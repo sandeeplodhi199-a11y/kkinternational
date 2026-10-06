@@ -79,7 +79,7 @@
                     <!-- Company Name -->
                     <div>
                         <label class="block text-xs font-black text-slate-800 mb-1.5">Company / Brand Name <span class="text-rose-500">*</span></label>
-                        <input type="text" name="company_name" value="{{ $settings['company_name'] ?? 'KK International' }}" required
+                        <input type="text" name="company_name" value="{{ $settings['company_name'] ?? 'Hisab Mittra' }}" required
                                class="w-full text-xs font-bold p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                     </div>
 
@@ -93,7 +93,7 @@
                     <!-- Official Website -->
                     <div>
                         <label class="block text-xs font-black text-slate-800 mb-1.5">Official Website URL</label>
-                        <input type="url" name="company_website" value="{{ $settings['company_website'] ?? 'https://kkinternational.com' }}" placeholder="https://..."
+                        <input type="url" name="company_website" value="{{ $settings['company_website'] ?? 'https://hisabmittra.com' }}" placeholder="https://..."
                                class="w-full text-xs font-mono font-bold p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                     </div>
 
@@ -247,7 +247,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-xs font-black text-slate-800 mb-1.5">Account Beneficiary Name</label>
-                        <input type="text" name="bank_beneficiary_name" value="{{ $settings['bank_beneficiary_name'] ?? 'KK International' }}"
+                        <input type="text" name="bank_beneficiary_name" value="{{ $settings['bank_beneficiary_name'] ?? 'Hisab Mittra' }}"
                                class="w-full text-xs font-bold p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                     </div>
 
@@ -279,7 +279,7 @@
 
                     <div>
                         <label class="block text-xs font-black text-slate-800 mb-1.5">Official UPI ID / VPA</label>
-                        <input type="text" name="bank_upi_id" value="{{ $settings['bank_upi_id'] ?? 'kkinternational@hdfcbank' }}" placeholder="e.g. business@upi"
+                        <input type="text" name="bank_upi_id" value="{{ $settings['bank_upi_id'] ?? 'hisabmittra@hdfcbank' }}" placeholder="e.g. business@upi"
                                class="w-full text-xs font-mono font-bold p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                     </div>
                 </div>

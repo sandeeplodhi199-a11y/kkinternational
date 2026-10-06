@@ -52,7 +52,7 @@
 
                     <div>
                         <label class="block text-xs font-black text-slate-800 mb-1.5">Work Email (Login ID) *</label>
-                        <input type="email" name="email" required placeholder="anand@kkinternational.com" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <input type="email" name="email" required placeholder="anand@hisabmittra.com" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>
 
                     <div>

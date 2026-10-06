@@ -245,7 +245,7 @@ class CrmSuperAdminController extends Controller
         CrmSetting::set('round_robin_active', $request->has('round_robin_active') ? '1' : '0');
         CrmSetting::set('sla_escalation_hours', $request->get('sla_escalation_hours', '4'));
         CrmSetting::set('duplicate_lead_action', $request->get('duplicate_lead_action', 'merge'));
-        CrmSetting::set('escalation_email', $request->get('escalation_email', 'admin@kkinternational.com'));
+        CrmSetting::set('escalation_email', $request->get('escalation_email', 'admin@hisabmittra.com'));
 
         CrmActivityLog::create([
             'user_name' => Auth::user()->name ?? 'Super Admin',

@@ -194,7 +194,7 @@ a.badge:hover {
 }
 
 .custom-bg-header {
-    background-image: url('https://kkinternationalschool.org/public/tranfer.jpeg') !important;
+    background-image: none !important;
     background-position: 100%;
     background-repeat: no-repeat;
     background-size: 100%;
@@ -461,7 +461,7 @@ a.badge:hover {
                                     <div class="print-content">
                                         <div class="print-area">
                                             <div class="certificate-sheet" id="certificateSheet"
-                                                style="background-image: url('https://kkinternationalschool.org/public/tranfer.jpeg')">
+                                                style="">
                                                 <div class="single-certificate">
                                                     <div class="certificate-head">
                                                         <p class="certificate-title">Transfer / Character <br />

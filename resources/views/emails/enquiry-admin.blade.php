@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>New Enquiry — KK International School</title>
+<title>New Enquiry — {{ config('app.name', 'Hisab Mittra CRM') }}</title>
 <style>
   body { margin:0; padding:0; background:#f0f4f8; font-family:'Segoe UI',Arial,sans-serif; }
   .wrapper { max-width:620px; margin:40px auto; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.10); }
-  .header { background:linear-gradient(135deg,#1a3a6b 0%,#2563b0 100%); padding:36px 40px; text-align:center; }
-  .header img { height:64px; margin-bottom:14px; }
+  .header { background:linear-gradient(135deg,#047857 0%,#065f46 100%); padding:36px 40px; text-align:center; }
   .header h1 { color:#fff; margin:0; font-size:22px; font-weight:700; letter-spacing:.3px; }
   .header p  { color:#bfd6f6; margin:6px 0 0; font-size:13px; }
   .badge { display:inline-block; background:#f59e0b; color:#fff; font-size:11px; font-weight:700;
@@ -39,7 +38,6 @@
 
   <!-- Header -->
   <div class="header">
-    <img src="https://kkinternationalschool.org/public/uploads/202606011816kk_logo.jpeg" alt="KK International School Logo" />
     <h1>New Enquiry Received</h1>
     <p>An enquiry has been submitted via the website contact form</p>
     <span class="badge">🔔 Action Required</span>
@@ -97,10 +95,10 @@
   <!-- Footer -->
   <div class="footer">
     <p>
-      <strong>KK International School</strong><br/>
-      📍 Dharan, Sunsari, Nepal &nbsp;|&nbsp;
-      📞 <a href="tel:+977-25-525300">+977-25-525300</a> &nbsp;|&nbsp;
-      ✉️ <a href="mailto:kkisdharan@gmail.com">kkisdharan@gmail.com</a>
+      <strong>{{ config('app.name', 'Hisab Mittra CRM') }}</strong><br/>
+      📍 India &nbsp;|&nbsp;
+      📞 <a href="tel:+919876543210">+91 98765 43210</a> &nbsp;|&nbsp;
+      ✉️ <a href="mailto:admin@hisabmittra.com">admin@hisabmittra.com</a>
     </p>
     <p style="margin-top:10px;font-size:11px;color:#9ca3af;">
       This is an automated notification. Do not reply to this email directly.

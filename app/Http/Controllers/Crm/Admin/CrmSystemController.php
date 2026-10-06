@@ -180,9 +180,9 @@ class CrmSystemController extends Controller
     {
         // Ensure reference employees from format design exist
         $referenceEmployees = [
-            ['name' => 'Rahul Sharma', 'email' => 'rahul.sharma@kkinternational.com', 'employee_code' => 'EMP-006', 'designation' => 'Field Executive'],
-            ['name' => 'Vipin', 'email' => 'vipin@kkinternational.com', 'employee_code' => 'EMP-007', 'designation' => 'Field Representative'],
-            ['name' => 'Nandkishor Chouhan', 'email' => 'nandkishor@kkinternational.com', 'employee_code' => 'EMP-008', 'designation' => 'Area Sales Manager'],
+            ['name' => 'Rahul Sharma', 'email' => 'rahul.sharma@hisabmittra.com', 'employee_code' => 'EMP-006', 'designation' => 'Field Executive'],
+            ['name' => 'Vipin', 'email' => 'vipin@hisabmittra.com', 'employee_code' => 'EMP-007', 'designation' => 'Field Representative'],
+            ['name' => 'Nandkishor Chouhan', 'email' => 'nandkishor@hisabmittra.com', 'employee_code' => 'EMP-008', 'designation' => 'Area Sales Manager'],
         ];
 
         foreach ($referenceEmployees as $ref) {

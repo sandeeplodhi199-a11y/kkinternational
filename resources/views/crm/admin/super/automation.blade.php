@@ -86,7 +86,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-black text-slate-700 mb-1">Escalation Notification Email</label>
-                            <input type="email" name="escalation_email" value="{{ \App\Models\Crm\CrmSetting::get('escalation_email', 'admin@kkinternational.com') }}" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-white">
+                            <input type="email" name="escalation_email" value="{{ \App\Models\Crm\CrmSetting::get('escalation_email', 'admin@hisabmittra.com') }}" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-white">
                         </div>
                     </div>
                 </div>

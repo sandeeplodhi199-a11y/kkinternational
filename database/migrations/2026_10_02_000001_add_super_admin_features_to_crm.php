@@ -76,10 +76,10 @@ return new class extends Migration
         // 5. Seed Initial Branches if empty
         if (DB::table('crm_branches')->count() == 0) {
             DB::table('crm_branches')->insert([
-                ['name' => 'Head Office Jaipur', 'code' => 'BR-JPR', 'city' => 'Jaipur, Rajasthan', 'phone' => '+91 141 2890000', 'email' => 'jaipur@kkinternational.com', 'address' => 'MI Road, Jaipur', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
-                ['name' => 'Delhi Corporate Branch', 'code' => 'BR-DEL', 'city' => 'New Delhi', 'phone' => '+91 11 45678900', 'email' => 'delhi@kkinternational.com', 'address' => 'Connaught Place, New Delhi', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
-                ['name' => 'Mumbai Commercial Hub', 'code' => 'BR-MUM', 'city' => 'Mumbai, Maharashtra', 'phone' => '+91 22 26789000', 'email' => 'mumbai@kkinternational.com', 'address' => 'BKC Complex, Bandra East, Mumbai', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
-                ['name' => 'Bengaluru Tech Branch', 'code' => 'BR-BLR', 'city' => 'Bengaluru, Karnataka', 'phone' => '+91 80 41234567', 'email' => 'blr@kkinternational.com', 'address' => 'Indiranagar 100ft Road, Bengaluru', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
+                ['name' => 'Head Office Jaipur', 'code' => 'BR-JPR', 'city' => 'Jaipur, Rajasthan', 'phone' => '+91 141 2890000', 'email' => 'jaipur@hisabmittra.com', 'address' => 'MI Road, Jaipur', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
+                ['name' => 'Delhi Corporate Branch', 'code' => 'BR-DEL', 'city' => 'New Delhi', 'phone' => '+91 11 45678900', 'email' => 'delhi@hisabmittra.com', 'address' => 'Connaught Place, New Delhi', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
+                ['name' => 'Mumbai Commercial Hub', 'code' => 'BR-MUM', 'city' => 'Mumbai, Maharashtra', 'phone' => '+91 22 26789000', 'email' => 'mumbai@hisabmittra.com', 'address' => 'BKC Complex, Bandra East, Mumbai', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
+                ['name' => 'Bengaluru Tech Branch', 'code' => 'BR-BLR', 'city' => 'Bengaluru, Karnataka', 'phone' => '+91 80 41234567', 'email' => 'blr@hisabmittra.com', 'address' => 'Indiranagar 100ft Road, Bengaluru', 'status' => 'Active', 'created_at' => now(), 'updated_at' => now()],
             ]);
         }
     }

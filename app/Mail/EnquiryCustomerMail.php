@@ -22,7 +22,7 @@ class EnquiryCustomerMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'We Received Your Enquiry — KK International School',
+            subject: 'We Received Your Enquiry — ' . config('app.name', 'Hisab Mittra CRM'),
         );
     }
 

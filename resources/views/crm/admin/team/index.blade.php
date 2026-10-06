@@ -203,7 +203,7 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Email Address *</label>
-                <input type="email" name="email" required placeholder="e.g. rahul@kkinternational.com" 
+                <input type="email" name="email" required placeholder="e.g. rahul@hisabmittra.com" 
                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
 

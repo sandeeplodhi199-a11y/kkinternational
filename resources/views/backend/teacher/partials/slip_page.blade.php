@@ -4,12 +4,12 @@
 <table style="width:100%; border:none; margin-bottom:14px;">
     <tr>
         <td style="border:none; width:100px; vertical-align:middle; text-align:left;">
-            <img src="https://www.kkinternationalschool.org/public/uploads/202606011816kk_logo.jpeg" 
-                 alt="KK School Logo" 
+            <img src="/img/logo.png" 
+                 alt="Logo" 
                  style="width:90px; height:90px; object-fit:contain; border-radius:50%;">
         </td>
        <td style="border:none; text-align:right; vertical-align:middle;">
-    <div class="school-name" style="font-size:28px;">K.K. International School</div>
+    <div class="school-name" style="font-size:28px;">{{ config('app.name', 'Hisab Mittra') }}</div>
     <div class="school-address" style="font-size:14px;">Dharan-15, Sunsari, Nepal</div>
     <div style="display:flex; align-items:flex-end; justify-content:flex-end; gap:0;">
         <div style="flex:1;border-bottom: 1px solid #000;margin-bottom: 24px;margin-left: 200px;"></div>

@@ -7,8 +7,8 @@
 @endphp
 
 {{-- ══════════════════════════════════════════════════
-     KK INTERNATIONAL SCHOOL — ERP DASHBOARD
-     Database: kkintern_kkinternational
+     HISAB MITTRA CRM & ERP DASHBOARD
+     Database: hisabmittra_crm
 ══════════════════════════════════════════════════ --}}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -379,7 +379,7 @@ color:white;
     <div class="hdr-brand">
       <div class="brand-avatar"><i class="fas fa-graduation-cap"></i></div>
       <div class="brand-text111">
-        <h1 style="color:white">KK International School</h1>
+        <h1 style="color:white">{{ config('app.name', 'Hisab Mittra CRM') }}</h1>
         <div class="sub" id="hdrGreet">Loading...</div>
       </div>
     </div>

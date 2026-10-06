@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Enquiry Confirmation — KK International School</title>
+<title>Enquiry Confirmation — {{ config('app.name', 'Hisab Mittra') }}</title>
 <style>
   body { margin:0; padding:0; background:#f0f4f8; font-family:'Segoe UI',Arial,sans-serif; }
   .wrapper { max-width:620px; margin:40px auto; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.10); }
 
   /* Header */
-  .header { background:linear-gradient(135deg,#1a3a6b 0%,#2563b0 100%); padding:40px 40px 30px; text-align:center; }
-  .header img { height:68px; margin-bottom:16px; }
+  .header { background:linear-gradient(135deg,#047857 0%,#065f46 100%); padding:40px 40px 30px; text-align:center; }
   .header h1 { color:#fff; margin:0; font-size:24px; font-weight:700; }
-  .header p  { color:#bfd6f6; margin:8px 0 0; font-size:14px; }
+  .header p  { color:#a7f3d0; margin:8px 0 0; font-size:14px; }
 
   /* Tick banner */
   .tick-banner { background:#e8f5e9; border-bottom:2px solid #a5d6a7; padding:18px 40px; text-align:center; }
@@ -69,9 +68,8 @@
 
   <!-- Header -->
   <div class="header">
-    <img src="https://kkinternationalschool.org/public/uploads/202606011816kk_logo.jpeg" alt="KK International School" />
-    <h1>KK International School</h1>
-    <p>Dharan, Sunsari, Nepal &nbsp;|&nbsp; Excellence in Education</p>
+    <h1>{{ config('app.name', 'Hisab Mittra') }}</h1>
+    <p>Excellence in Enterprise Solutions</p>
   </div>
 
   <!-- Success banner -->
@@ -85,9 +83,8 @@
 
     <p class="greeting">Dear {{ $enquiry['firstname'] }},</p>
     <p class="intro">
-      Thank you for reaching out to <strong>KK International School</strong>. We have received your enquiry
-      and our team will get back to you within <strong>1–2 business days</strong>. Your interest in our
-      school means a lot to us, and we look forward to connecting with you.
+      Thank you for reaching out to <strong>{{ config('app.name', 'Hisab Mittra') }}</strong>. We have received your enquiry
+      and our team will get back to you within <strong>1–2 business days</strong>. We look forward to connecting with you.
     </p>
 
     <!-- Enquiry Summary -->
@@ -142,9 +139,9 @@
     <!-- Contact Info -->
     <div class="contact-strip">
       <h3>Need Immediate Assistance?</h3>
-      <div class="c-row">📞 &nbsp;<a href="tel:+977-25-525300">+977-25-525300</a></div>
-      <div class="c-row">✉️ &nbsp;<a href="mailto:kkisdharan@gmail.com">kkisdharan@gmail.com</a></div>
-      <div class="c-row">📍 &nbsp;Dharan, Sunsari, Nepal</div>
+      <div class="c-row">📞 &nbsp;<a href="tel:+919876543210">+91 98765 43210</a></div>
+      <div class="c-row">✉️ &nbsp;<a href="mailto:admin@hisabmittra.com">admin@hisabmittra.com</a></div>
+      <div class="c-row">📍 &nbsp;India</div>
     </div>
 
     <p class="ref">
@@ -157,14 +154,13 @@
   <!-- Footer -->
   <div class="footer">
     <p>
-      <strong style="color:#fff;">KK International School</strong><br/>
-      Dharan, Sunsari, Nepal<br/>
-      <a href="tel:+977-25-525300">+977-25-525300</a> &nbsp;|&nbsp;
-      <a href="mailto:kkisdharan@gmail.com">kkisdharan@gmail.com</a><br/>
-      <a href="https://kkinternationalschool.org">kkinternationalschool.org</a>
+      <strong style="color:#fff;">{{ config('app.name', 'Hisab Mittra CRM') }}</strong><br/>
+      <a href="tel:+919876543210">+91 98765 43210</a> &nbsp;|&nbsp;
+      <a href="mailto:admin@hisabmittra.com">admin@hisabmittra.com</a><br/>
+      <a href="{{ config('app.url', 'https://hisabmittra.com') }}">{{ config('app.url', 'https://hisabmittra.com') }}</a>
     </p>
     <p class="copy">
-      © {{ date('Y') }} KK International School. All rights reserved.<br/>
+      © {{ date('Y') }} {{ config('app.name', 'Hisab Mittra') }}. All rights reserved.<br/>
       This is an automated confirmation email. Please do not reply directly.
     </p>
   </div>

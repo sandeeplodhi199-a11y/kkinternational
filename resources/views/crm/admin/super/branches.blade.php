@@ -111,7 +111,7 @@
             </div>
             <div>
                 <label class="block text-xs font-black text-slate-800 mb-1.5">Office Email</label>
-                <input type="email" name="email" placeholder="pune@kkinternational.com" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                <input type="email" name="email" placeholder="pune@hisabmittra.com" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500">
             </div>
             <div>
                 <label class="block text-xs font-black text-slate-800 mb-1.5">Physical Address</label>
