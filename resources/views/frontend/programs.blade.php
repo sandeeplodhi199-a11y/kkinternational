@@ -1,0 +1,118 @@
+@extends('frontend.layouts.app')
+
+
+@section('content')
+
+<style>
+    .program-theme .sec-subtitle,
+    .program-theme h1,
+    .program-theme h2,
+    .program-theme h3,
+    .program-theme h4,
+    .program-theme .service-title,
+    .program-theme .service-title a,
+    .program-theme a:hover {
+        color: var(--theme-color) !important;
+    }
+    .program-theme .service-btn:hover,
+    .program-theme .vs-btn:hover {
+        color: var(--theme-color) !important;
+    }
+    .program-theme [style*="color:red"],
+    .program-theme [style*="color: red"],
+    .program-theme [style*="#ff0000"],
+    .program-theme [style*="#f00"],
+    .program-theme [style*="#e70d3c"],
+    .program-theme [style*="#dc3545"] {
+        color: var(--theme-color) !important;
+    }
+    .program-theme [style*="background:red"],
+    .program-theme [style*="background: red"],
+    .program-theme [style*="background-color:red"],
+    .program-theme [style*="background-color: red"],
+    .program-theme [style*="background:#e70d3c"],
+    .program-theme [style*="background: #e70d3c"],
+    .program-theme [style*="background-color:#e70d3c"],
+    .program-theme [style*="background-color: #e70d3c"],
+    .program-theme [style*="background:#dc3545"],
+    .program-theme [style*="background: #dc3545"],
+    .program-theme [style*="background-color:#dc3545"],
+    .program-theme [style*="background-color: #dc3545"] {
+        background-color: var(--theme-color) !important;
+        border-color: var(--theme-color) !important;
+    }
+</style>
+
+    <div class="breadcumb-wrapper " data-bg-src="{{ url('assets/frontend/img/breadcumb/breadcumb-bg.jpg') }}">
+        <div class="container z-index-common">
+            <div class="breadcumb-content">
+                <h1 class="breadcumb-title">Program </h1>
+                <p class="breadcumb-text">Learning Today for a Better Tomorrow</p>
+                <div class="breadcumb-menu-wrap">
+                    <ul class="breadcumb-menu">
+                        <li><a href="{{ url('/') }}">Home</a></li>
+                        <li>Program </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+  <section class="space-top space-extra-bottom program-theme">
+    <div class="container">
+        @if($programs->isNotEmpty())
+            @foreach($programs as $index => $item)
+            <div class="row align-items-center justify-content-between mb-5 
+                {{ $index % 2 == 0 ? 'flex-row-reverse' : '' }}">
+
+                {{-- Image --}}
+                <div class="col-lg-6 col-xl-auto text-center 
+                    {{ $index % 2 == 0 ? 'text-lg-end' : 'text-lg-start' }}">
+                    <div class="img-box2">
+                        <div class="transform-banner">
+                            <img src="{{ url('public/uploads/' . $item->image) }}" alt="about">
+                        </div>
+                        <div class="vs-circle jump"></div>
+                    </div>
+                </div>
+
+                {{-- Content --}}
+                <div class="col-lg-6 text-center program-content
+                    {{ $index % 2 == 0 ? 'text-lg-start' : 'text-lg-end' }}">
+                    {!! $item->name !!}
+                </div>
+
+            </div>
+            @endforeach
+
+        @else
+            {{-- No Data Message --}}
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div style="
+                        background: linear-gradient(135deg, #10233f, #173b69);
+                        border-radius: 16px;
+                        padding: 27px 40px;
+                        text-align: center;
+                        box-shadow: 0 10px 40px rgba(16, 35, 63, 0.18);
+                        margin-top: -68px;
+                    ">
+                        <div style="font-size: 60px; margin-bottom: 15px;">😔</div>
+                        <h3 style="
+                            color: #fff;
+                            font-size: 24px;
+                            font-weight: 700;
+                            margin-bottom: 10px;
+                            letter-spacing: 0.5px;
+                        ">No programss Found!</h3>
+                        
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+</section>
+    
+
+    @endsection

@@ -1,0 +1,278 @@
+@extends('backend.layouts.app')
+
+@section('content')
+
+
+
+
+
+
+
+<!-- Content Wrapper. Contains page content -->
+
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+
+
+
+    <div class="row mart10 padd">
+
+        <div class="col-md-8">
+
+        </div>
+
+        <div class="col-md-4">
+
+            <a class="btn btn-primary btn-sm float-right" href="{{url('admin/slider')}}">Manage Slider</a>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Main content -->
+
+    <section class="content">
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-12">
+
+                    <!-- Default box -->
+
+                    <div class="card card-primary card-outline">
+
+                        <div class="card-header">
+
+                            <h3 class="card-title">Edit Slider</h3>
+
+
+
+                            <div class="card-tools">
+
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+
+                                    <i class="fas fa-minus"></i>
+
+                                </button>
+
+                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+
+                                    <i class="fas fa-times"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <!------------------------>
+
+                            @if (\Session::has('success'))
+
+                            <div class="alert alert-success">
+
+                                {!! \Session::get('success') !!}
+
+                            </div>
+
+                            @endif
+
+
+
+                            <form method="post" action="{{url('admin/updateSlider')}}" enctype="multipart/form-data">
+
+
+
+
+
+                                <input type="hidden" name="id" value="{{$slider->id}}">
+
+                                {{ csrf_field() }}
+
+                                <div class="row">
+
+
+
+
+
+                                    <div class="col-md-5">
+
+                                        <div class="form-group">
+
+                                            <label>Image</label>
+
+                                            <input type="file" class="form-control" name="image">
+
+                                        </div>
+                                        <p class="custom-text" style="color: red;">Image Size Should be 1920 × 770 px
+                                        </p>
+
+
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Button Name</label>
+                                            <input type="text" class="form-control" name="image_alt"
+                                                value="{{$slider->image_alt}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <div class="form-group">
+
+                                            <label>Button Url</label>
+
+                                            <input type="text" class="form-control" name="name" required
+                                                value="{{$slider->name}}">
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="col-md-2">
+
+                                        <div class="form-group">
+
+                                            <label>Order By</label>
+
+                                            <input type="number" class="form-control" name="order_by"
+                                                value="{{$slider->order_by}}">
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select class="form-control select2" name="status">
+                                                <option value="{{$slider->status}}">{{$slider->status}}</option>
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label> Title</label>
+                                            <input type="text" class="form-control" name="image_title"
+                                                value="{{$slider->image_title}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label> Description</label>
+                                            <input type="text" class="form-control" name="image_description"
+                                                value="{{$slider->image_description}}">
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-12">
+
+                                        <div class="form-group">
+
+                                            <input type="submit" class="btn btn-primary" value="Submit">
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="col-md-2">
+
+                                        <div class="form-group">
+
+                                            <img src="{{url('public/uploads/'.$slider->image)}}"
+                                                style="max-width: 100%;" />
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                </div>
+
+                            </form>
+
+                            <!-------------------------->
+
+
+
+
+
+                        </div>
+
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+
+
+
+                        </div>
+
+                        <!-- /.card-footer-->
+
+                    </div>
+
+                    <!-- /.card -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- /.content -->
+
+</div>
+
+<!-- /.content-wrapper -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@endsection
