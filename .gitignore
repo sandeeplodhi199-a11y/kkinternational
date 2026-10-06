@@ -23,3 +23,5 @@ yarn-error.log
 error_log
 trace_*.php
 test_*.php
+
+.vercel
