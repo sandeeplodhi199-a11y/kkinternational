@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="">
+    <title>Admin Dashboard | Hisab Mittra CRM</title>
+    <link rel="icon" type="image/png" href="/images/hisab-mittra-icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <!-- Google Fonts: Plus Jakarta Sans / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7f4',
+                            100: '#dcece5',
+                            200: '#bfdcd0',
+                            300: '#94c6b3',
+                            400: '#5da790',
+                            500: '#0e6f66',
+                            600: '#0b5a53',
+                            700: '#084d47',
+                            800: '#063c37',
+                            900: '#042b27',
+                        },
+                        sage: {
+                            50: '#f5faf7',
+                            100: '#eaf4ee',
+                            200: '#d8eade',
+                            300: '#c2decb',
+                            400: '#a3cdb2',
+                            500: '#80b894',
+                            600: '#619e78',
+                            700: '#4c7f5f',
+                            800: '#3d654d',
+                            900: '#335340',
+                        },
+                        coachTeal: {
+                            light: '#138b80',
+                            DEFAULT: '#0e6f66',
+                            dark: '#084d47',
+                            deep: '#063934',
+                        },
+                        amberAccent: {
+                            50: '#fdf6f0',
+                            100: '#fbeee2',
+                            500: '#e27a4e',
+                            600: '#cb6336',
+                        },
+                        canvas: '#eaf2ee',
+                        cardBorder: '#dcece5',
+                    },
+                    borderRadius: {
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome 6 & Feather Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background-color: #F8F9FD;
+            background-image: 
+                radial-gradient(circle 900px at 15% 0%, rgba(254, 215, 226, 0.45) 0%, rgba(255, 241, 242, 0.20) 40%, transparent 70%),
+                radial-gradient(circle 850px at 85% 10%, rgba(254, 215, 170, 0.35) 0%, rgba(255, 247, 237, 0.18) 40%, transparent 70%),
+                radial-gradient(circle 950px at 50% 50%, rgba(243, 232, 255, 0.30) 0%, rgba(250, 245, 255, 0.15) 50%, transparent 75%),
+                radial-gradient(circle 1000px at 85% 90%, rgba(254, 215, 226, 0.35) 0%, rgba(255, 241, 242, 0.15) 50%, transparent 75%),
+                linear-gradient(135deg, #FDF8F9 0%, #F9F7FB 50%, #F5F7FC 100%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1E293B;
+        }
+
+        /* hr.ad Modern Surface Cards */
+        .crm-card, .hrad-card {
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(226, 232, 240, 0.65), 0 2px 8px -2px rgba(15, 23, 42, 0.03);
+            transition: all 0.2s ease-in-out;
+        }
+        .crm-card:hover, .hrad-card:hover {
+            box-shadow: 0 15px 35px -5px rgba(203, 213, 225, 0.75), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Sidebar scrollbar */
+        .sidebar-dark-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 9999px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb:hover {
+            background: #CBD5E1;
+        }
+
+        /* hr.ad Sidebar Navigation Items (Bold & High Contrast) */
+        .sidebar-dark-item {
+            color: #0F172A;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            margin: 3px 12px;
+            border-radius: 0.85rem;
+            transition: all 0.18s ease-in-out;
+            text-decoration: none;
+            cursor: pointer;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-dark-item span {
+            color: #0F172A;
+            font-weight: 700;
+        }
+        .sidebar-dark-item i {
+            color: #475569;
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            transition: all 0.18s ease-in-out;
+            flex-shrink: 0;
+        }
+        .sidebar-dark-item:hover {
+            background-color: #F1F5F9;
+            color: #000000;
+        }
+        .sidebar-dark-item:hover span {
+            color: #000000;
+            font-weight: 800;
+        }
+        .sidebar-dark-item:hover i {
+            color: #2563EB;
+        }
+        .sidebar-dark-item-active {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            border-radius: 0.85rem !important;
+            box-shadow: 0 8px 20px -3px rgba(37, 99, 235, 0.35) !important;
+            padding-left: 16px !important;
+        }
+        .sidebar-dark-item-active span {
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+        .sidebar-dark-item-active i {
+            color: #ffffff !important;
+        }
+
+        /* hr.ad Table Styling */
+        table thead th {
+            background-color: #F8FAFC !important;
+            color: #64748B !important;
+            border-color: #F1F5F9 !important;
+        }
+        table tbody tr {
+            border-color: #F8FAFC !important;
+        }
+        table tbody tr:hover {
+            background-color: #F8FAFC/70 !important;
+        }
+    </style>
+    </head>
+<body class="h-full flex overflow-hidden text-slate-800">
+
+    <!-- Collapsible / Responsive Mobile Backdrop -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/30 z-40 hidden md:hidden transition-opacity"></div>
+
+    <!-- LEFT SIDEBAR (LeadPro Clean White Theme) -->
+    <aside id="main-sidebar" class="fixed md:static inset-y-0 left-0 z-50 w-64 h-full bg-white border-r border-slate-200/80 flex flex-col overflow-hidden select-none shadow-sm transition-all duration-300 transform -translate-x-full md:translate-x-0">
+                    <div class="flex flex-col h-full bg-white select-none">
+    <!-- Brand Logo (HisabMittra) -->
+    <div class="px-5 py-4 border-b border-slate-100/80">
+        <a href="/crm/admin/dashboard" class="flex items-center group py-0.5">
+            <img src="/images/hisab-mittra-logo.png" alt="HisabMittra" class="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform group-hover:scale-102">
+        </a>
+    </div>
+
+    <!-- Navigation Menu (hr.ad Modern Aesthetic - Bold & High Legibility) -->
+    <nav id="sidebar-nav" class="flex-1 overflow-y-auto sidebar-dark-scroll py-3 space-y-1">
+
+        <!-- 1. SECTION: MAIN -->
+        <div class="px-6 pt-2 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Main
+        </div>
+
+        <!-- Dashboard -->
+        <a href="/crm/admin/dashboard" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <!-- 2. SECTION: CRM & PIPELINE -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            CRM & Pipeline
+        </div>
+
+        <!-- All Leads -->
+        <a href="/crm/admin/leads" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-list-ul"></i>
+            <span>All Leads</span>
+        </a>
+
+        <!-- Deals -->
+        <a href="/crm/admin/deals" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-handshake"></i>
+            <span>Deals & Pipeline</span>
+        </a>
+
+        <!-- Customers -->
+        <a href="/crm/admin/customers" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-building"></i>
+            <span>Customers</span>
+        </a>
+
+        <!-- Quotations -->
+        <a href="/crm/admin/quotations" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span>Quotations & Proposals</span>
+        </a>
+
+        <!-- 3. SECTION: OPERATIONS -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Operations
+        </div>
+
+        <!-- Follow-ups -->
+        <a href="/crm/admin/followups" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Follow-ups</span>
+        </a>
+
+        <!-- Tasks -->
+        <a href="/crm/admin/tasks" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <!-- Demos -->
+        <a href="/crm/admin/demos" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Demos</span>
+        </a>
+
+        <!-- Reservations -->
+        <a href="/crm/admin/reservations" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-book-open"></i>
+            <span>Reservations</span>
+        </a>
+
+        <!-- Bulk Assign -->
+        <a href="/crm/admin/leads/bulk-assign" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-shuffle"></i>
+            <span>Bulk Assign</span>
+        </a>
+
+        <!-- Upload Leads -->
+        <a href="/crm/admin/leads/upload" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span>Upload Leads</span>
+        </a>
+
+        <!-- 4. SECTION: FINANCE & PRODUCTS -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Finance & Products
+        </div>
+
+        <!-- Payments -->
+        <a href="/crm/admin/payments" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-credit-card"></i>
+            <span>Payments & Collections</span>
+        </a>
+
+        <!-- Products -->
+        <a href="/crm/admin/products" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Products & Services</span>
+        </a>
+
+        <!-- Billing Calculator -->
+        <a href="/crm/admin/tools/billing-calculator" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-calculator"></i>
+            <span>Billing Calculator</span>
+        </a>
+
+        <!-- 5. SECTION: TEAM -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Team Management
+        </div>
+
+        <!-- Employees -->
+        <a href="/crm/admin/team" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-users"></i>
+            <span>Employees</span>
+        </a>
+
+        <!-- Sales Targets -->
+        <a href="/crm/admin/targets" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-bullseye"></i>
+            <span>Sales Targets</span>
+        </a>
+
+        <!-- Performance -->
+        <a href="/crm/admin/performance" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-trophy"></i>
+            <span>Team Performance</span>
+        </a>
+
+        <!-- 6. SECTION: ANALYTICS & REPORTS -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Analytics & Logs
+        </div>
+
+        <!-- Master Reports -->
+        <a href="/crm/admin/reports" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Reports & Analytics</span>
+        </a>
+
+        <!-- Demo Assignments -->
+        <a href="/crm/admin/demos/assignments" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Demo Assignments</span>
+        </a>
+
+        <!-- Export Leads -->
+        <a href="/crm/admin/leads-export" 
+           class="sidebar-dark-item hover:text-blue-600">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Export Leads (.xlsx)</span>
+        </a>
+
+        <!-- Activity Logs -->
+        <a href="/crm/admin/activity-logs" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Activity Logs</span>
+        </a>
+
+        <!-- Live Tracking -->
+        <a href="/crm/admin/live-tracking" 
+           class="sidebar-dark-item hover:text-blue-600 ">
+            <i class="fa-solid fa-tower-broadcast text-rose-500 animate-pulse"></i>
+            <span>Live Tracking</span>
+        </a>
+
+        <!-- 7. SECTION: SUPER ADMIN GOVERNANCE -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Super Admin
+        </div>
+
+        <!-- RBAC Matrix -->
+        <a href="/crm/admin/super/rbac" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-shield-halved text-rose-500"></i>
+            <span>RBAC Matrix</span>
+        </a>
+
+
+        <!-- Automation & Routing -->
+        <a href="/crm/admin/super/automation" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+            <span>Lead Automation</span>
+        </a>
+
+        <!-- Integrations & APIs -->
+        <a href="/crm/admin/super/integrations" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-plug text-blue-500"></i>
+            <span>Integrations & APIs</span>
+        </a>
+
+
+        <!-- Recycle Bin -->
+        <a href="/crm/admin/super/recycle-bin" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-trash-can text-rose-500"></i>
+            <span>Recycle Bin</span>
+        </a>
+
+        <!-- Financial Approvals -->
+        <a href="/crm/admin/super/approvals" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-stamp text-emerald-600"></i>
+            <span>Financial Approvals</span>
+        </a>
+
+
+        <!-- 8. SECTION: SYSTEM -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            System Settings
+        </div>
+
+        <!-- Settings -->
+        <a href="/crm/admin/settings" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-gear"></i>
+            <span>System Settings</span>
+        </a>
+    </nav>
+
+    <!-- Bottom Sign Out -->
+    <div class="p-4 border-t border-slate-100 bg-white">
+        <form action="/crm/logout" method="POST">
+            <input type="hidden" name="_token" value="" autocomplete="off">            <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border border-rose-200/80 bg-rose-50/70 text-rose-600 text-xs font-black hover:bg-rose-100/80 hover:text-rose-700 transition duration-150 cursor-pointer">
+                <i class="fa-solid fa-power-off text-xs text-rose-500"></i>
+                <span>Sign Out</span>
+            </button>
+        </form>
+    </div>
+</div>
+            </aside>
+    <script>
+        // Immediate sidebar scroll restoration prior to page paint to eliminate visual jumping
+        (function() {
+            try {
+                var nav = document.getElementById('sidebar-nav');
+                if (nav) {
+                    var saved = sessionStorage.getItem('crm_sidebar_scroll_pos');
+                    if (saved !== null) {
+                        nav.scrollTop = parseInt(saved, 10);
+                    }
+                }
+            } catch(e) {}
+        })();
+    </script>
+
+    <!-- MAIN WRAPPER -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50/60 backdrop-blur-[2px]">
+        
+        
+        <!-- TOPBAR -->
+        <header class="bg-transparent px-4 md:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30">
+    <!-- Left: Page Back Button, Website Link & Mobile Toggle -->
+    <div class="flex items-center gap-3">
+        <!-- Page Back Button (20% enlarged) -->
+        <button type="button" 
+                onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/crm/admin/dashboard'; }" 
+                title="Go Back" 
+                class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer active:scale-95 group">
+            <i class="fa-solid fa-arrow-left text-sm transition-transform group-hover:-translate-x-0.5"></i>
+            <span class="text-sm font-bold hidden sm:inline">Back</span>
+        </button>
+
+        <!-- View Public Website Button (20% enlarged) -->
+        <a href="" 
+           title="View Public Website" 
+           class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer group">
+            <i class="fa-solid fa-globe text-sm transition-transform group-hover:rotate-12"></i>
+            <span class="text-sm font-bold hidden sm:inline">Website</span>
+        </a>
+
+        <button type="button" onclick="toggleSidebar()" class="md:hidden text-slate-700 hover:text-blue-600 p-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Center/Right: Search Input, Notification Bell, User Profile Pill -->
+    <div class="flex items-center gap-3.5 ml-auto">
+        <!-- Functional Inline Search Bar with Live Results Dropdown -->
+        <div class="relative w-56 sm:w-72 md:w-96" id="topbar-search-container">
+            <form action="/crm/admin/search" method="GET" class="relative w-full" id="topbar-search-form">
+                <div class="w-full bg-white border border-slate-200/90 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm transition">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm shrink-0"></i>
+                    <input type="text" 
+                           id="topbar-search-input" 
+                           name="q" 
+                           autocomplete="off" 
+                           value=""
+                           placeholder="Search leads, deals, customers..." 
+                           class="w-full text-sm font-bold text-slate-900 placeholder-slate-400 bg-transparent outline-none">
+                    
+                    <!-- Clear Button -->
+                    <button type="button" id="clear-search-btn" onclick="clearTopSearch()" class="hidden text-slate-400 hover:text-slate-700 text-xs px-1 cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Inline Live Search Dropdown Result Panel -->
+            <div id="inline-search-dropdown" class="absolute right-0 top-full mt-2 w-80 sm:w-96 md:w-[440px] bg-white rounded-3xl shadow-2xl border border-slate-200 z-50 p-4 text-slate-900 hidden max-h-[460px] overflow-y-auto">
+                <div id="inline-search-loading" class="hidden text-center py-6 text-xs text-slate-600 font-bold">
+                    <i class="fa-solid fa-circle-notch fa-spin text-orange-500 text-base mb-1.5 block mx-auto"></i>
+                    Searching CRM records...
+                </div>
+                <div id="inline-search-content" class="space-y-3 text-xs">
+                    <div class="text-center py-4 text-slate-500 font-bold">Type to search leads, customers, deals, quotations...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Bell with Quick Badge & Dropdown Preview -->
+        <div class="relative group">
+            <a href="/crm/admin/notifications" title="Notifications" class="relative w-11 h-11 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:border-emerald-300 transition cursor-pointer">
+                <i class="fa-regular fa-bell text-lg"></i>
+                                    <span class="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full bg-rose-500 text-white font-black text-[11px] flex items-center justify-center shadow-sm">
+                        18
+                    </span>
+                            </a>
+
+            <!-- Quick Notification Dropdown Preview -->
+            <div class="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-100 rounded-3xl shadow-2xl py-3 hidden group-hover:block transition z-50">
+                <div class="px-4 pb-2 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h4 class="text-xs font-black text-slate-800">Notifications</h4>
+                        <p class="text-[10px] text-slate-400">18 unread alerts</p>
+                    </div>
+                    <a href="/crm/admin/notifications" class="text-[11px] font-bold text-[#155242] hover:underline">
+                        View All &rarr;
+                    </a>
+                </div>
+
+                <div class="max-h-72 overflow-y-auto divide-y divide-slate-50">
+                                                                    <a href="/crm/admin/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
+                                <i class="fa-solid fa-trophy text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">🎉 Deal Won: hyy</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal &#039;hyy&#039; was successfully WON! Revenue: ₹5,000</p>
+                            </div>
+                        </a>
+                                                                    <a href="/crm/admin/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
+                                <i class="fa-solid fa-trophy text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">🎉 Deal Won: hyy</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal &#039;hyy&#039; was successfully WON! Revenue: ₹5,000</p>
+                            </div>
+                        </a>
+                                                                    <a href="/crm/admin/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
+                                <i class="fa-solid fa-trophy text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">Deal Added: hyy</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal added in pipeline at New stage for ₹5,000</p>
+                            </div>
+                        </a>
+                                                                    <a href="/crm/admin/leads/37" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600 border border-emerald-200/60">
+                                <i class="fa-solid fa-user-plus text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">New Webhook Lead: Webhook Test Buyer</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Lead LEAD-9062 received from external webhook. Status: New</p>
+                            </div>
+                        </a>
+                                                                    <a href="/crm/admin/leads/33" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600 border border-emerald-200/60">
+                                <i class="fa-solid fa-user-plus text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">New Webhook Lead: Webhook Test Buyer</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Lead LEAD-3369 received from external webhook. Status: New</p>
+                            </div>
+                        </a>
+                                    </div>
+
+                <div class="px-4 pt-2 border-t border-slate-100 text-center">
+                    <a href="/crm/admin/notifications" class="text-xs font-bold text-slate-700 hover:text-[#155242] inline-block py-1">
+                        Go to Notification Center &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Dropdown Pill (20% enlarged) -->
+        <div class="relative group">
+            <button class="flex items-center gap-2.5 p-1.5 pr-3.5 rounded-2xl bg-white border border-white/80 shadow-sm hover:border-slate-200 transition cursor-pointer">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-inner">
+                    A
+                </div>
+                <div class="hidden sm:block text-left pr-1">
+                    <div class="text-sm font-bold text-slate-800 leading-tight">Admin</div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-slate-700 transition"></i>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div class="absolute right-0 mt-2 w-52 bg-white border border-slate-100 rounded-3xl shadow-xl py-2 hidden group-hover:block transition z-50">
+                <div class="px-4 py-2 border-b border-slate-100">
+                    <p class="text-xs font-bold text-slate-800">Admin</p>
+                    <p class="text-[11px] text-slate-400 truncate">admin@crm.com</p>
+                </div>
+                                    <a href="/crm/employee/profile" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                        <i class="fa-solid fa-user text-slate-400"></i> My Profile
+                    </a>
+                                <form action="/crm/logout" method="POST">
+                    <input type="hidden" name="_token" value="" autocomplete="off">                    <button type="submit" class="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 cursor-pointer">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-rose-400"></i> Sign Out
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+        <!-- MAIN SCROLLABLE CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+            <!-- Flash Message Alerts -->
+            
+            
+            <div class="space-y-6">
+
+    <!-- TOP HEADER / GREETING AREA -->
+    
+    <div class="p-5 sm:p-6 rounded-2xl bg-slate-200 border border-slate-300 shadow-sm">
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Hello Admin!
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-700 font-bold mt-1">
+            Measure How Fast You're Growing Monthly Recurring performance management.
+        </p>
+    </div>
+
+    <!-- OVERVIEW TITLE -->
+    <div class="flex items-center justify-between pt-1">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Overview</h2>
+    </div>
+
+    <!-- 1. TOP 7 KPI CARDS (hr.ad Circular Ring Indicator with Bold High-Contrast Text) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-7 gap-4">
+        <!-- Card 1: Total Leads (Orange Arc) -->
+        <a href="/crm/admin/leads" class="crm-card p-4 sm:p-5 flex items-center gap-3.5 hover:shadow-lg hover:border-orange-300 transition duration-150 group cursor-pointer block">
+            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
+                <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-orange-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-orange-500" stroke-width="3.5" stroke-dasharray="78, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-xs font-black text-slate-900 group-hover:scale-110 transition-transform">↗</span>
+                </div>
+            </div>
+            <div class="min-w-0">
+                <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none group-hover:text-orange-600 transition-colors">2</div>
+                <div class="text-xs font-black uppercase tracking-wider text-slate-700 mt-1.5">Total Leads</div>
+            </div>
+        </a>
+
+        <!-- Card 2: Converted Leads (Sky Blue Arc) -->
+        <a href="/crm/admin/leads?status=Converted" class="crm-card p-4 sm:p-5 flex items-center gap-3.5 hover:shadow-lg hover:border-sky-300 transition duration-150 group cursor-pointer block">
+            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
+                <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-sky-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-sky-500" stroke-width="3.5" stroke-dasharray="65, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-xs font-black text-slate-900 group-hover:scale-110 transition-transform">↙</span>
+                </div>
+            </div>
+            <div class="min-w-0">
+                <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none group-hover:text-sky-600 transition-colors">0</div>
+                <div class="text-xs font-black uppercase tracking-wider text-slate-700 mt-1.5">Converted Leads</div>
+            </div>
+        </a>
+
+        <!-- Card 3: In Progress (Amber Arc) -->
+        <a href="/crm/admin/leads?status=In%20Progress" class="crm-card p-4 sm:p-5 flex items-center gap-3.5 hover:shadow-lg hover:border-amber-300 transition duration-150 group cursor-pointer block">
+            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
+                <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-amber-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-amber-500" stroke-width="3.5" stroke-dasharray="82, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-xs font-black text-slate-900 group-hover:scale-110 transition-transform">↗</span>
+                </div>
+            </div>
+            <div class="min-w-0">
+                <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none group-hover:text-amber-600 transition-colors">1</div>
+                <div class="text-xs font-black uppercase tracking-wider text-slate-700 mt-1.5">In Progress</div>
+            </div>
+        </a>
+
+        <!-- Card 4: Unassigned (Rose Arc) -->
+        <a href="/crm/admin/leads/bulk-assign" class="crm-card p-4 sm:p-5 flex items-center gap-3.5 hover:shadow-lg hover:border-rose-300 transition duration-150 group cursor-pointer block">
+            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
+                <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-rose-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-rose-500" stroke-width="3.5" stroke-dasharray="50, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-xs font-black text-slate-900 group-hover:scale-110 transition-transform">↙</span>
+                </div>
+            </div>
+            <div class="min-w-0">
+                <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none group-hover:text-rose-600 transition-colors">1</div>
+                <div class="text-xs font-black uppercase tracking-wider text-slate-700 mt-1.5">Unassigned</div>
+            </div>
+        </a>
+
+        <!-- Card 5: Active Employees (Purple Arc) -->
+        <a href="/crm/admin/team" class="crm-card p-4 sm:p-5 flex items-center gap-3.5 hover:shadow-lg hover:border-purple-300 transition duration-150 group cursor-pointer block">
+            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
+                <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-purple-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-purple-500" stroke-width="3.5" stroke-dasharray="70, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-xs font-black text-slate-900 group-hover:scale-110 transition-transform">↗</span>
+                </div>
+            </div>
+            <div class="min-w-0">
+                <div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none group-hover:text-purple-600 transition-colors">5</div>
+                <div class="text-xs font-black uppercase tracking-wider text-slate-700 mt-1.5">Active Team</div>
+            </div>
+        </a>
+
+        <!-- Card 6: Revenue Received (Emerald Arc) -->
+        <a href="/crm/admin/payments" class="crm-card p-4 sm:p-5 flex items-center gap-3.5 hover:shadow-lg hover:border-emerald-300 transition duration-150 group cursor-pointer block">
+            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
+                <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-emerald-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-emerald-500" stroke-width="3.5" stroke-dasharray="88, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-xs font-black text-slate-900 group-hover:scale-110 transition-transform">↗</span>
+                </div>
+            </div>
+            <div class="min-w-0">
+                <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-none group-hover:text-emerald-600 transition-colors">₹0</div>
+                <div class="text-xs font-black uppercase tracking-wider text-slate-700 mt-1.5">Revenue Received</div>
+            </div>
+        </a>
+
+        <!-- Card 7: Payment Pending (Orange/Amber Arc) -->
+        <a href="/crm/admin/payments" class="crm-card p-4 sm:p-5 flex items-center gap-3.5 hover:shadow-lg hover:border-amber-300 transition duration-150 group cursor-pointer block">
+            <div class="relative w-12 h-12 flex items-center justify-center shrink-0">
+                <svg class="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                    <path class="text-amber-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-amber-500" stroke-width="3.5" stroke-dasharray="60, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-xs font-black text-slate-900 group-hover:scale-110 transition-transform">↙</span>
+                </div>
+            </div>
+            <div class="min-w-0">
+                <div class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-none group-hover:text-amber-600 transition-colors">₹0</div>
+                <div class="text-xs font-black uppercase tracking-wider text-slate-700 mt-1.5">Payment Pending</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 2. MIDDLE SECTION: DUAL-TONE SPLINE CHART & RADIAL SATISFACTION GAUGE -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        
+        <!-- Large Spline Chart (~65% width) -->
+        <div class="lg:col-span-8 crm-card p-5 sm:p-6 flex flex-col justify-between relative overflow-visible">
+            <div class="flex items-center justify-between flex-wrap gap-3 pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-black text-slate-900">Salary & Revenue Statistics</h3>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-600 font-bold"></i>
+                </div>
+
+                <!-- Floating Legend / Filter Badge (Exact Reference Style - Bold Texts) -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-3 px-3.5 py-1.5 rounded-2xl bg-slate-100/80 border border-slate-200 text-[11px] font-bold text-slate-700">
+                        <span class="font-black text-slate-950" id="chartYearBadge">This Month (October 2026)</span>
+                        <span>Marketing: <strong class="text-slate-950 font-black" id="chartMarketingVal">₹0</strong></span>
+                        <span>Closed: <strong class="text-orange-600 font-black" id="chartClosedVal">₹0</strong></span>
+                    </div>
+
+                    <!-- Interactive Sort by Dropdown (Day, Month, Year, Date) -->
+                    <div class="relative" id="revenueSortDropdownContainer">
+                        <button type="button" 
+                                id="revenueSortBtn" 
+                                onclick="toggleSortMenu('revenueSortMenu', 'revenueSortChevron', event)" 
+                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-black text-slate-900 shadow-xs cursor-pointer transition select-none focus:outline-none focus:ring-2 focus:ring-orange-500/20">
+                            <span>Sort by</span>
+                            <span id="revenueSortLabelText" class="text-slate-700 font-bold">Months (Oct)</span>
+                            <i id="revenueSortChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-700 transition-transform duration-200"></i>
+                        </button>
+
+                        <!-- Dropdown Modal Popup -->
+                        <div id="revenueSortMenu" class="hidden absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200 z-50 p-4 text-slate-900 transition-all duration-150">
+                            <!-- Header with close button -->
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                                <div class="flex items-center gap-1.5 text-xs font-black text-slate-900 uppercase tracking-wider">
+                                    <i class="fa-solid fa-arrow-down-wide-short text-orange-500"></i>
+                                    <span>Sort by Timeframe</span>
+                                </div>
+                                <button type="button" onclick="closeSortMenu('revenueSortMenu', 'revenueSortChevron')" class="w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center text-xs font-bold transition">
+                                    &times;
+                                </button>
+                            </div>
+
+                            <!-- 4 Category Tabs: DAY, MONTH, YEAR, DATE -->
+                            <div class="grid grid-cols-4 gap-1 p-1 bg-slate-100 rounded-2xl my-3 text-[11px] font-black">
+                                <button type="button" onclick="switchSortTab('rev', 'day')" id="revTabBtn_day" class="rev-tab-btn py-1.5 rounded-xl text-center transition text-slate-700 hover:text-slate-950">
+                                    Day
+                                </button>
+                                <button type="button" onclick="switchSortTab('rev', 'month')" id="revTabBtn_month" class="rev-tab-btn py-1.5 rounded-xl text-center transition bg-white shadow-xs text-orange-600">
+                                    Month
+                                </button>
+                                <button type="button" onclick="switchSortTab('rev', 'year')" id="revTabBtn_year" class="rev-tab-btn py-1.5 rounded-xl text-center transition text-slate-700 hover:text-slate-950">
+                                    Year
+                                </button>
+                                <button type="button" onclick="switchSortTab('rev', 'date')" id="revTabBtn_date" class="rev-tab-btn py-1.5 rounded-xl text-center transition text-slate-700 hover:text-slate-950">
+                                    Date
+                                </button>
+                            </div>
+
+                            <!-- TAB CONTENT 1: DAY (दिन) -->
+                            <div id="revTabContent_day" class="rev-tab-content space-y-2 hidden">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Day-wise Breakdown</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" onclick="applyDashboardSort('day', 'today', 'Day (Today)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Today</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">06 Oct 2026</div>
+                                        </div>
+                                        <i class="fa-regular fa-sun text-amber-500 text-sm"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('day', 'yesterday', 'Day (Yesterday)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Yesterday</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">05 Oct</div>
+                                        </div>
+                                        <i class="fa-solid fa-clock-rotate-left text-slate-500 text-sm"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('day', 'last_7_days', 'Day (Last 7 Days)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last 7 Days (Daily Trend)</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Breakdown day-by-day</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-orange-100 text-orange-800 text-[10px] font-black">7 Days</span>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('day', 'last_30_days', 'Day (Last 30 Days)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last 30 Days</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Past month daily progression</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-slate-200 text-slate-800 text-[10px] font-black">30 Days</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- TAB CONTENT 2: MONTH (महीना) -->
+                            <div id="revTabContent_month" class="rev-tab-content space-y-2 ">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Month-wise Breakdown</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" onclick="applyDashboardSort('month', 'this_month', 'Months (Oct)')" class="p-2.5 rounded-2xl border border-orange-500 bg-orange-50/70 text-orange-950 font-black ring-1 ring-orange-400 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">This Month</div>
+                                            <div class="text-[10px] text-orange-600 font-extrabold">October 2026</div>
+                                        </div>
+                                        <i class="fa-regular fa-calendar-check text-orange-500"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('month', 'last_month', 'Months (Sep)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last Month</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">September 2026</div>
+                                        </div>
+                                        <i class="fa-regular fa-calendar-minus text-slate-500"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('month', 'last_6_months', 'Months (6M)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last 6 Months Trend</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Half-yearly growth trajectory</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-sky-100 text-sky-800 text-[10px] font-black">6 Months</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- TAB CONTENT 3: YEAR (साल) -->
+                            <div id="revTabContent_year" class="rev-tab-content space-y-2 hidden">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Year-wise Breakdown</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" onclick="applyDashboardSort('year', 'this_year', 'Years (2026)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">This Year</div>
+                                            <div class="text-xs text-orange-600 font-black">2026</div>
+                                        </div>
+                                        <i class="fa-solid fa-chart-line text-emerald-500"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('year', 'last_year', 'Years (2025)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last Year</div>
+                                            <div class="text-xs text-slate-600 font-black">2025</div>
+                                        </div>
+                                        <i class="fa-solid fa-clock-rotate-left text-slate-400"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('year', 'all_years', 'Years (Multi-Year)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Multi-Year (2023 - 2026)</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Annual performance comparison</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 text-[10px] font-black">All Years</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- TAB CONTENT 4: DATE (कस्टम तारीख) -->
+                            <div id="revTabContent_date" class="rev-tab-content space-y-3 hidden">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Custom Date Range (तारीख)</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-black text-slate-700 mb-1">From Date</label>
+                                        <input type="date" id="revStartDate" value="2026-10-01" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-white shadow-xs focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-slate-700 mb-1">To Date</label>
+                                        <input type="date" id="revEndDate" value="2026-10-31" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-white shadow-xs focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                                    </div>
+                                </div>
+                                <button type="button" onclick="applyCustomDate('revStartDate', 'revEndDate')" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-black shadow-md shadow-orange-500/25 transition cursor-pointer flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-check text-xs"></i> Apply Date Filter
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button type="button" title="Export" onclick="window.print()" class="w-8 h-8 rounded-xl border border-slate-300 bg-white text-slate-600 hover:text-slate-900 flex items-center justify-center shadow-xs transition cursor-pointer">
+                        <i class="fa-solid fa-arrow-down-to-bracket text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Spline Line Chart Canvas -->
+            <div class="h-64 sm:h-72 mt-4">
+                <canvas id="revenueTrendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Right Semi-Circle Radial Satisfaction Gauge (~35% width) -->
+        <div class="lg:col-span-4 crm-card p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="text-sm font-black text-slate-900">Pipeline & Lead Conversion</h3>
+                <button type="button" title="Print/Export" onclick="window.print()" class="w-8 h-8 rounded-xl border border-slate-300 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center shadow-xs transition cursor-pointer">
+                    <i class="fa-solid fa-arrow-down-to-bracket text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Semi-circle Gauge Meter (Bold & Clear) -->
+            <div class="relative flex flex-col items-center justify-center py-4 my-auto">
+                <svg class="w-64 h-32" viewBox="0 0 200 100">
+                    <!-- Background Arc -->
+                    <path d="M 25 100 A 75 75 0 0 1 175 100" fill="none" stroke="#E2E8F0" stroke-width="18" stroke-linecap="round"/>
+                    <!-- Progress Arc -->
+                    <path d="M 25 100 A 75 75 0 0 1 155 45" fill="none" stroke="url(#satisfactionGradient)" stroke-width="18" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="satisfactionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#F97316"/>
+                            <stop offset="50%" stop-color="#FB923C"/>
+                            <stop offset="100%" stop-color="#38BDF8"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+
+                <div class="absolute bottom-2 flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center text-xs mb-1 shadow-xs">
+                        <i class="fa-regular fa-thumbs-up text-slate-800 font-bold"></i>
+                    </div>
+                    <span class="text-3xl sm:text-4xl font-black text-slate-950 leading-none">
+                        74%
+                    </span>
+                    <span class="text-xs font-bold text-slate-700 mt-1">Lead Conversion Rate</span>
+                </div>
+
+                <div class="w-60 flex justify-between text-xs font-black text-slate-700 px-3 mt-2">
+                    <span>0%</span>
+                    <span>100%</span>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>Active Performance</span>
+                <span class="text-emerald-700 font-black">+12% vs last month</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. BOTTOM SECTION: PERFORMANCE STATISTICS & DUAL BAR CHART -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        
+        <!-- Left: Performance Statistics (~35% width) -->
+        <div class="lg:col-span-5 crm-card p-5 sm:p-6 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 class="text-sm font-black text-slate-900">Performance Statistics</h3>
+                <a href="/crm/admin/reports" title="View Performance Analytics" class="w-8 h-8 rounded-xl border border-slate-300 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center shadow-xs transition cursor-pointer">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </a>
+            </div>
+
+            <div class="space-y-5 my-auto py-2">
+                <!-- Bar 1: Won Deals (Coral Orange) -->
+                <div>
+                    <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
+                        <span>Converted Pipeline</span>
+                        <span class="text-slate-900 font-black">65%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-orange-400 to-amber-500 rounded-full" style="width: 65%;"></div>
+                    </div>
+                </div>
+
+                <!-- Bar 2: Active Pipeline (Cyan Blue) -->
+                <div>
+                    <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
+                        <span>Active Pipeline Volume</span>
+                        <span class="text-slate-900 font-black">84%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-sky-400 to-blue-500 rounded-full" style="width: 84%;"></div>
+                    </div>
+                </div>
+
+                <!-- Bar 3: Payment Collection (Sky) -->
+                <div>
+                    <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
+                        <span>Payment Collection Rate</span>
+                        <span class="text-slate-900 font-black">71%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full" style="width: 71%;"></div>
+                    </div>
+                </div>
+
+                <!-- Bar 4: Team Allocation (Purple) -->
+                <div>
+                    <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
+                        <span>Assigned Lead Ratio</span>
+                        <span class="text-slate-900 font-black">50%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full" style="width: 75%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-700 font-bold">
+                <span>Updated 06 Oct 2026</span>
+                <span class="text-orange-600 font-black">Optimal Speed</span>
+            </div>
+        </div>
+
+        <!-- Right: Dual Bar Chart (hr.ad New Employees style, ~65% width) -->
+        <div class="lg:col-span-7 crm-card p-5 sm:p-6 flex flex-col justify-between relative overflow-visible">
+            <div class="flex items-center justify-between flex-wrap gap-3 pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-black text-slate-900">Lead Status & Team Performance</h3>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-600 font-bold"></i>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-100/80 border border-slate-200 text-[11px] font-bold text-slate-700">
+                        <span class="font-black text-slate-950">This Month (October 2026)</span>
+                        <span>Total: <strong class="text-slate-950 font-black">2 Leads</strong></span>
+                        <span class="px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-800 text-[10px] font-black">28% ↗</span>
+                    </div>
+
+                    <!-- Interactive Sort by Dropdown (Team Chart) -->
+                    <div class="relative" id="teamSortDropdownContainer">
+                        <button type="button" 
+                                id="teamSortBtn" 
+                                onclick="toggleSortMenu('teamSortMenu', 'teamSortChevron', event)" 
+                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-black text-slate-900 shadow-xs cursor-pointer transition select-none focus:outline-none focus:ring-2 focus:ring-orange-500/20">
+                            <span>Sort by</span>
+                            <span id="teamSortLabelText" class="text-slate-700 font-bold">Months (Oct)</span>
+                            <i id="teamSortChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-700 transition-transform duration-200"></i>
+                        </button>
+
+                        <!-- Dropdown Modal Popup -->
+                        <div id="teamSortMenu" class="hidden absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200 z-50 p-4 text-slate-900 transition-all duration-150">
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                                <div class="flex items-center gap-1.5 text-xs font-black text-slate-900 uppercase tracking-wider">
+                                    <i class="fa-solid fa-arrow-down-wide-short text-orange-500"></i>
+                                    <span>Sort Team Performance</span>
+                                </div>
+                                <button type="button" onclick="closeSortMenu('teamSortMenu', 'teamSortChevron')" class="w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center text-xs font-bold transition">
+                                    &times;
+                                </button>
+                            </div>
+
+                            <!-- Tabs: DAY, MONTH, YEAR, DATE -->
+                            <div class="grid grid-cols-4 gap-1 p-1 bg-slate-100 rounded-2xl my-3 text-[11px] font-black">
+                                <button type="button" onclick="switchSortTab('team', 'day')" id="teamTabBtn_day" class="team-tab-btn py-1.5 rounded-xl text-center transition text-slate-700 hover:text-slate-950">
+                                    Day
+                                </button>
+                                <button type="button" onclick="switchSortTab('team', 'month')" id="teamTabBtn_month" class="team-tab-btn py-1.5 rounded-xl text-center transition bg-white shadow-xs text-orange-600">
+                                    Month
+                                </button>
+                                <button type="button" onclick="switchSortTab('team', 'year')" id="teamTabBtn_year" class="team-tab-btn py-1.5 rounded-xl text-center transition text-slate-700 hover:text-slate-950">
+                                    Year
+                                </button>
+                                <button type="button" onclick="switchSortTab('team', 'date')" id="teamTabBtn_date" class="team-tab-btn py-1.5 rounded-xl text-center transition text-slate-700 hover:text-slate-950">
+                                    Date
+                                </button>
+                            </div>
+
+                            <!-- DAY -->
+                            <div id="teamTabContent_day" class="team-tab-content space-y-2 hidden">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Day-wise Breakdown</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" onclick="applyDashboardSort('day', 'today', 'Day (Today)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Today</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">06 Oct 2026</div>
+                                        </div>
+                                        <i class="fa-regular fa-sun text-amber-500 text-sm"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('day', 'yesterday', 'Day (Yesterday)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Yesterday</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">05 Oct</div>
+                                        </div>
+                                        <i class="fa-solid fa-clock-rotate-left text-slate-500 text-sm"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('day', 'last_7_days', 'Day (Last 7 Days)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last 7 Days (Daily Trend)</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Breakdown day-by-day</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-orange-100 text-orange-800 text-[10px] font-black">7 Days</span>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('day', 'last_30_days', 'Day (Last 30 Days)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last 30 Days</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Past month performance</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-slate-200 text-slate-800 text-[10px] font-black">30 Days</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- MONTH -->
+                            <div id="teamTabContent_month" class="team-tab-content space-y-2 ">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Month Breakdown</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" onclick="applyDashboardSort('month', 'this_month', 'Months (Oct)')" class="p-2.5 rounded-2xl border border-orange-500 bg-orange-50/70 text-orange-950 font-black ring-1 ring-orange-400 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">This Month</div>
+                                            <div class="text-[10px] text-orange-600 font-extrabold">October 2026</div>
+                                        </div>
+                                        <i class="fa-regular fa-calendar-check text-orange-500"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('month', 'last_month', 'Months (Sep)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last Month</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">September 2026</div>
+                                        </div>
+                                        <i class="fa-regular fa-calendar-minus text-slate-500"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('month', 'last_6_months', 'Months (6M)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last 6 Months Trend</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Half-yearly comparison</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-sky-100 text-sky-800 text-[10px] font-black">6 Months</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- YEAR -->
+                            <div id="teamTabContent_year" class="team-tab-content space-y-2 hidden">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Year Breakdown</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" onclick="applyDashboardSort('year', 'this_year', 'Years (2026)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">This Year</div>
+                                            <div class="text-xs text-orange-600 font-black">2026</div>
+                                        </div>
+                                        <i class="fa-solid fa-chart-line text-emerald-500"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('year', 'last_year', 'Years (2025)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between">
+                                        <div>
+                                            <div class="font-black text-slate-900">Last Year</div>
+                                            <div class="text-xs text-slate-600 font-black">2025</div>
+                                        </div>
+                                        <i class="fa-solid fa-clock-rotate-left text-slate-400"></i>
+                                    </button>
+                                    <button type="button" onclick="applyDashboardSort('year', 'all_years', 'Years (Multi-Year)')" class="p-2.5 rounded-2xl border border-slate-200 hover:border-orange-400 hover:bg-slate-50 font-bold text-slate-800 text-xs text-left transition flex items-center justify-between col-span-2">
+                                        <div>
+                                            <div class="font-black text-slate-900">Multi-Year (2023 - 2026)</div>
+                                            <div class="text-[10px] text-slate-500 font-semibold">Annual performance comparison</div>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 text-[10px] font-black">All Years</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- DATE -->
+                            <div id="teamTabContent_date" class="team-tab-content space-y-3 hidden">
+                                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Custom Date Range (तारीख)</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-[10px] font-black text-slate-700 mb-1">From Date</label>
+                                        <input type="date" id="teamStartDate" value="2026-10-01" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-white shadow-xs focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-slate-700 mb-1">To Date</label>
+                                        <input type="date" id="teamEndDate" value="2026-10-31" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 font-bold text-slate-900 bg-white shadow-xs focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                                    </div>
+                                </div>
+                                <button type="button" onclick="applyCustomDate('teamStartDate', 'teamEndDate')" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-black shadow-md shadow-orange-500/25 transition cursor-pointer flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-check text-xs"></i> Apply Date Filter
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button type="button" title="Export" onclick="window.print()" class="w-8 h-8 rounded-xl border border-slate-300 bg-white text-slate-600 hover:text-slate-900 flex items-center justify-center shadow-xs transition cursor-pointer">
+                        <i class="fa-solid fa-arrow-down-to-bracket text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Capsule Bar Chart Canvas -->
+            <div class="h-64 sm:h-72 mt-4">
+                <canvas id="topPerformersChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 4. REMINDERS & PAYMENTS (Bold Text & Crisp Visibility) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+        
+        <!-- Follow-up Reminders -->
+        <div class="crm-card p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm shadow-xs">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black text-slate-900">Follow-up Reminders</h4>
+                        <p class="text-xs text-slate-700 font-bold">Overdue & Upcoming Schedules</p>
+                    </div>
+                </div>
+                <button type="button" onclick="document.getElementById('add-followup-modal').classList.remove('hidden')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold shadow-md shadow-orange-500/20 transition cursor-pointer">
+                    <i class="fa-solid fa-plus text-[10px] mr-1"></i> Add Reminder
+                </button>
+            </div>
+
+                            <div class="py-8 flex flex-col items-center justify-center text-center">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-lg mb-2">
+                        <i class="fa-regular fa-bell"></i>
+                    </div>
+                    <p class="text-xs font-bold text-slate-700">No follow-up reminders due today</p>
+                    <button type="button" onclick="document.getElementById('add-followup-modal').classList.remove('hidden')" class="mt-2 text-xs text-orange-600 font-black hover:underline cursor-pointer">
+                        + Schedule Follow-up
+                    </button>
+                </div>
+                    </div>
+
+        <!-- Commercial Payment Reminders -->
+        <div class="crm-card p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm shadow-xs">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black text-slate-900">Commercial Payments</h4>
+                        <p class="text-xs text-slate-700 font-bold">Outstanding Balances & Invoices</p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-50 text-emerald-800 border border-emerald-300">
+                    Total Due: ₹0
+                </span>
+            </div>
+
+            <!-- Commercial Client Cards -->
+            <div class="space-y-3">
+                <!-- Client 1 -->
+                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5 hover:bg-white transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h5 class="text-xs font-black text-slate-900">Vashistha Reality Group</h5>
+                            <p class="text-[11px] text-slate-700 font-bold font-mono">98556 77889</p>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-800 border border-blue-200">Monthly</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="bg-white p-2 rounded-xl border border-slate-200">
+                            <span class="text-[10px] text-slate-600 font-black uppercase block">Total</span>
+                            <span class="font-black text-slate-900">₹18,010</span>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200">
+                            <span class="text-[10px] text-emerald-700 font-black uppercase block">Paid</span>
+                            <span class="font-black text-emerald-700">₹12,750</span>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200">
+                            <span class="text-[10px] text-rose-600 font-black uppercase block">Pending</span>
+                            <span class="font-black text-rose-600">₹5,260</span>
+                        </div>
+                    </div>
+                    <div class="text-[11px] text-slate-700 font-bold flex items-center justify-between pt-1 border-t border-slate-200">
+                        <span>Payment Due: In 1 day (01 Oct)</span>
+                        <a href="https://wa.me/919855677889?text=Payment%20reminder%20of%20INR%205,260" target="_blank" class="text-emerald-700 font-black hover:underline inline-flex items-center gap-1">
+                            <i class="fa-brands fa-whatsapp"></i> Remind
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Client 2 -->
+                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5 hover:bg-white transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h5 class="text-xs font-black text-slate-900">Smart Infoware</h5>
+                            <p class="text-[11px] text-slate-700 font-bold font-mono">98223 44556</p>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-50 text-amber-800 border border-amber-300">One-up</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div class="bg-white p-2 rounded-xl border border-slate-200">
+                            <span class="text-[10px] text-slate-600 font-black uppercase block">Total</span>
+                            <span class="font-black text-slate-900">₹7,480</span>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200">
+                            <span class="text-[10px] text-emerald-700 font-black uppercase block">Paid</span>
+                            <span class="font-black text-emerald-700">₹2,000</span>
+                        </div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200">
+                            <span class="text-[10px] text-rose-600 font-black uppercase block">Pending</span>
+                            <span class="font-black text-rose-600">₹5,480</span>
+                        </div>
+                    </div>
+                    <div class="text-[11px] text-slate-700 font-bold flex items-center justify-between pt-1 border-t border-slate-200">
+                        <span>Payment Due: In 4 days (04 Oct)</span>
+                        <a href="https://wa.me/919822344556?text=Payment%20reminder%20of%20INR%205,480" target="_blank" class="text-emerald-700 font-black hover:underline inline-flex items-center gap-1">
+                            <i class="fa-brands fa-whatsapp"></i> Remind
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 5. RECENT LEADS & RECENT ACTIVITY (Bold High-Contrast Tables & Lists) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        
+        <!-- Left: Recent Leads Table (~65% width) -->
+        <div class="lg:col-span-8 crm-card overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-list-ul text-slate-600 text-xs"></i>
+                    <h3 class="text-sm font-black text-slate-900">Recent Leads</h3>
+                </div>
+                <a href="/crm/admin/leads" class="text-xs font-black text-orange-600 hover:text-orange-700">View All &rarr;</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100/80 text-slate-700 font-black text-[11px] uppercase tracking-wider border-b border-slate-200">
+                            <th class="py-3 px-4">#</th>
+                            <th class="py-3 px-4">LEAD NAME</th>
+                            <th class="py-3 px-4">PHONE</th>
+                            <th class="py-3 px-4">STATUS</th>
+                            <th class="py-3 px-4">ASSIGNED TO</th>
+                            <th class="py-3 px-4 text-right">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                                                    <tr class="hover:bg-slate-50 transition">
+                                <td class="py-3 px-4 font-black text-slate-700">1</td>
+                                <td class="py-3 px-4 font-black text-slate-900">
+                                    <a href="/crm/admin/leads/39" class="hover:text-blue-600 hover:underline">
+                                        sandeep
+                                    </a>
+                                                                            <span class="block text-[11px] text-slate-600 font-semibold">hisabmitrra</span>
+                                                                    </td>
+                                <td class="py-3 px-4 font-mono font-bold text-slate-800">+91 98765 00000</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-800 border border-emerald-300">
+                                        Contacted
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4">
+                                                                            <span class="text-slate-600 font-black text-[11px]">Unassigned</span>
+                                                                    </td>
+                                <td class="py-3 px-4 text-right">
+                                    <a href="/crm/admin/leads/39" class="text-[11px] font-black text-blue-600 hover:underline">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                                                    <tr class="hover:bg-slate-50 transition">
+                                <td class="py-3 px-4 font-black text-slate-700">2</td>
+                                <td class="py-3 px-4 font-black text-slate-900">
+                                    <a href="/crm/admin/leads/28" class="hover:text-blue-600 hover:underline">
+                                        ram
+                                    </a>
+                                                                            <span class="block text-[11px] text-slate-600 font-semibold">code</span>
+                                                                    </td>
+                                <td class="py-3 px-4 font-mono font-bold text-slate-800">7654387654</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-800 border border-emerald-300">
+                                        In Progress
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4">
+                                                                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-sky-50 text-sky-800 border border-sky-300">
+                                            Vipin
+                                        </span>
+                                                                    </td>
+                                <td class="py-3 px-4 text-right">
+                                    <a href="/crm/admin/leads/28" class="text-[11px] font-black text-blue-600 hover:underline">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                                            </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right: Recent Activity (~35% width) -->
+        <div class="lg:col-span-4 crm-card p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-slate-600 text-xs"></i>
+                    <h3 class="text-sm font-black text-slate-900">Recent Activity</h3>
+                </div>
+                <a href="/crm/admin/activity-logs" class="text-xs font-black text-orange-600 hover:text-orange-700">View All</a>
+            </div>
+            <div class="space-y-3.5 max-h-96 overflow-y-auto pr-1">
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from Lost to Won.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from Won to Lost.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from Negotiation to Won.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from Proposal to Negotiation.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from Qualified to Proposal.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from New to Qualified.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from Qualified to New.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from New to Qualified.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; moved from New to New.
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                                    <div class="flex items-start gap-3 text-xs">
+                        <div class="w-7 h-7 rounded-xl bg-slate-200 text-slate-900 flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                            A
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-slate-800 text-xs font-semibold leading-snug">
+                                <span class="font-black text-slate-950">Admin</span>
+                                Deal &#039;hyy&#039; created for ₹5,000
+                            </p>
+                            <span class="text-[11px] text-slate-600 font-bold">2 days ago</span>
+                        </div>
+                    </div>
+                            </div>
+        </div>
+
+    </div>
+
+    <!-- Hidden Lead Status Canvas for Chart.js initialization compatibility -->
+    <canvas id="leadStatusChart" class="hidden"></canvas>
+
+</div>
+
+<!-- MODAL: ADD FOLLOW-UP REMINDER -->
+<div id="add-followup-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-[32px] max-w-md w-full p-6 sm:p-7 shadow-2xl border border-white">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <h3 class="text-base font-black text-slate-900">Schedule Follow-up</h3>
+            <button type="button" onclick="document.getElementById('add-followup-modal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-bold cursor-pointer transition">&times;</button>
+        </div>
+        <form action="/crm/admin/followups" method="POST" class="space-y-4">
+            <input type="hidden" name="_token" value="" autocomplete="off">            <input type="hidden" name="status" value="Pending">
+            <div>
+                <label class="block text-xs font-black text-slate-800 mb-1.5">Select Lead *</label>
+                <select name="lead_id" required class="w-full text-xs p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-xs font-bold text-slate-800">
+                    <option value="">Select a prospect...</option>
+                                            <option value="39">sandeep (hisabmitrra)</option>
+                                            <option value="28">ram (code)</option>
+                                    </select>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-black text-slate-800 mb-1.5">Follow-up Date *</label>
+                    <input type="date" name="date" value="2026-10-06" required class="w-full text-xs p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-xs font-bold text-slate-800">
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-slate-800 mb-1.5">Time *</label>
+                    <input type="time" name="time" value="11:00" required class="w-full text-xs p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-xs font-bold text-slate-800">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-black text-slate-800 mb-1.5">Type</label>
+                <select name="type" class="w-full text-xs p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-xs font-bold text-slate-800">
+                    <option value="Phone Call">Phone Call</option>
+                    <option value="Online Meeting">Online Meeting</option>
+                    <option value="Email / WhatsApp">Email / WhatsApp</option>
+                    <option value="Office Visit">Office Visit</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-black text-slate-800 mb-1.5">Notes</label>
+                <textarea name="notes" rows="2" placeholder="Discussion purpose..." class="w-full text-xs p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white shadow-xs font-bold text-slate-800"></textarea>
+            </div>
+            <div class="pt-2 flex justify-end gap-2.5">
+                <button type="button" onclick="document.getElementById('add-followup-modal').classList.add('hidden')" class="px-4 py-2.5 rounded-2xl border border-slate-300 text-xs font-black text-slate-700 hover:bg-slate-50 cursor-pointer">Cancel</button>
+                <button type="submit" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-black shadow-md shadow-orange-500/25 hover:from-orange-600 hover:to-amber-600 transition cursor-pointer">Schedule</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CHARTS INITIALIZATION & SORT FILTER SCRIPT -->
+<script>
+window.chartDatasets = {"day":{"labels":["30 Sep","01 Oct","02 Oct","03 Oct","04 Oct","05 Oct","06 Oct"],"revenue":[0,0,0,0,0,0,0],"target":[4000,4000,4000,4000,4000,4000,4000],"marketing":0,"closed":0,"label":"Days"},"month":{"labels":["May 2026","Jun 2026","Jul 2026","Aug 2026","Sep 2026","Oct 2026"],"revenue":[12000,18500,15200,22400,0,0],"target":[12700,18225,15420,21540,2500,2500],"marketing":27240,"closed":40860,"label":"Months"},"year":{"labels":["2023","2024","2025","2026"],"revenue":[185000,290000,420000,560000],"target":[160000,260000,380000,500000],"marketing":582000,"closed":873000,"label":"Years"},"date":{"labels":["01 Oct","02 Oct","03 Oct","04 Oct","05 Oct","06 Oct","07 Oct","08 Oct","09 Oct","10 Oct","11 Oct","12 Oct","13 Oct","14 Oct","15 Oct","16 Oct","17 Oct","18 Oct","19 Oct","20 Oct","21 Oct","22 Oct","23 Oct","24 Oct","25 Oct","26 Oct","27 Oct","28 Oct","29 Oct","30 Oct","31 Oct"],"revenue":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"target":[4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000],"marketing":0,"closed":0,"label":"Date Range"}};
+window.activeSort = 'month';
+
+function toggleSortMenu(menuId, chevronId, event) {
+    if (event) event.stopPropagation();
+    const menu = document.getElementById(menuId);
+    const chevron = document.getElementById(chevronId);
+    if (!menu) return;
+    const isHidden = menu.classList.contains('hidden');
+
+    // Close other dropdowns
+    document.querySelectorAll('[id$="SortMenu"]').forEach(m => {
+        if (m.id !== menuId) m.classList.add('hidden');
+    });
+    document.querySelectorAll('[id$="SortChevron"]').forEach(c => {
+        if (c.id !== chevronId) c.classList.remove('rotate-180');
+    });
+
+    if (isHidden) {
+        menu.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+    } else {
+        menu.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+    }
+}
+
+function closeSortMenu(menuId, chevronId) {
+    const menu = document.getElementById(menuId);
+    const chevron = document.getElementById(chevronId);
+    if (menu) menu.classList.add('hidden');
+    if (chevron) chevron.classList.remove('rotate-180');
+}
+
+function switchSortTab(prefix, tab) {
+    document.querySelectorAll('.' + prefix + '-tab-content').forEach(el => el.classList.add('hidden'));
+    const target = document.getElementById(prefix + 'TabContent_' + tab);
+    if (target) target.classList.remove('hidden');
+
+    document.querySelectorAll('.' + prefix + '-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'shadow-xs', 'text-orange-600');
+        btn.classList.add('text-slate-700');
+    });
+    const activeBtn = document.getElementById(prefix + 'TabBtn_' + tab);
+    if (activeBtn) {
+        activeBtn.classList.add('bg-white', 'shadow-xs', 'text-orange-600');
+        activeBtn.classList.remove('text-slate-700');
+    }
+}
+
+function applyDashboardSort(sortType, periodKey, label) {
+    // 1. Update button labels immediately
+    const revLabel = document.getElementById('revenueSortLabelText');
+    if (revLabel) revLabel.innerText = label;
+    const teamLabel = document.getElementById('teamSortLabelText');
+    if (teamLabel) teamLabel.innerText = label;
+
+    // 2. Update chart client-side immediately
+    if (window.chartDatasets && window.chartDatasets[sortType] && window.revenueTrendChartInstance) {
+        const ds = window.chartDatasets[sortType];
+        window.revenueTrendChartInstance.data.labels = ds.labels;
+        window.revenueTrendChartInstance.data.datasets[0].data = ds.revenue;
+        window.revenueTrendChartInstance.data.datasets[1].data = ds.target;
+        window.revenueTrendChartInstance.update();
+
+        const mkt = document.getElementById('chartMarketingVal');
+        if (mkt) mkt.innerText = '₹' + Number(ds.marketing).toLocaleString('en-IN');
+        const cls = document.getElementById('chartClosedVal');
+        if (cls) cls.innerText = '₹' + Number(ds.closed).toLocaleString('en-IN');
+        const yb = document.getElementById('chartYearBadge');
+        if (yb) yb.innerText = label;
+    }
+
+    // 3. Close menus
+    document.querySelectorAll('[id$="SortMenu"]').forEach(m => m.classList.add('hidden'));
+    document.querySelectorAll('[id$="SortChevron"]').forEach(c => c.classList.remove('rotate-180'));
+
+    // 4. Navigate to keep full dashboard in sync
+    const url = new URL(window.location.origin + window.location.pathname);
+    url.searchParams.set('period', periodKey);
+    url.searchParams.set('sort', sortType);
+    window.location.href = url.toString();
+}
+
+function applyCustomDate(startId, endId) {
+    const s = document.getElementById(startId).value;
+    const e = document.getElementById(endId).value;
+    if (!s || !e) {
+        alert('Please select both Start Date and End Date.');
+        return;
+    }
+    const url = new URL(window.location.origin + window.location.pathname);
+    url.searchParams.set('period', 'custom');
+    url.searchParams.set('sort', 'date');
+    url.searchParams.set('start_date', s);
+    url.searchParams.set('end_date', e);
+    window.location.href = url.toString();
+}
+
+// Close when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#revenueSortDropdownContainer') && !e.target.closest('#teamSortDropdownContainer')) {
+        document.querySelectorAll('[id$="SortMenu"]').forEach(m => m.classList.add('hidden'));
+        document.querySelectorAll('[id$="SortChevron"]').forEach(c => c.classList.remove('rotate-180'));
+    }
+});
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('[id$="SortMenu"]').forEach(m => m.classList.add('hidden'));
+        document.querySelectorAll('[id$="SortChevron"]').forEach(c => c.classList.remove('rotate-180'));
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Dual Spline Line Chart (High contrast axis & legend)
+    const trendCtx = document.getElementById('revenueTrendChart');
+    if (trendCtx) {
+        const monthlyData = [12000,18500,15200,22400,0,0];
+        const targetData = [12700,18225,15420,21540,2500,2500];
+
+        window.revenueTrendChartInstance = new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ["May 2026","Jun 2026","Jul 2026","Aug 2026","Sep 2026","Oct 2026"],
+                datasets: [
+                    {
+                        label: 'Actual Revenue (INR)',
+                        data: monthlyData,
+                        borderColor: '#F97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.08)',
+                        tension: 0.45,
+                        borderWidth: 3.5,
+                        pointBackgroundColor: '#F97316',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4.5,
+                        pointHoverRadius: 6,
+                        fill: false
+                    },
+                    {
+                        label: 'Projected Target',
+                        data: targetData,
+                        borderColor: '#334155',
+                        backgroundColor: 'transparent',
+                        tension: 0.45,
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#334155',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 5.5,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + (value >= 1000 ? (value / 1000) + 'k' : value);
+                            },
+                            font: { size: 11, weight: '700' },
+                            color: '#334155'
+                        },
+                        grid: { color: '#E2E8F0' },
+                        border: { dash: [4, 4] }
+                    },
+                    x: {
+                        ticks: { font: { size: 11, weight: '800' }, color: '#1E293B' },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            boxWidth: 8,
+                            usePointStyle: true,
+                            font: { size: 11, weight: '700' },
+                            color: '#1E293B'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#0F172A',
+                        padding: 10,
+                        cornerRadius: 12,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ₹' + Number(context.raw).toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 2. Rounded Capsule Bar Chart
+    const performersCtx = document.getElementById('topPerformersChart');
+    if (performersCtx) {
+        const counts = [0,0,1,0,0];
+        const altCounts = counts.map(v => Math.max(1, Math.round(v * 0.75)));
+
+        window.topPerformersChartInstance = new Chart(performersCtx, {
+            type: 'bar',
+            data: {
+                labels: ["Admin","Rahul Sharma","Vipin","Nandkishor Chouhan","sunny"],
+                datasets: [
+                    {
+                        label: 'Closed Deals',
+                        data: counts,
+                        backgroundColor: '#F97316',
+                        borderRadius: 9999,
+                        borderSkipped: false,
+                        maxBarThickness: 14
+                    },
+                    {
+                        label: 'Active Leads',
+                        data: altCounts,
+                        backgroundColor: '#64748B',
+                        borderRadius: 9999,
+                        borderSkipped: false,
+                        maxBarThickness: 14
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, font: { size: 11, weight: '700' }, color: '#334155' },
+                        grid: { color: '#E2E8F0' },
+                        border: { dash: [4, 4] }
+                    },
+                    x: {
+                        ticks: { font: { size: 11, weight: '800' }, color: '#1E293B' },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            boxWidth: 8,
+                            usePointStyle: true,
+                            font: { size: 11, weight: '700' },
+                            color: '#1E293B'
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+        </main>
+    </div>
+
+    <!-- Core Scripts -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const backdrop = document.getElementById('mobile-sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        // Global Keyboard Shortcut: Ctrl + K or / to focus Topbar Search Input
+        document.addEventListener('keydown', function(e) {
+            const searchInput = document.getElementById('topbar-search-input');
+            if (!searchInput) return;
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === 'Escape') {
+                closeInlineSearch();
+            }
+        });
+
+        // Inline Live Search Controller
+        const topSearchInput = document.getElementById('topbar-search-input');
+        const inlineDropdown = document.getElementById('inline-search-dropdown');
+        const inlineContent = document.getElementById('inline-search-content');
+        const inlineLoading = document.getElementById('inline-search-loading');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+
+        let searchDebounceTimeout = null;
+
+        if (topSearchInput) {
+            topSearchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2) {
+                    performLiveSearch(this.value.trim());
+                }
+            });
+
+            topSearchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+
+                if (clearSearchBtn) {
+                    if (query.length > 0) {
+                        clearSearchBtn.classList.remove('hidden');
+                    } else {
+                        clearSearchBtn.classList.add('hidden');
+                    }
+                }
+
+                if (query.length < 2) {
+                    closeInlineSearch();
+                    return;
+                }
+
+                clearTimeout(searchDebounceTimeout);
+                searchDebounceTimeout = setTimeout(() => {
+                    performLiveSearch(query);
+                }, 250);
+            });
+        }
+
+        let currentSearchController = null;
+
+        function performLiveSearch(query) {
+            if (!inlineDropdown || !inlineContent) return;
+
+            const isAdmin = false;
+            const searchUrl = isAdmin ? '/crm/admin/search?q=' + encodeURIComponent(query) : '/crm/employee/leads?search=' + encodeURIComponent(query);
+
+            inlineDropdown.classList.remove('hidden');
+            if (inlineLoading) inlineLoading.classList.remove('hidden');
+            inlineContent.innerHTML = '';
+
+            if (currentSearchController) {
+                currentSearchController.abort();
+            }
+            currentSearchController = new AbortController();
+
+            fetch('/crm/global-search?ajax=1&q=' + encodeURIComponent(query), {
+                signal: currentSearchController.signal,
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('HTTP ' + res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (inlineLoading) inlineLoading.classList.add('hidden');
+
+                    let html = '';
+
+                    // 1. Leads
+                    if (data.leads && data.leads.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5 text-emerald-700">
+                                    <i class="fa-solid fa-bullseye text-emerald-500"></i> Leads (${data.leads.length})
+                                </span>
+                            </div>
+                        `;
+                        data.leads.forEach(l => {
+                            html += `
+                                <a href="${l.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-emerald-50/70 border border-transparent hover:border-emerald-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-emerald-950 text-xs">${l.name}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold truncate flex items-center gap-2">
+                                            <span>${l.company || 'Direct Contact'}</span>
+                                            ${l.phone ? `<span class="font-mono text-slate-600 font-bold">• ${l.phone}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">${l.status}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 2. Customers
+                    if (data.customers && data.customers.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5 text-sky-700">
+                                    <i class="fa-solid fa-building text-sky-500"></i> Customers (${data.customers.length})
+                                </span>
+                            </div>
+                        `;
+                        data.customers.forEach(c => {
+                            html += `
+                                <a href="${c.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-sky-50/70 border border-transparent hover:border-sky-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-sky-950 text-xs">${c.name}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold truncate flex items-center gap-2">
+                                            <span>${c.company || 'Account'}</span>
+                                            ${c.phone ? `<span class="font-mono text-slate-600 font-bold">• ${c.phone}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <span class="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300 shrink-0">${c.code || 'Account'}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 3. Deals
+                    if (data.deals && data.deals.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center gap-1.5 text-amber-700">
+                                <i class="fa-solid fa-handshake text-amber-500"></i> Deals (${data.deals.length})
+                            </div>
+                        `;
+                        data.deals.forEach(d => {
+                            html += `
+                                <a href="${d.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-amber-950 text-xs">${d.title}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'Pipeline'}</div>
+                                    </div>
+                                    <span class="text-xs font-black text-slate-900 shrink-0">₹${d.value}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 4. Quotations
+                    if (data.quotations && data.quotations.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center gap-1.5 text-purple-700">
+                                <i class="fa-solid fa-file-invoice-dollar text-purple-500"></i> Quotations (${data.quotations.length})
+                            </div>
+                        `;
+                        data.quotations.forEach(qt => {
+                            html += `
+                                <a href="${qt.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-purple-50/70 border border-transparent hover:border-purple-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-purple-950 text-xs font-mono">${qt.quotation_no}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold truncate">${qt.customer_name}</div>
+                                    </div>
+                                    <span class="text-xs font-black text-purple-900 shrink-0">₹${qt.amount}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 5. Products
+                    if (data.products && data.products.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center gap-1.5 text-orange-700">
+                                <i class="fa-solid fa-boxes-stacked text-orange-500"></i> Products (${data.products.length})
+                            </div>
+                        `;
+                        data.products.forEach(p => {
+                            html += `
+                                <a href="${p.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-orange-50/70 border border-transparent hover:border-orange-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-orange-950 text-xs">${p.name}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${p.category || 'General'}</div>
+                                    </div>
+                                    <span class="text-xs font-black text-orange-600 shrink-0">₹${p.price}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    if (!html) {
+                        html = `
+                            <div class="text-center py-6 text-slate-500">
+                                <i class="fa-solid fa-magnifying-glass text-xl text-slate-300 mb-2 block"></i>
+                                <span class="text-xs font-black text-slate-800">No records matching "<strong>${query}</strong>"</span>
+                                <p class="text-[11px] text-slate-400 font-medium mt-1">Try name, company or phone number</p>
+                            </div>
+                        `;
+                    } else {
+                        // Quick Action to View All Results Page
+                        html += `
+                            <div class="pt-2.5 mt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                                <span class="text-slate-400 font-medium">Press <kbd class="bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-slate-800">Enter</kbd></span>
+                                <a href="${searchUrl}" class="font-black text-orange-600 hover:text-orange-700 flex items-center gap-1.5 cursor-pointer">
+                                    <span>View all ${data.total_count} results</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        `;
+                    }
+
+                    inlineContent.innerHTML = html;
+                })
+                .catch(err => {
+                    if (err.name === 'AbortError') return;
+                    console.error('Search error:', err);
+                    if (inlineLoading) inlineLoading.classList.add('hidden');
+                    inlineContent.innerHTML = `
+                        <div class="text-center py-4 px-2">
+                            <div class="text-xs font-bold text-rose-500 mb-1">Search encountered an issue.</div>
+                            <a href="${searchUrl}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200 hover:bg-orange-100 transition mt-2">
+                                <span>View search page directly</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    `;
+                });
+        }
+
+        function clearTopSearch() {
+            if (topSearchInput) {
+                topSearchInput.value = '';
+                topSearchInput.focus();
+            }
+            if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
+            closeInlineSearch();
+        }
+
+        function closeInlineSearch() {
+            if (inlineDropdown) inlineDropdown.classList.add('hidden');
+        }
+
+        // Close dropdown when clicking anywhere outside the search container
+        document.addEventListener('click', function(event) {
+            const container = document.getElementById('topbar-search-container');
+            if (container && !container.contains(event.target)) {
+                closeInlineSearch();
+            }
+        });
+
+        // =========================================================================
+        // SIDEBAR SCROLL PERSISTENCE & AUTO-ALIGN ACTIVE MENU ITEM
+        // Prevents sidebar from jumping to the top when navigating or clicking links
+        // =========================================================================
+        (function() {
+            function getNav() {
+                return document.getElementById('sidebar-nav');
+            }
+
+            function restoreSidebarScroll() {
+                var nav = getNav();
+                if (!nav) return;
+
+                var savedPos = sessionStorage.getItem('crm_sidebar_scroll_pos');
+                if (savedPos !== null && savedPos !== '') {
+                    nav.scrollTop = parseInt(savedPos, 10);
+                }
+
+                // Ensure the active item is visible in the sidebar viewport
+                var active = nav.querySelector('.sidebar-dark-item-active');
+                if (active) {
+                    var navRect = nav.getBoundingClientRect();
+                    var activeRect = active.getBoundingClientRect();
+                    var isVisible = (activeRect.top >= navRect.top + 10) && (activeRect.bottom <= navRect.bottom - 10);
+                    if (!isVisible) {
+                        active.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                    }
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', restoreSidebarScroll);
+            } else {
+                restoreSidebarScroll();
+            }
+            window.addEventListener('load', restoreSidebarScroll);
+
+            // Continuously save scroll position on user scroll (debounced)
+            var scrollDebounce = null;
+            document.addEventListener('DOMContentLoaded', function() {
+                var nav = getNav();
+                if (!nav) return;
+
+                nav.addEventListener('scroll', function() {
+                    clearTimeout(scrollDebounce);
+                    scrollDebounce = setTimeout(function() {
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                    }, 40);
+                }, { passive: true });
+
+                // Snapshot exact scroll position immediately on link clicks
+                nav.addEventListener('click', function(e) {
+                    var link = e.target.closest('a');
+                    if (link) {
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                    }
+                });
+
+                // Clicking the Brand/Dashboard logo explicitly resets to top (position 0)
+                var brandLogo = document.querySelector('#main-sidebar a[href*="dashboard"]');
+                if (brandLogo) {
+                    brandLogo.addEventListener('click', function() {
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', '0');
+                    });
+                }
+            });
+
+            // Save on beforeunload
+            window.addEventListener('beforeunload', function() {
+                var nav = getNav();
+                if (nav) {
+                    sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                }
+            });
+        })();
+    </script>
+    </body>
+</html>

@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hisab Mittra — One Intelligent Platform for Your Entire Business</title>
+    <meta name="description" content="Hisab Mittra is India’s premium enterprise business operating platform. Seamlessly manage HRM, Biometric Attendance, Payroll, CRM, Sales Pipeline, and Accounting.">
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS with Luxury Light Green, Royal/Ice Blue & Radiant Orange Palette -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // 1. LIGHT GREEN PALETTE (Base theme & fresh surfaces)
+                        mint: {
+                            DEFAULT: '#F0F8F5',
+                            50:      '#F8FCFA',
+                            100:     '#F0F8F5',
+                            200:     '#DCF2E7',
+                            300:     '#BEE5D1',
+                            400:     '#86D0A9',
+                        },
+                        green: {
+                            DEFAULT: '#10B981',
+                            hover:   '#059669',
+                            dark:    '#065F46',
+                            soft:    '#DCF2E7',
+                        },
+
+                        // 2. BLUE PALETTE (Royal Sapphire & Celestial Ice Blue)
+                        peri: {
+                            DEFAULT: '#2563EB',
+                            mist:    '#EFF5FD',
+                            light:   '#E2EDFC',
+                            border:  '#BFDBFE',
+                            dark:    '#1E3A8A',
+                        },
+                        aqua: {
+                            DEFAULT: '#2563EB',
+                            hover:   '#1D4ED8',
+                            dark:    '#1E3A8A',
+                            light:   '#EFF6FF',
+                            soft:    '#DBEAFE',
+                            border:  '#93C5FD',
+                        },
+
+                        // 3. ORANGE PALETTE (Warm Radiant Brand Accent)
+                        orange: {
+                            DEFAULT: '#F97316',
+                            hover:   '#EA580C',
+                            light:   '#FFF7ED',
+                            soft:    '#FFEDD5',
+                            border:  '#FED7AA',
+                            dark:    '#C2410C',
+                        },
+
+                        // LUXURY TYPOGRAPHY (Midnight Slate & Crisp Body)
+                        navy: {
+                            DEFAULT: '#0F172A',
+                            body:    '#334155',
+                            muted:   '#475569',
+                            subtle:  '#64748B',
+                            border:  '#CBD5E1',
+                        },
+
+                        // Backward-compatible aliases mapped to the new luxury palette
+                        ivory: {
+                            DEFAULT: '#F0F8F5',
+                            50:      '#F8FCFA',
+                            100:     '#F0F8F5',
+                            200:     '#EFF5FD',
+                            300:     '#E2EDFC',
+                        },
+                        champagne: {
+                            DEFAULT: '#F97316',
+                            light:   '#FFF7ED',
+                            soft:    '#FFEDD5',
+                            border:  '#FED7AA',
+                            dark:    '#EA580C',
+                        },
+                        burgundy: {
+                            DEFAULT: '#2563EB',
+                            hover:   '#1D4ED8',
+                            dark:    '#1E3A8A',
+                            light:   '#EFF6FF',
+                            soft:    '#DBEAFE',
+                            border:  '#93C5FD',
+                        },
+                        charcoal: {
+                            DEFAULT: '#0F172A',
+                            light:   '#334155',
+                            muted:   '#475569',
+                            subtle:  '#64748B',
+                            border:  '#BFDBFE',
+                        },
+                        mauve: {
+                            DEFAULT: '#2563EB',
+                            light:   '#EFF5FD',
+                            soft:    '#DBEAFE',
+                            border:  '#BFDBFE',
+                            dark:    '#1E3A8A',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    boxShadow: {
+                        'soft-elevation':  '0 10px 30px -10px rgba(15, 23, 42, 0.05), 0 2px 6px 0 rgba(16, 185, 129, 0.05)',
+                        'luxury-card':     '0 15px 35px -5px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(191, 219, 254, 0.50)',
+                        'aqua-glow':       '0 10px 25px -5px rgba(37, 99, 235, 0.35)',
+                        'orange-glow':     '0 10px 25px -5px rgba(249, 115, 22, 0.35)',
+                        'champagne-glow':  '0 10px 25px -5px rgba(249, 115, 22, 0.35)',
+                        'burgundy-glow':   '0 10px 25px -5px rgba(37, 99, 235, 0.35)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #EBF8FE;
+            background-image: 
+                radial-gradient(circle 900px at 0% 0%, rgba(186, 230, 253, 0.85) 0%, rgba(224, 242, 254, 0.50) 40%, transparent 70%),
+                radial-gradient(circle 950px at 100% 5%, rgba(254, 215, 170, 0.75) 0%, rgba(255, 247, 237, 0.45) 40%, transparent 70%),
+                radial-gradient(circle 850px at 50% 50%, rgba(167, 243, 208, 0.65) 0%, rgba(236, 253, 245, 0.40) 45%, transparent 75%),
+                radial-gradient(circle 1000px at 0% 95%, rgba(186, 230, 253, 0.70) 0%, rgba(224, 242, 254, 0.40) 45%, transparent 75%),
+                radial-gradient(circle 950px at 100% 95%, rgba(254, 215, 170, 0.80) 0%, rgba(255, 237, 213, 0.50) 45%, transparent 75%),
+                linear-gradient(135deg, #E0F2FE 0%, #ECFDF5 50%, #FFF7ED 100%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: #1E293B;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism styles matching reference */
+        .glass-header {
+            background: rgba(248, 250, 252, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .glass-modal {
+            background: rgba(248, 250, 252, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Subtle scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track  { background: #E0F2FE; }
+        ::-webkit-scrollbar-thumb  { background: #BAE6FD; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38BDF8; }
+
+        /* Simple Black Typography (Overrides colorful gradients site-wide) */
+        .text-gradient-burgundy,
+        .text-gradient-aqua,
+        .text-gradient-gold {
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            -webkit-text-fill-color: #000000 !important;
+            color: #000000 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-style: normal !important;
+        }
+
+        /* Hero contrast & accent */
+        .text-aqua {
+            color: #38BDF8; /* Luminous celestial azure on dark hero */
+        }
+
+        /* High-contrast crisp white text on primary aqua buttons */
+        button.bg-aqua,
+        a.bg-aqua,
+        [class*="from-aqua"] {
+            color: #FFFFFF !important;
+        }
+        button.bg-aqua:hover,
+        a.bg-aqua:hover,
+        [class*="from-aqua"]:hover {
+            color: #FFFFFF !important;
+        }
+        button.bg-aqua i,
+        a.bg-aqua i,
+        [class*="from-aqua"] i {
+            color: #FFFFFF !important;
+        }
+
+        /* Subtle grid background pattern */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right,  rgba(191, 219, 254, 0.15) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(191, 219, 254, 0.15) 1px, transparent 1px);
+        }
+
+        /* ========================================================================= */
+        /* DYNAMIC MOTION SYSTEM (SITE-WIDE) */
+        /* ========================================================================= */
+
+        /* Smooth Top Scroll Progress Bar */
+        #scroll-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3.5px;
+            width: 0%;
+            background: linear-gradient(90deg, #2563EB, #10B981, #F97316);
+            z-index: 9999;
+            transition: width 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+        }
+
+        /* Scroll Reveal Base Classes */
+        .motion-reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .motion-fade-in {
+            opacity: 0;
+            transform: scale(0.96);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .motion-slide-left {
+            opacity: 0;
+            transform: translateX(-35px);
+            transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .motion-slide-right {
+            opacity: 0;
+            transform: translateX(35px);
+            transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        /* Visible State Triggered via Intersection Observer */
+        .motion-visible {
+            opacity: 1 !important;
+            transform: translate(0, 0) scale(1) !important;
+        }
+
+        /* Stagger Delays */
+        .delay-100 { transition-delay: 100ms !important; }
+        .delay-200 { transition-delay: 200ms !important; }
+        .delay-300 { transition-delay: 300ms !important; }
+        .delay-400 { transition-delay: 400ms !important; }
+        .delay-500 { transition-delay: 500ms !important; }
+        .delay-600 { transition-delay: 600ms !important; }
+
+        /* Dynamic Floating Micro-Animations */
+        @keyframes motionFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-7px); }
+        }
+
+        @keyframes motionFloatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        @keyframes motionFloatReverse {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(8px); }
+        }
+
+        @keyframes rippleMotion {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .motion-float {
+            animation: motionFloat 4s ease-in-out infinite;
+        }
+
+        .motion-float-slow {
+            animation: motionFloatSlow 6s ease-in-out infinite;
+        }
+
+        .motion-float-reverse {
+            animation: motionFloatReverse 5s ease-in-out infinite;
+        }
+
+        /* Dynamic Card Hover Physics */
+        .motion-card,
+        .hover-lift {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease !important;
+        }
+        .motion-card:hover,
+        .hover-lift:hover {
+            transform: translateY(-6px) scale(1.004) !important;
+            box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.25) !important;
+        }
+
+        /* Shimmer Sheen Beam on Primary Buttons */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-shimmer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -80%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.35) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(25deg);
+            transition: all 0.8s ease;
+            pointer-events: none;
+        }
+        .btn-shimmer:hover::before {
+            left: 150%;
+        }
+
+        /* Active Click Dynamic Bounce */
+        button:active,
+        a.btn-shimmer:active,
+        .btn-action:active {
+            transform: scale(0.97) !important;
+            transition: transform 0.1s ease !important;
+        }
+
+        /* 1. Dynamic Cursor Glow Follower Spotlight (Desktop) */
+        #cursor-glow-follower {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 420px;
+            height: 420px;
+            margin-left: -210px;
+            margin-top: -210px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(16, 185, 129, 0.04) 40%, transparent 70%);
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, left, top;
+        }
+        #cursor-glow-follower.is-hovering {
+            transform: scale(1.4);
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(249, 115, 22, 0.05) 45%, transparent 70%);
+        }
+        @media (hover: none), (pointer: coarse) {
+            #cursor-glow-follower { display: none !important; }
+        }
+
+        /* 2. Dynamic Click Particle Burst */
+        .click-particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 99999;
+            will-change: transform, opacity;
+            animation: particleBurst 0.65s cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
+        }
+        @keyframes particleBurst {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* 3. Global 3D Card Tilt & Cursor Sheen */
+        .motion-card-tilt {
+            transform-style: preserve-3d;
+            transition: transform 0.12s ease-out, box-shadow 0.3s ease;
+            will-change: transform;
+            position: relative;
+        }
+        .card-cursor-sheen {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: radial-gradient(circle 260px at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.25), transparent 70%);
+            mix-blend-mode: overlay;
+            z-index: 10;
+        }
+
+        /* 4. Floating Back to Top Button (Positioned cleanly above the corner WhatsApp button) */
+        #back-to-top-btn {
+            position: fixed;
+            bottom: 86px;
+            right: 20px;
+            z-index: 993;
+            opacity: 0;
+            transform: translateY(16px) scale(0.85);
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+            pointer-events: none;
+        }
+        #back-to-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        #back-to-top-btn:hover {
+            transform: translateY(-3px) scale(1.06);
+            box-shadow: 0 14px 28px -6px rgba(37, 99, 235, 0.35);
+        }
+
+        /* 5. Floating WhatsApp Button (Docked right in the Bottom Corner) */
+        #floating-support-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 996;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #floating-support-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+
+
+
+        /* Respect Accessibility: User Reduced Motion Preference */
+        @media (prefers-reduced-motion: reduce) {
+            .motion-reveal,
+            .motion-fade-in,
+            .motion-slide-left,
+            .motion-slide-right,
+            .motion-float,
+            .motion-float-slow,
+            .motion-float-reverse,
+            .click-particle,
+            #cursor-glow-follower {
+                animation: none !important;
+                transition: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+                display: none !important;
+            }
+        }
+    </style>
+    </head>
+<body class="min-h-screen flex flex-col text-navy antialiased selection:bg-aqua-soft selection:text-aqua-dark">
+    <!-- TOP SCROLL PROGRESS BAR -->
+    <div id="scroll-progress-bar"></div>
+
+    <!-- STICKY NAVBAR -->
+    <header id="main-navbar" class="sticky top-0 z-40 transition-all duration-300 glass-header border-b border-peri-border/40">
+        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+            <div class="flex items-center justify-between h-20 transition-all duration-300 w-full" id="navbar-inner">
+                
+                <!-- Logo -->
+                <a href="" class="flex items-center group shrink-0">
+                    <img src="/images/hisab-mittra-logo.png" alt="Hisab Mittra" class="h-11 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
+                </a>
+
+                <!-- Desktop Navigation Menu (Centered) -->
+                <nav class="hidden lg:flex items-center gap-7 text-xs font-bold text-navy-body mx-auto">
+                    <a href="" class="hover:text-aqua-dark transition-colors text-aqua-dark font-extrabold">
+                        Home
+                    </a>
+                    <a href="/features" class="hover:text-aqua-dark transition-colors ">
+                        Features
+                    </a>
+                    <a href="/hrm" class="hover:text-aqua-dark transition-colors ">
+                        HRM & Attendance
+                    </a>
+                    <a href="/crm-platform" class="hover:text-aqua-dark transition-colors ">
+                        CRM & Pipeline
+                    </a>
+                    <a href="/pricing" class="hover:text-aqua-dark transition-colors ">
+                        Pricing
+                    </a>
+
+                    <!-- Resources Dropdown -->
+                    <div class="relative group py-2">
+                        <button class="flex items-center gap-1.5 hover:text-aqua-dark transition-colors cursor-pointer ">
+                            <span>Resources</span>
+                            <i class="fa-solid fa-chevron-down text-[9px] transition-transform duration-200 group-hover:rotate-180"></i>
+                        </button>
+                        
+                        <div class="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-luxury-card border border-peri-border/50 py-2.5 hidden group-hover:block transition-all duration-200 z-50">
+                            <a href="/blog" class="flex items-center gap-3 px-4 py-2 text-xs font-semibold text-navy hover:bg-aqua-soft hover:text-aqua-dark transition">
+                                <i class="fa-regular fa-newspaper text-aqua-dark/80 w-4 text-center"></i>
+                                <div>
+                                    <div>Articles & Guides</div>
+                                    <div class="text-[10px] text-navy-subtle font-normal">Payroll & Sales compliance</div>
+                                </div>
+                            </a>
+                            <a href="/about" class="flex items-center gap-3 px-4 py-2 text-xs font-semibold text-navy hover:bg-aqua-soft hover:text-aqua-dark transition">
+                                <i class="fa-regular fa-building text-aqua-dark/80 w-4 text-center"></i>
+                                <div>
+                                    <div>About Us</div>
+                                    <div class="text-[10px] text-navy-subtle font-normal">Our team & vision</div>
+                                </div>
+                            </a>
+                            <a href="/help" class="flex items-center gap-3 px-4 py-2 text-xs font-semibold text-navy hover:bg-aqua-soft hover:text-aqua-dark transition">
+                                <i class="fa-regular fa-circle-question text-aqua-dark/80 w-4 text-center"></i>
+                                <div>
+                                    <div>Help Center & FAQs</div>
+                                    <div class="text-[10px] text-navy-subtle font-normal">Setup & knowledge base</div>
+                                </div>
+                            </a>
+                            <a href="/contact" class="flex items-center gap-3 px-4 py-2 text-xs font-semibold text-navy hover:bg-aqua-soft hover:text-aqua-dark transition">
+                                <i class="fa-regular fa-envelope text-aqua-dark/80 w-4 text-center"></i>
+                                <div>
+                                    <div>Contact Sales & Support</div>
+                                    <div class="text-[10px] text-navy-subtle font-normal">We're here 24/7</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Right Action Buttons (Right Corner) -->
+                <div class="hidden sm:flex items-center gap-3 shrink-0 ml-auto lg:ml-0">
+                    <!-- Login Button -->
+                    <a href="/crm/login" class="px-4 py-2.5 rounded-xl border border-peri-border hover:border-aqua text-navy hover:text-aqua-dark font-bold text-xs bg-white/80 transition-all duration-200 hover:shadow-sm flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-[11px] text-aqua-dark"></i>
+                        <span>Login</span>
+                    </a>
+
+                    <!-- Book a Demo Button -->
+                    <a href="/book-demo" class="px-5 py-2.5 rounded-xl border border-aqua-border bg-aqua hover:bg-aqua-hover text-white font-extrabold text-xs transition-all duration-200 hover:shadow-md active:scale-95 shadow-sm">
+                        Book a Demo
+                    </a>
+                </div>
+
+                <!-- Mobile Hamburger Toggle -->
+                <button type="button" onclick="toggleMobileNav()" class="lg:hidden p-2.5 rounded-xl border border-peri-border text-navy hover:text-aqua-dark bg-white ml-3 shrink-0" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars text-base"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobile-nav-drawer" class="lg:hidden hidden px-4 pt-3 pb-6 border-t border-peri-border/60 bg-mint/95 backdrop-blur-xl">
+            <div class="space-y-2 text-sm font-bold text-navy">
+                <a href="" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Home</a>
+                <a href="/features" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Features Overview</a>
+                <a href="/hrm" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">HRM & Biometric Attendance</a>
+                <a href="/crm-platform" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">CRM & Sales Pipeline</a>
+                <a href="/pricing" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Pricing & Plans</a>
+                <a href="/blog" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Resources & Guides</a>
+                <a href="/about" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">About Hisab Mittra</a>
+                <a href="/contact" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Contact Support</a>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-peri-border/40 space-y-2.5">
+                                    <a href="/crm/login" class="w-full py-2.5 px-4 rounded-xl border border-aqua text-aqua-dark font-bold text-xs flex items-center justify-center gap-2 bg-white">
+                        <i class="fa-solid fa-lock text-[10px]"></i>
+                        <span>Login to Admin Panel</span>
+                    </a>
+                                <a href="/book-demo" class="w-full py-2.5 px-4 rounded-xl bg-aqua-soft border border-aqua-border text-navy font-bold text-xs text-center block">
+                    Book a Product Demo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN BODY CONTENT -->
+    <main class="flex-grow">
+        <div class="overflow-hidden">
+
+    <!-- 1. HERO SECTION -->
+    <section class="relative min-h-screen flex items-start overflow-hidden bg-navy">
+        <!-- Background Office Image covering Hero -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none -z-0">
+            <div class="w-full h-full bg-no-repeat bg-cover bg-center" 
+                 style="background-image: linear-gradient(180deg, rgba(10, 18, 40, 0.22) 0%, rgba(10, 18, 40, 0.38) 100%), url('/images/hero-bg.jpg?v=1791274324'); background-position: center 30%;">
+            </div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl ml-0 lg:ml-8 xl:ml-16 px-4 sm:px-6 text-left w-full pt-36 pb-16">
+            
+            <!-- Main Headline -->
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] max-w-2xl leading-[1.14]">
+                One CRM to Manage Your 
+                <span class="font-sans not-italic font-extrabold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">Leads, Sales & Customers</span>
+            </h1>
+
+            <!-- Subheading -->
+            <p class="mt-5 text-sm sm:text-base text-slate-100 drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] max-w-xl leading-relaxed font-medium">
+                Manage your leads, customers, sales and team from one powerful platform. Stay organized, save time and grow your business.
+            </p>
+
+            <!-- CTA Action Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-start gap-4">
+                <a href="/pricing" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-aqua to-aqua-hover hover:from-aqua-hover hover:to-aqua text-white font-extrabold text-sm tracking-wide shadow-aqua-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5">
+                    <span>Start Free Trial</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+
+                <button type="button" onclick="openDemoModal()" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-white hover:bg-slate-100 text-navy font-bold text-sm transition-all duration-300 shadow-soft-elevation flex items-center justify-center gap-2.5 hover:scale-[1.02] active:scale-[0.98]">
+                    <i class="fa-solid fa-play text-aqua-dark text-xs"></i>
+                    <span>Explore Live Platform</span>
+                </button>
+            </div>
+
+
+
+        </div>
+    </section>
+
+
+
+    <!-- 3. SIX CORE MODULES (Interactive Overview Grid) -->
+    <section class="pt-16 pb-8 sm:pt-20 sm:pb-10 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-4xl mx-auto mb-16">
+
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-navy">
+                    Work Smarter. Manage Better <br>
+                    <span class="font-sans not-italic font-bold text-black block mt-2 text-xl sm:text-2xl">Everything Your Business Needs, Connected in One Place</span>
+                </h2>
+                <p class="mt-4 text-sm sm:text-base text-navy-muted">
+                    Eliminate 5+ disjointed software subscriptions. Hisab Mittra unifies your people, payroll, attendance, customer deals, and books into a single high-performance cockpit.
+                </p>
+            </div>
+
+            <!-- 6 Module Cards -->
+            <!-- 6 Module Cards (Compact Square Shape) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                
+                <!-- 1. HR Management -->
+                <div class="rounded-none bg-white border border-peri-border/60 shadow-soft-elevation hover:shadow-luxury-card hover:border-aqua/40 transition-all duration-300 group flex flex-col justify-between overflow-hidden">
+                    <div class="relative h-36 sm:h-40 w-full overflow-hidden bg-slate-100">
+                        <img src="/images/modules/module-hrm.jpg" alt="Human Resource Management" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-2.5 left-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/95 backdrop-blur text-navy text-[11px] font-bold shadow-sm">
+                                <i class="fa-solid fa-users-gear text-aqua-dark"></i> HRM
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                        <div>
+                            <h3 class="text-base font-bold text-navy mb-1">1. Human Resource Management</h3>
+                            <p class="text-xs text-navy-muted leading-relaxed mb-2.5 line-clamp-2">
+                                Centralize employee lifecycle from onboarding and digital KYC to performance appraisals and document vaults.
+                            </p>
+                            <ul class="space-y-1 text-xs text-navy-body font-medium">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> Digital Employee Records & KYC</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> Leave Policies & Role Hierarchies</li>
+                            </ul>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-peri-border/60">
+                            <a href="/hrm" class="text-xs font-bold text-aqua-dark hover:text-aqua-dark flex items-center justify-between">
+                                <span>Explore HRM Details</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Attendance & Biometrics -->
+                <div class="rounded-none bg-white border border-peri-border/60 shadow-soft-elevation hover:shadow-luxury-card hover:border-aqua/40 transition-all duration-300 group flex flex-col justify-between overflow-hidden">
+                    <div class="relative h-36 sm:h-40 w-full overflow-hidden bg-slate-100">
+                        <img src="/images/modules/module-attendance.jpg" alt="Touchless Attendance System" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-2.5 left-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/95 backdrop-blur text-navy text-[11px] font-bold shadow-sm">
+                                <i class="fa-solid fa-id-card-clip text-aqua-dark"></i> Attendance
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                        <div>
+                            <h3 class="text-base font-bold text-navy mb-1">2. Touchless Attendance System</h3>
+                            <p class="text-xs text-navy-muted leading-relaxed mb-2.5 line-clamp-2">
+                                Eliminate buddy punching with AI face recognition, GPS geofenced check-ins, and hardware biometric machine sync.
+                            </p>
+                            <ul class="space-y-1 text-xs text-navy-body font-medium">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> AI Face Recognition with Liveness</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> GPS Geofencing for Field Sales</li>
+                            </ul>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-peri-border/60">
+                            <a href="/hrm" class="text-xs font-bold text-aqua-dark hover:text-aqua-dark flex items-center justify-between">
+                                <span>Explore Attendance Modes</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Automated Payroll -->
+                <div class="rounded-none bg-white border border-peri-border/60 shadow-soft-elevation hover:shadow-luxury-card hover:border-aqua/40 transition-all duration-300 group flex flex-col justify-between overflow-hidden">
+                    <div class="relative h-36 sm:h-40 w-full overflow-hidden bg-slate-100">
+                        <img src="/images/modules/module-payroll.jpg" alt="Indian Payroll & Tax Compliance" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-2.5 left-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/95 backdrop-blur text-navy text-[11px] font-bold shadow-sm">
+                                <i class="fa-solid fa-money-check-dollar text-aqua-dark"></i> Payroll
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                        <div>
+                            <h3 class="text-base font-bold text-navy mb-1">3. Indian Payroll & Compliance</h3>
+                            <p class="text-xs text-navy-muted leading-relaxed mb-2.5 line-clamp-2">
+                                Run payroll in 3 minutes with automated Basic, HRA, PF (12%), ESI, and TDS deductions plus 1-click payslips.
+                            </p>
+                            <ul class="space-y-1 text-xs text-navy-body font-medium">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> 100% Indian Labour Law Compliant</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> ECR EPFO & ESIC Ready Reports</li>
+                            </ul>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-peri-border/60">
+                            <a href="/hrm" class="text-xs font-bold text-aqua-dark hover:text-aqua-dark flex items-center justify-between">
+                                <span>Explore Payroll Features</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. CRM & Sales Pipeline -->
+                <div class="rounded-none bg-white border border-peri-border/60 shadow-soft-elevation hover:shadow-luxury-card hover:border-aqua/40 transition-all duration-300 group flex flex-col justify-between overflow-hidden">
+                    <div class="relative h-36 sm:h-40 w-full overflow-hidden bg-slate-100">
+                        <img src="/images/modules/module-crm.jpg" alt="CRM & Deal Pipeline" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-2.5 left-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/95 backdrop-blur text-navy text-[11px] font-bold shadow-sm">
+                                <i class="fa-solid fa-diagram-project text-aqua-dark"></i> CRM Pipeline
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                        <div>
+                            <h3 class="text-base font-bold text-navy mb-1">4. CRM & Deal Pipeline</h3>
+                            <p class="text-xs text-navy-muted leading-relaxed mb-2.5 line-clamp-2">
+                                Never lose leads again with visual drag-and-drop Kanban pipelines, automated follow-up reminders, and sales targets.
+                            </p>
+                            <ul class="space-y-1 text-xs text-navy-body font-medium">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> Interactive Kanban Deal Stages</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> Auto-Lead Capture & Tracking</li>
+                            </ul>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-peri-border/60">
+                            <a href="/crm-platform" class="text-xs font-bold text-aqua-dark hover:text-aqua-dark flex items-center justify-between">
+                                <span>Explore CRM Suite</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. WhatsApp & Omnichannel Communication -->
+                <div class="rounded-none bg-white border border-peri-border/60 shadow-soft-elevation hover:shadow-luxury-card hover:border-aqua/40 transition-all duration-300 group flex flex-col justify-between overflow-hidden">
+                    <div class="relative h-36 sm:h-40 w-full overflow-hidden bg-slate-100">
+                        <img src="/images/modules/module-whatsapp.jpg" alt="WhatsApp & Email Integration" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-2.5 left-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/95 backdrop-blur text-navy text-[11px] font-bold shadow-sm">
+                                <i class="fa-brands fa-whatsapp text-emerald-600"></i> WhatsApp CRM
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                        <div>
+                            <h3 class="text-base font-bold text-navy mb-1">5. WhatsApp & Email Integration</h3>
+                            <p class="text-xs text-navy-muted leading-relaxed mb-2.5 line-clamp-2">
+                                Send instant quotations, payment links, and follow-ups directly on WhatsApp with official Meta Business API templates.
+                            </p>
+                            <ul class="space-y-1 text-xs text-navy-body font-medium">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> 1-Click WhatsApp Quotations</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> Automated Follow-up Trigger Bots</li>
+                            </ul>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-peri-border/60">
+                            <a href="/crm-platform" class="text-xs font-bold text-aqua-dark hover:text-aqua-dark flex items-center justify-between">
+                                <span>Explore Communication</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Accounting & Business Management -->
+                <div class="rounded-none bg-white border border-peri-border/60 shadow-soft-elevation hover:shadow-luxury-card hover:border-aqua/40 transition-all duration-300 group flex flex-col justify-between overflow-hidden">
+                    <div class="relative h-36 sm:h-40 w-full overflow-hidden bg-slate-100">
+                        <img src="/images/modules/module-accounting.jpg" alt="Accounting, Billing & Inventory" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div class="absolute bottom-2.5 left-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/95 backdrop-blur text-navy text-[11px] font-bold shadow-sm">
+                                <i class="fa-solid fa-scale-balanced text-aqua-dark"></i> Billing & GST
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                        <div>
+                            <h3 class="text-base font-bold text-navy mb-1">6. Accounting, Billing & Inventory</h3>
+                            <p class="text-xs text-navy-muted leading-relaxed mb-2.5 line-clamp-2">
+                                Create professional GST invoices, track expenses, manage inventory stock alerts, and monitor real-time P&L statements.
+                            </p>
+                            <ul class="space-y-1 text-xs text-navy-body font-medium">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> GST e-Invoicing & Gateways</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> SKU Inventory with Low Stock Alerts</li>
+                            </ul>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-peri-border/60">
+                            <a href="/features" class="text-xs font-bold text-aqua-dark hover:text-aqua-dark flex items-center justify-between">
+                                <span>Explore Accounting</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+ 
+    <!-- VIDEO SHOWCASE SECTION -->
+    <section class="pt-6 pb-16 sm:pt-8 sm:pb-20 bg-transparent overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Heading -->
+            <div class="text-center mb-10 sm:mb-12">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-700 tracking-tight mb-3">
+                    See Your Business. Smarter.
+                </h2>
+                <p class="text-base sm:text-lg text-navy-body font-semibold max-w-2xl mx-auto">
+                    Real-time visibility across employees, attendance, CRM and business operations.
+                </p>
+            </div>
+
+            <!-- Centered Video Frame -->
+            <div class="max-w-5xl mx-auto">
+
+                <!-- Video Card Frame -->
+                <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-slate-200/80 bg-white aspect-[16/10] sm:aspect-[16/9]">
+
+                    <!-- Video (Full clean screen visibility) -->
+                    <video id="showcase-video"
+                        class="w-full h-full object-cover block"
+                        autoplay loop muted playsinline>
+                        <source src="/videos/demo-video.mp4?v=2" type="video/mp4">
+                    </video>
+
+                    <!-- Audio toggle floating at bottom right -->
+                    <button type="button" onclick="toggleShowcaseMute();" class="absolute bottom-4 right-4 z-20 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur flex items-center justify-center transition-all shadow-md" title="Mute / Unmute">
+                        <i id="showcase-mute-icon" class="fa-solid fa-volume-xmark text-xs"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleShowcaseMute() {
+            const v = document.getElementById('showcase-video');
+            const muteIcon = document.getElementById('showcase-mute-icon');
+            if (v) {
+                v.muted = !v.muted;
+                if (muteIcon) {
+                    muteIcon.className = v.muted ? 'fa-solid fa-volume-xmark text-xs' : 'fa-solid fa-volume-high text-xs';
+                }
+            }
+        }
+    </script>
+
+    <!-- 4. HRM & ATTENDANCE SPLIT SPOTLIGHT -->
+    <section class="relative py-20 sm:py-28 bg-no-repeat bg-cover bg-center overflow-hidden border-y border-blue-100" style="background-image: url('/images/attendance-bg.png?v=1791274324');">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                
+                <!-- Left Details -->
+                <div class="space-y-6">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/80 text-blue-700 text-xs font-bold uppercase tracking-wider">
+                        Next-Gen Attendance
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-navy tracking-tight leading-tight">
+                        Attendance That Works Smarter. <br>
+                        <span class="font-sans not-italic font-extrabold text-black block mt-2 text-2xl sm:text-4xl">Accurate Tracking. Zero Proxy. Complete Control.</span>
+                    </h2>
+                    <p class="text-sm sm:text-base text-navy-muted leading-relaxed">
+                        Whether your staff works in an office, a multi-story showroom, a factory floor, or out in the field, Hisab Mittra provides verified, tamper-proof attendance marking.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2" id="attendance-feature-tabs">
+                        <!-- Tab 0: AI Face Recognition -->
+                        <div onclick="setAttendanceSlide(0)" id="att-tab-0" class="p-4 rounded-2xl bg-white border-2 border-blue-600 shadow-md cursor-pointer transition-all duration-300 hover:scale-[1.02] relative group">
+                            <div class="text-blue-700 font-bold text-sm mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-camera"></i> AI Face Recognition</span>
+                                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse att-indicator"></span>
+                            </div>
+                            <p class="text-xs text-navy-muted">Sub-second facial match via mobile camera or tablet kiosk with anti-spoofing.</p>
+                        </div>
+
+                        <!-- Tab 1: GPS Geofencing -->
+                        <div onclick="setAttendanceSlide(1)" id="att-tab-1" class="p-4 rounded-2xl bg-white/85 backdrop-blur-sm border-2 border-transparent hover:border-blue-200 shadow-sm cursor-pointer transition-all duration-300 hover:scale-[1.02] relative group">
+                            <div class="text-navy font-bold text-sm mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-crosshairs"></i> GPS Geofencing</span>
+                                <span class="w-2 h-2 rounded-full bg-transparent att-indicator"></span>
+                            </div>
+                            <p class="text-xs text-navy-muted">Set authorized geographical radiuses for field sales executives and branch offices.</p>
+                        </div>
+
+                        <!-- Tab 2: Dynamic QR Kiosk -->
+                        <div onclick="setAttendanceSlide(2)" id="att-tab-2" class="p-4 rounded-2xl bg-white/85 backdrop-blur-sm border-2 border-transparent hover:border-blue-200 shadow-sm cursor-pointer transition-all duration-300 hover:scale-[1.02] relative group">
+                            <div class="text-navy font-bold text-sm mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-qrcode"></i> Dynamic QR Kiosk</span>
+                                <span class="w-2 h-2 rounded-full bg-transparent att-indicator"></span>
+                            </div>
+                            <p class="text-xs text-navy-muted">Rotating QR code displayed at reception that employees scan to mark entry in 2 seconds.</p>
+                        </div>
+
+                        <!-- Tab 3: Biometric Machine Sync -->
+                        <div onclick="setAttendanceSlide(3)" id="att-tab-3" class="p-4 rounded-2xl bg-white/85 backdrop-blur-sm border-2 border-transparent hover:border-blue-200 shadow-sm cursor-pointer transition-all duration-300 hover:scale-[1.02] relative group">
+                            <div class="text-navy font-bold text-sm mb-1 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-fingerprint"></i> Biometric Machine Sync</span>
+                                <span class="w-2 h-2 rounded-full bg-transparent att-indicator"></span>
+                            </div>
+                            <p class="text-xs text-navy-muted">Seamlessly connects with existing Essl, Realtime, and ZKTeco biometric devices.</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex items-center gap-4">
+                        <a href="/hrm" class="px-6 py-3 rounded-xl bg-aqua text-aqua-dark font-bold text-xs hover:bg-aqua-hover transition shadow-aqua-glow">
+                            Learn More About HRM &rarr;
+                        </a>
+                        <button type="button" onclick="openDemoModal()" class="px-6 py-3 rounded-xl border border-peri-border bg-white text-navy font-bold text-xs hover:bg-aqua-soft transition">
+                            Book Live Attendance Demo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Visual: Dynamic 4-Feature Attendance Showcase Slider -->
+                <div class="relative" id="attendance-slider-container">
+                    <div class="p-5 sm:p-6 rounded-3xl bg-white/95 backdrop-blur-md border-2 border-blue-200/80 shadow-2xl relative overflow-hidden">
+                        
+                        <!-- Card Header -->
+                        <div class="flex items-center justify-between pb-3.5 mb-4 border-b border-peri-border/40">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-aqua text-aqua-dark flex items-center justify-center text-xs font-black shadow-sm">
+                                    HM
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-navy" id="att-header-title">Employee Mobile Kiosk</div>
+                                    <div class="text-[10px] text-navy-subtle" id="att-header-subtitle">Geo-Verified Active Session</div>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 border border-emerald-200 text-emerald-800 text-[10px] font-bold" id="att-header-badge">
+                                <i class="fa-solid fa-circle-check text-emerald-600 text-[9px]"></i> Location Verified
+                            </span>
+                        </div>
+
+                        <!-- SLIDER SCREEN CONTAINER (Holds the 4 feature screens) -->
+                        <div class="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden bg-slate-900 shadow-md select-none group">
+                            
+                            <!-- SLIDE 0: AI Face Recognition -->
+                            <div id="att-slide-0" class="att-slide absolute inset-0 transition-all duration-500 opacity-100 pointer-events-auto">
+                                <img src="/images/rahul-verma-attendance.jpg" alt="Rahul Verma - Executive Sales" class="w-full h-full object-cover object-top">
+                                
+                                <!-- Scanner Top HUD Pills -->
+                                <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                                    <span class="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-[10px] font-bold flex items-center gap-1.5 shadow">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> AI Face Match
+                                    </span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/90 backdrop-blur-md text-white text-[10px] font-extrabold flex items-center gap-1 shadow">
+                                        <i class="fa-solid fa-check"></i> 99.8% Match
+                                    </span>
+                                </div>
+
+                                <!-- Face Scan Target Frame -->
+                                <div class="absolute top-10 left-1/2 -translate-x-1/2 w-28 h-28 border-2 border-emerald-400/90 rounded-2xl pointer-events-none flex items-center justify-center">
+                                    <div class="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-emerald-300"></div>
+                                    <div class="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-emerald-300"></div>
+                                    <div class="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-emerald-300"></div>
+                                    <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-emerald-300"></div>
+                                </div>
+
+                                <!-- Bottom Employee Tag Overlay -->
+                                <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-xs font-bold flex items-center gap-1.5">
+                                                <span>Good Morning, Rahul Verma</span>
+                                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
+                                            </div>
+                                            <div class="text-[10px] text-slate-300">Executive Sales &bull; EMP-0042</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-[10px] text-emerald-300 font-semibold flex items-center gap-1 justify-end">
+                                                <i class="fa-solid fa-location-dot"></i> Gurugram HQ
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 1: GPS Geofencing (Realistic Photo) -->
+                            <div id="att-slide-1" class="att-slide absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none">
+                                <img src="/images/attendance/gps-attendance.jpg" alt="GPS Geofence Field Attendance" class="w-full h-full object-cover object-center">
+                                
+                                <!-- Top HUD Pills -->
+                                <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/90 backdrop-blur-md text-white text-[10px] font-extrabold flex items-center gap-1.5 shadow">
+                                        <span class="w-2 h-2 rounded-full bg-white animate-ping"></span> GPS Geofence Verified
+                                    </span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-blue-300 text-[10px] font-bold flex items-center gap-1 shadow">
+                                        <i class="fa-solid fa-satellite-dish"></i> ± 2.4m Radius
+                                    </span>
+                                </div>
+
+                                <!-- Center subtle target indicator -->
+                                <div class="absolute top-8 right-6 w-24 h-24 rounded-full border-2 border-emerald-400/80 bg-emerald-500/10 pointer-events-none flex items-center justify-center animate-pulse">
+                                    <span class="px-2 py-0.5 rounded-full bg-black/70 text-[9px] font-bold text-emerald-300">50m Range OK</span>
+                                </div>
+
+                                <!-- Bottom Employee Tag Overlay -->
+                                <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/85 via-black/50 to-transparent text-white">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-xs font-bold flex items-center gap-1.5">
+                                                <span>Priya Sharma</span>
+                                                <span class="px-1.5 py-0.5 rounded bg-emerald-500/90 text-[9px] font-black">Authorized</span>
+                                            </div>
+                                            <div class="text-[10px] text-slate-300">Field Sales Manager &bull; EMP-0108</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-[10px] text-emerald-300 font-semibold flex items-center gap-1 justify-end">
+                                                <i class="fa-solid fa-location-dot"></i> DLF Cyber City, Gurugram
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 2: Dynamic QR Kiosk (Realistic Photo) -->
+                            <div id="att-slide-2" class="att-slide absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none">
+                                <img src="/images/attendance/qr-kiosk.jpg" alt="Dynamic QR Kiosk Reception" class="w-full h-full object-cover object-center">
+                                
+                                <!-- Top HUD Pills -->
+                                <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                                    <span class="px-2.5 py-1 rounded-lg bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-extrabold flex items-center gap-1.5 shadow">
+                                        <i class="fa-solid fa-shield-halved"></i> Anti-Spoof Dynamic QR
+                                    </span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-amber-300 text-[10px] font-bold flex items-center gap-1 shadow">
+                                        <i class="fa-solid fa-rotate animate-spin"></i> Refresh in <span id="qr-countdown">12</span>s
+                                    </span>
+                                </div>
+
+                                <!-- Bottom Employee Tag Overlay -->
+                                <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/85 via-black/50 to-transparent text-white">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-xs font-bold flex items-center gap-1.5">
+                                                <span>Reception Kiosk Tablet #01</span>
+                                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
+                                            </div>
+                                            <div class="text-[10px] text-slate-300">Tower Reception Desk &bull; Scan in 1.4s</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-[10px] text-cyan-300 font-semibold flex items-center gap-1 justify-end">
+                                                <i class="fa-solid fa-qrcode"></i> Dynamic Token Active
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SLIDE 3: Biometric Machine Sync (Realistic Photo) -->
+                            <div id="att-slide-3" class="att-slide absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none">
+                                <img src="/images/attendance/biometric-sync.jpg" alt="Biometric Hardware Sync" class="w-full h-full object-cover object-center">
+                                
+                                <!-- Top HUD Pills -->
+                                <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/90 backdrop-blur-md text-white text-[10px] font-extrabold flex items-center gap-1.5 shadow">
+                                        <span class="w-2 h-2 rounded-full bg-white animate-ping"></span> 3 Devices Synced
+                                    </span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-slate-200 text-[10px] font-bold flex items-center gap-1 shadow">
+                                        <i class="fa-solid fa-server text-blue-400"></i> eSSL / ZKTeco Bridge
+                                    </span>
+                                </div>
+
+
+                                <!-- Bottom Status Tag -->
+                                <div class="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/85 via-black/50 to-transparent text-white">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-xs font-bold flex items-center gap-1.5">
+                                                <span>Zero Data Loss Protocol</span>
+                                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
+                                            </div>
+                                            <div class="text-[10px] text-slate-300">Offline memory buffer &bull; Real-time payroll push</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-[10px] text-emerald-300 font-semibold flex items-center gap-1 justify-end">
+                                                <i class="fa-solid fa-bolt"></i> 100% Synced
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Subtle Dot Indicators (Bottom Center) -->
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 bg-black/50 backdrop-blur px-2.5 py-1 rounded-full pointer-events-none">
+                                <span class="att-dot w-3 h-1.5 rounded-full bg-blue-500 transition-all"></span>
+                                <span class="att-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all"></span>
+                                <span class="att-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all"></span>
+                                <span class="att-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all"></span>
+                            </div>
+
+                        </div>
+
+                        <!-- Dynamic Shift Timings & Metrics (Updates per slide) -->
+                        <div class="grid grid-cols-2 gap-3 mt-3.5">
+                            <div class="p-3 rounded-xl bg-white border border-peri-border/60 text-left shadow-sm">
+                                <div class="text-[10px] text-navy-subtle" id="att-metric1-label">Check-In Time</div>
+                                <div class="text-sm font-extrabold text-navy" id="att-metric1-value">09:12 AM</div>
+                                <div class="text-[9px] text-emerald-700 font-bold" id="att-metric1-sub">On Schedule</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-white border border-peri-border/60 text-left shadow-sm">
+                                <div class="text-[10px] text-navy-subtle" id="att-metric2-label">Working Hours</div>
+                                <div class="text-sm font-extrabold text-navy" id="att-metric2-value">7h 48m</div>
+                                <div class="text-[9px] text-aqua-dark font-bold" id="att-metric2-sub">Standard Shift</div>
+                            </div>
+                        </div>
+
+                        <!-- Live Notification Pill (Updates per slide) -->
+                        <div class="mt-3.5 p-3 rounded-xl bg-white border border-peri-border/60 flex items-center gap-3 text-xs shadow-sm" id="att-footer-alert">
+                            <i id="att-footer-icon" class="fa-brands fa-whatsapp text-emerald-600 text-lg"></i>
+                            <div class="text-[11px] text-navy leading-tight">
+                                <span class="font-bold" id="att-footer-tag">WhatsApp Alert:</span>
+                                <span id="att-footer-msg">Check-in recorded and confirmed with Branch Manager.</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <script>
+                    const attendanceSlidesData = [
+                        {
+                            headerTitle: 'Employee Mobile Kiosk',
+                            headerSubtitle: 'AI Face-Verified Active Session',
+                            headerBadge: '<i class="fa-solid fa-circle-check text-emerald-600 text-[9px]"></i> Face Match Verified',
+                            m1Label: 'Check-In Time',
+                            m1Val: '09:12 AM',
+                            m1Sub: 'On Schedule',
+                            m2Label: 'Working Hours',
+                            m2Val: '7h 48m',
+                            m2Sub: 'Standard Shift',
+                            footerIcon: 'fa-brands fa-whatsapp text-emerald-600 text-lg',
+                            footerTag: 'WhatsApp Alert:',
+                            footerMsg: 'Check-in recorded and confirmed with Branch Manager.'
+                        },
+                        {
+                            headerTitle: 'GPS Field Territory Tracker',
+                            headerSubtitle: 'Geo-Radius Boundary Verified',
+                            headerBadge: '<i class="fa-solid fa-location-dot text-emerald-600 text-[9px]"></i> 14m to Office Center',
+                            m1Label: 'Field Punch In',
+                            m1Val: '09:35 AM',
+                            m1Sub: 'Authorized Territory',
+                            m2Label: 'GPS Accuracy',
+                            m2Val: '± 2.4 meters',
+                            m2Sub: 'High-Precision Lock',
+                            footerIcon: 'fa-solid fa-location-crosshairs text-blue-600 text-lg',
+                            footerTag: 'Geofence Guard:',
+                            footerMsg: 'Entry validated within designated 50m DLF Cyber Hub radius.'
+                        },
+                        {
+                            headerTitle: 'Lobby Tablet QR Kiosk',
+                            headerSubtitle: 'Anti-Spoof Rolling Token Active',
+                            headerBadge: '<i class="fa-solid fa-shield-halved text-blue-600 text-[9px]"></i> Dynamic QR Live',
+                            m1Label: 'Today Kiosk Scans',
+                            m1Val: '348 Employees',
+                            m1Sub: 'Zero Touch entry',
+                            m2Label: 'Entry Speed',
+                            m2Val: '1.4 Seconds',
+                            m2Sub: 'Sub-second Processing',
+                            footerIcon: 'fa-solid fa-qrcode text-blue-600 text-lg',
+                            footerTag: 'Dynamic QR Security:',
+                            footerMsg: 'QR token auto-refreshes every 15s to completely stop photo proxy.'
+                        },
+                        {
+                            headerTitle: 'Biometric Machine Cloud Bridge',
+                            headerSubtitle: 'eSSL & ZKTeco Hardware Synced',
+                            headerBadge: '<i class="fa-solid fa-server text-emerald-600 text-[9px]"></i> 3 Devices Online',
+                            m1Label: 'Live Sync Latency',
+                            m1Val: '< 180ms',
+                            m1Sub: 'Realtime Cloud Push',
+                            m2Label: 'Hardware Uptime',
+                            m2Val: '99.99%',
+                            m2Sub: 'Offline Buffer Ready',
+                            footerIcon: 'fa-solid fa-fingerprint text-purple-600 text-lg',
+                            footerTag: 'Hardware Bridge:',
+                            footerMsg: 'Biometric punches push straight into salary calculations with zero human entry.'
+                        }
+                    ];
+
+                    let currentAttendanceSlide = 0;
+                    let attendanceSlideTimer = null;
+
+                    function setAttendanceSlide(index) {
+                        currentAttendanceSlide = (index + attendanceSlidesData.length) % attendanceSlidesData.length;
+                        
+                        // Update slides visibility
+                        for (let i = 0; i < 4; i++) {
+                            const slide = document.getElementById('att-slide-' + i);
+                            const tab = document.getElementById('att-tab-' + i);
+                            const dots = document.querySelectorAll('.att-dot');
+                            
+                            if (slide) {
+                                if (i === currentAttendanceSlide) {
+                                    slide.classList.remove('opacity-0', 'pointer-events-none');
+                                    slide.classList.add('opacity-100', 'pointer-events-auto');
+                                } else {
+                                    slide.classList.remove('opacity-100', 'pointer-events-auto');
+                                    slide.classList.add('opacity-0', 'pointer-events-none');
+                                }
+                            }
+
+                            // Update Tab Styles
+                            if (tab) {
+                                const ind = tab.querySelector('.att-indicator');
+                                const title = tab.querySelector('div > span:first-child');
+                                if (i === currentAttendanceSlide) {
+                                    tab.className = 'p-4 rounded-2xl bg-white border-2 border-blue-600 shadow-md cursor-pointer transition-all duration-300 hover:scale-[1.02] relative group';
+                                    if (title) title.parentElement.className = 'text-blue-700 font-bold text-sm mb-1 flex items-center justify-between';
+                                    if (ind) ind.className = 'w-2 h-2 rounded-full bg-blue-600 animate-pulse att-indicator';
+                                } else {
+                                    tab.className = 'p-4 rounded-2xl bg-white/85 backdrop-blur-sm border-2 border-transparent hover:border-blue-200 shadow-sm cursor-pointer transition-all duration-300 hover:scale-[1.02] relative group';
+                                    if (title) title.parentElement.className = 'text-navy font-bold text-sm mb-1 flex items-center justify-between';
+                                    if (ind) ind.className = 'w-2 h-2 rounded-full bg-transparent att-indicator';
+                                }
+                            }
+
+                            // Update Dots
+                            if (dots && dots[i]) {
+                                if (i === currentAttendanceSlide) {
+                                    dots[i].className = 'att-dot w-4 h-2 rounded-full bg-blue-500 transition-all';
+                                } else {
+                                    dots[i].className = 'att-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all';
+                                }
+                            }
+                        }
+
+                        // Update dynamic texts
+                        const data = attendanceSlidesData[currentAttendanceSlide];
+                        const titleEl = document.getElementById('att-header-title');
+                        const subEl = document.getElementById('att-header-subtitle');
+                        const badgeEl = document.getElementById('att-header-badge');
+                        const m1Label = document.getElementById('att-metric1-label');
+                        const m1Val = document.getElementById('att-metric1-value');
+                        const m1Sub = document.getElementById('att-metric1-sub');
+                        const m2Label = document.getElementById('att-metric2-label');
+                        const m2Val = document.getElementById('att-metric2-value');
+                        const m2Sub = document.getElementById('att-metric2-sub');
+                        const fIcon = document.getElementById('att-footer-icon');
+                        const fTag = document.getElementById('att-footer-tag');
+                        const fMsg = document.getElementById('att-footer-msg');
+
+                        if (titleEl) titleEl.innerText = data.headerTitle;
+                        if (subEl) subEl.innerText = data.headerSubtitle;
+                        if (badgeEl) badgeEl.innerHTML = data.headerBadge;
+                        if (m1Label) m1Label.innerText = data.m1Label;
+                        if (m1Val) m1Val.innerText = data.m1Val;
+                        if (m1Sub) m1Sub.innerText = data.m1Sub;
+                        if (m2Label) m2Label.innerText = data.m2Label;
+                        if (m2Val) m2Val.innerText = data.m2Val;
+                        if (m2Sub) m2Sub.innerText = data.m2Sub;
+                        if (fIcon) fIcon.className = data.footerIcon;
+                        if (fTag) fTag.innerText = data.footerTag;
+                        if (fMsg) fMsg.innerText = data.footerMsg;
+                    }
+
+                    function stepAttendanceSlide(dir) {
+                        setAttendanceSlide(currentAttendanceSlide + dir);
+                        restartAttendanceAutoTimer();
+                    }
+
+                    function startAttendanceAutoTimer() {
+                        clearInterval(attendanceSlideTimer);
+                        attendanceSlideTimer = setInterval(() => {
+                            setAttendanceSlide(currentAttendanceSlide + 1);
+                        }, 4000);
+                    }
+
+                    function restartAttendanceAutoTimer() {
+                        startAttendanceAutoTimer();
+                    }
+
+                    // Countdown simulation for QR Code
+                    let qrSeconds = 12;
+                    setInterval(() => {
+                        const el = document.getElementById('qr-countdown');
+                        if (el) {
+                            qrSeconds = qrSeconds <= 1 ? 15 : qrSeconds - 1;
+                            el.innerText = qrSeconds;
+                        }
+                    }, 1000);
+
+                    // Initialize immediately
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', () => {
+                            startAttendanceAutoTimer();
+                        });
+                    } else {
+                        startAttendanceAutoTimer();
+                    }
+                </script>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. PRICING PREVIEW SECTION -->
+    <section class="py-20 sm:py-28 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-peri-mist border border-peri-border text-navy text-[11px] font-bold uppercase tracking-wider mb-3">
+                Transparent Pricing
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-navy">
+                Predictable Plans. <br>
+                <span class="font-sans not-italic font-extrabold text-black">Massive ROI for Every Stage.</span>
+            </h2>
+            <p class="mt-4 text-sm sm:text-base text-navy-muted max-w-2xl mx-auto">
+                No hidden implementation fees. All plans include automated statutory updates, cloud backups, and dedicated onboarding support.
+            </p>
+
+            <!-- Pricing Cards (3 Tiers) -->
+            <div class="mt-14 grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-5xl mx-auto">
+                
+                <!-- Starter Tier -->
+                <div class="p-8 rounded-3xl bg-white border border-peri-border/70 shadow-soft-elevation flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-navy-subtle mb-1">Starter</div>
+                        <h4 class="text-xl font-bold text-navy">Small Teams</h4>
+                        <p class="text-xs text-navy-muted mt-1">Ideal for growing firms up to 25 employees.</p>
+                        
+                        <div class="my-6">
+                            <span class="text-3xl sm:text-4xl font-black text-navy">₹1,499</span>
+                            <span class="text-xs text-navy-subtle">/ month billed annually</span>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs text-navy-body">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Up to 25 Employees</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> AI Face & Mobile Attendance</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Automated PF & ESI Payroll</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Standard Leave Management</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> PDF Payslip Generation</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-peri-border">
+                        <a href="/pricing" class="w-full py-3 rounded-xl border border-peri-border hover:border-aqua text-navy hover:text-aqua-dark font-bold text-xs text-center block transition">
+                            Select Starter Plan
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Growth Tier (Featured) -->
+                <div class="p-8 rounded-3xl bg-white border-2 border-aqua shadow-luxury-card relative flex flex-col justify-between transform md:-translate-y-2">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-aqua text-aqua-dark text-[10px] font-extrabold uppercase tracking-widest shadow-sm">
+                        Most Popular
+                    </div>
+
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-aqua-dark mb-1">Growth & CRM</div>
+                        <h4 class="text-xl font-bold text-navy">Mid-Market Companies</h4>
+                        <p class="text-xs text-navy-muted mt-1">For businesses scaling teams, sales & branches.</p>
+                        
+                        <div class="my-6">
+                            <span class="text-3xl sm:text-4xl font-black text-aqua-dark">₹3,499</span>
+                            <span class="text-xs text-navy-subtle">/ month billed annually</span>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs text-navy-body font-medium">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Up to 100 Employees</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Full HRM & Shift Rostering</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Visual Deal Pipeline & Leads CRM</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Official WhatsApp Messaging</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Invoicing & Quotations Tool</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Priority Support & Training</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-peri-border">
+                        <a href="/pricing" class="w-full py-3.5 rounded-xl bg-aqua hover:bg-aqua-hover text-aqua-dark font-extrabold text-xs text-center block transition shadow-aqua-glow">
+                            Start 14-Day Free Trial
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Enterprise Tier -->
+                <div class="p-8 rounded-3xl bg-white border border-peri-border/70 shadow-soft-elevation flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-navy-subtle mb-1">Enterprise</div>
+                        <h4 class="text-xl font-bold text-navy">Custom Organization</h4>
+                        <p class="text-xs text-navy-muted mt-1">For multi-location corporate groups & retail chains.</p>
+                        
+                        <div class="my-6">
+                            <span class="text-3xl sm:text-4xl font-black text-navy">Custom</span>
+                            <span class="text-xs text-navy-subtle">tailored to your scale</span>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs text-navy-body">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Unlimited Employees & Branches</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Custom ERP & Biometric API Sync</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Multi-GST Entity Management</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Dedicated Account Manager</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> 99.98% SLA Guarantee</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-peri-border">
+                        <button type="button" onclick="openDemoModal()" class="w-full py-3 rounded-xl border border-peri-border hover:border-aqua text-navy hover:text-aqua-dark font-bold text-xs text-center block transition">
+                            Talk to Enterprise Sales
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-10">
+                <a href="/pricing" class="text-xs font-bold text-aqua-dark hover:underline">
+                    View Complete Feature Comparison Matrix &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. FINAL CALL-TO-ACTION BANNER -->
+    <section class="py-16 sm:py-24 bg-no-repeat bg-cover bg-center text-center relative overflow-hidden border-t border-blue-100" style="background-image: url('/images/cta-bg.png?v=1791274324');">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-100/90 text-blue-700 text-[11px] font-bold uppercase tracking-wider mb-4 border border-blue-200 shadow-sm">
+                Start In Under 5 Minutes
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-navy">
+                Modernize Your Entire Business Today.
+            </h2>
+            <p class="mt-4 text-sm sm:text-lg text-slate-600 max-w-2xl mx-auto font-medium">
+                Join 2,400+ forward-thinking Indian businesses running on Hisab Mittra. Experience the speed and clarity of unified business management.
+            </p>
+
+            <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="/pricing" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition shadow-lg shadow-blue-500/25 active:scale-95">
+                    Start Your 14-Day Free Trial
+                </a>
+                <button type="button" onclick="openDemoModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/90 hover:bg-white border border-slate-300/80 text-navy font-bold text-sm transition shadow-sm active:scale-95">
+                    Schedule 1-on-1 Demo Walkthrough
+                </button>
+            </div>
+        </div>
+    </section>
+
+</div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white/95 backdrop-blur-md text-navy border-t border-slate-200/80 pt-16 pb-12 mt-0">
+        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-[1500px] mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-slate-200/70">
+                
+                <!-- Col 1: Brand & Bio (4 cols) -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="flex items-center">
+                        <img src="/images/hisab-mittra-logo.png" alt="Hisab Mittra" class="h-12 sm:h-13 w-auto object-contain">
+                    </div>
+                    <p class="text-sm sm:text-base font-bold text-navy leading-relaxed max-w-md">
+                        Built for Indian enterprises, MSMEs, retail chains, and tech companies. A single integrated platform replacing fragmented HR, biometric attendance, payroll, WhatsApp CRM, and accounting software.
+                    </p>
+                    <div class="pt-1">
+                        <div class="text-xs font-black uppercase tracking-wider text-black mb-2">Security & Compliance</div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200/80 text-xs font-extrabold text-blue-700 flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-shield-check text-blue-600"></i> ISO 27001
+                            </span>
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200/80 text-xs font-extrabold text-emerald-700 flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-lock text-emerald-600"></i> SOC-2 Type II
+                            </span>
+                            <span class="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-200/80 text-xs font-extrabold text-amber-700 flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-server text-amber-600"></i> 100% India Hosted
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Col 2: Platform Modules (3 cols) -->
+                <div class="lg:col-span-3">
+                    <h5 class="text-base font-extrabold uppercase tracking-wider text-navy mb-5">Core Modules</h5>
+                    <ul class="space-y-3 text-sm sm:text-base font-bold text-navy">
+                        <li><a href="/hrm" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> HR & Employee Management</a></li>
+                        <li><a href="/hrm" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> Biometric & Face Attendance</a></li>
+                        <li><a href="/hrm" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> PF / ESI / TDS Payroll</a></li>
+                        <li><a href="/crm-platform" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> Visual Deal Pipeline</a></li>
+                        <li><a href="/crm-platform" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> WhatsApp & Email CRM</a></li>
+                        <li><a href="/features" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> Invoicing & Accounting</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Company & Resources (2 cols) -->
+                <div class="lg:col-span-2">
+                    <h5 class="text-base font-extrabold uppercase tracking-wider text-navy mb-5">Company</h5>
+                    <ul class="space-y-3 text-sm sm:text-base font-bold text-navy">
+                        <li><a href="/about" class="hover:text-blue-700 transition">About Hisab Mittra</a></li>
+                        <li><a href="/pricing" class="hover:text-blue-700 transition">Pricing & Plans</a></li>
+                        <li><a href="/blog" class="hover:text-blue-700 transition">Payroll & Blog</a></li>
+                        <li><a href="/help" class="hover:text-blue-700 transition">Help Center & Docs</a></li>
+                        <li><a href="/contact" class="hover:text-blue-700 transition">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Enterprise Contact & Support (3 cols) -->
+                <div class="lg:col-span-3">
+                    <h5 class="text-base font-extrabold uppercase tracking-wider text-navy mb-5">Get In Touch</h5>
+                    <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-200/80 shadow-sm space-y-3.5">
+                        <div class="flex items-start gap-3 text-sm font-semibold text-navy">
+                            <i class="fa-solid fa-location-dot text-blue-600 mt-1 shrink-0"></i>
+                            <span>DLF Cyber City, Gurugram, Haryana - 122002</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm font-bold text-navy">
+                            <i class="fa-solid fa-phone text-blue-600 shrink-0"></i>
+                            <a href="tel:+919876543210" class="hover:text-blue-700 transition">+91 98765 43210</a>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm font-bold text-navy">
+                            <i class="fa-solid fa-envelope text-blue-600 shrink-0"></i>
+                            <a href="mailto:support@hisabmittra.com" class="hover:text-blue-700 transition">support@hisabmittra.com</a>
+                        </div>
+                        <button type="button" onclick="openDemoModal()" class="w-full mt-2 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs transition shadow-md flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-calendar-check"></i> Book a Live Demo
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Row: Legal & Copyright -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm font-bold text-navy">
+                <div>
+                    &copy; 2026 Hisab Mittra Technologies Pvt. Ltd. All rights reserved. Made for Indian Businesses.
+                </div>
+                <div class="flex flex-wrap items-center gap-6 font-bold">
+                    <a href="javascript:void(0)" class="hover:text-blue-700 transition">Privacy Policy</a>
+                    <a href="javascript:void(0)" class="hover:text-blue-700 transition">Terms of Service</a>
+                    <a href="javascript:void(0)" class="hover:text-blue-700 transition">Security Architecture</a>
+                    <a href="javascript:void(0)" class="hover:text-blue-700 transition">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================================================= -->
+    <!-- GLOBAL DYNAMIC INTERACTIVE WIDGETS & FLOATING HUD -->
+    <!-- ========================================================================= -->
+
+    <!-- 1. Cursor Glow Follower Spotlight (Desktop) -->
+    <div id="cursor-glow-follower"></div>
+
+
+
+
+    <!-- 3. Floating WhatsApp Button (Docked in Corner) -->
+    <div id="floating-support-btn" class="group">
+        <a href="https://wa.me/919876543210?text=Hi%20Hisab%20Mittra%20team,%20I%20would%20like%20to%20learn%20more%20about%20the%20platform." target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" title="Chat on WhatsApp" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white shadow-2xl shadow-emerald-600/40 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border-2 border-white">
+            <i class="fa-brands fa-whatsapp text-2xl sm:text-3xl text-white"></i>
+        </a>
+    </div>
+
+    <!-- Floating Support Interactive Quick Drawer Modal -->
+    <div id="support-drawer" class="fixed bottom-16 right-4 sm:right-5 w-80 max-w-[calc(100vw-32px)] rounded-3xl bg-white border border-slate-200 shadow-2xl p-5 z-[999] hidden opacity-0 transition-all duration-300">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-black">Hisab Mittra Direct Desk</h4>
+                    <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Active Specialists Online
+                    </span>
+                </div>
+            </div>
+            <button type="button" onclick="toggleSupportDrawer()" class="text-slate-400 hover:text-black text-xs p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="mt-4 space-y-2.5 text-xs">
+            <a href="https://wa.me/919876543210?text=Hi%20Hisab%20Mittra%20team,%20I%20would%20like%20to%20learn%20more%20about%20the%20platform." target="_blank" class="p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-900 font-bold flex items-center justify-between transition group">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-brands fa-whatsapp text-lg text-emerald-600"></i>
+                    <span>Chat on WhatsApp</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-[10px] text-emerald-600 transition-transform group-hover:translate-x-1"></i>
+            </a>
+
+            <a href="/book-demo" class="p-3 rounded-2xl bg-blue-50 hover:bg-blue-100/80 border border-blue-200 text-blue-900 font-bold flex items-center justify-between transition group">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-calendar-check text-blue-600 text-sm"></i>
+                    <span>Schedule 1-on-1 Demo</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-[10px] text-blue-600 transition-transform group-hover:translate-x-1"></i>
+            </a>
+
+            <a href="tel:+919876543210" class="p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold flex items-center justify-between transition group">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-phone text-slate-600 text-xs"></i>
+                    <span>Call: +91 98765 43210</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400 transition-transform group-hover:translate-x-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 4. Floating Back to Top Button with SVG Circular Progress -->
+    <button type="button" id="back-to-top-btn" onclick="scrollToTop()" class="w-12 h-12 rounded-full bg-white border border-slate-200 shadow-xl flex items-center justify-center text-blue-600 relative group active:scale-90 transition-all" title="Back to top">
+        <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="20" class="stroke-slate-200" stroke-width="3" fill="none" />
+            <circle id="scroll-circle-progress" cx="24" cy="24" r="20" class="stroke-blue-600 transition-all duration-100" stroke-width="3" stroke-linecap="round" fill="none" stroke-dasharray="125.6" stroke-dashoffset="125.6" />
+        </svg>
+        <i class="fa-solid fa-arrow-up text-sm transition-transform group-hover:-translate-y-0.5"></i>
+    </button>
+
+    <!-- GLOBAL JAVASCRIPT HELPERS & DYNAMIC MOTION ENGINE -->
+    <script>
+        // Sticky Navbar Compact on Scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('main-navbar');
+            const inner = document.getElementById('navbar-inner');
+            if (window.scrollY > 30) {
+                navbar.classList.add('shadow-md');
+                inner.classList.remove('h-20');
+                inner.classList.add('h-16');
+            } else {
+                navbar.classList.remove('shadow-md');
+                inner.classList.remove('h-16');
+                inner.classList.add('h-20');
+            }
+        });
+
+        // Mobile Nav Drawer Toggle
+        function toggleMobileNav() {
+            const drawer = document.getElementById('mobile-nav-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Demo Page Navigation Handler (Direct Full Page)
+        function openDemoModal() {
+            window.location.href = "/book-demo";
+        }
+
+        // Floating Support Drawer Toggle
+        function toggleSupportDrawer() {
+            const drawer = document.getElementById('support-drawer');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    drawer.classList.remove('opacity-0');
+                    drawer.classList.add('opacity-100');
+                }, 10);
+            } else {
+                drawer.classList.remove('opacity-100');
+                drawer.classList.add('opacity-0');
+                setTimeout(() => {
+                    drawer.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Dismiss Toast
+        function dismissToast() {
+            const toast = document.getElementById('live-activity-toast');
+            if (toast) {
+                toast.classList.remove('show');
+            }
+        }
+
+        // Scroll to Top Smoothly
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Close Support Drawer on outside click
+        document.addEventListener('click', (e) => {
+            const drawer = document.getElementById('support-drawer');
+            const btn = document.getElementById('floating-support-btn');
+            if (drawer && !drawer.classList.contains('hidden')) {
+                if (!drawer.contains(e.target) && !btn.contains(e.target)) {
+                    toggleSupportDrawer();
+                }
+            }
+        });
+
+        // =========================================================================
+        // GLOBAL DYNAMIC MOTION ENGINE (IntersectionObserver + Counters + Cursor + 3D Tilt)
+        // =========================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Top Reading / Scroll Progress Bar & Circular Progress Back-to-Top
+            const progressBar = document.getElementById('scroll-progress-bar');
+            const backToTopBtn = document.getElementById('back-to-top-btn');
+            const scrollCircle = document.getElementById('scroll-circle-progress');
+            const circleLength = 125.6; // 2 * PI * 20
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
+
+                if (backToTopBtn && scrollCircle) {
+                    if (scrollTop > 280) {
+                        backToTopBtn.classList.add('visible');
+                    } else {
+                        backToTopBtn.classList.remove('visible');
+                    }
+                    const offset = circleLength - (progress / 100) * circleLength;
+                    scrollCircle.style.strokeDashoffset = offset;
+                }
+            }, { passive: true });
+
+            // 2. Cursor Glow Follower Spotlight (Desktop Smooth Lerp)
+            const cursorFollower = document.getElementById('cursor-glow-follower');
+            if (cursorFollower && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                let mouseX = window.innerWidth / 2;
+                let mouseY = window.innerHeight / 2;
+                let currentX = mouseX;
+                let currentY = mouseY;
+                let isCursorVisible = false;
+
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    if (!isCursorVisible) {
+                        isCursorVisible = true;
+                        cursorFollower.style.opacity = '1';
+                    }
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    isCursorVisible = false;
+                    cursorFollower.style.opacity = '0';
+                });
+
+                function animateCursor() {
+                    currentX += (mouseX - currentX) * 0.15;
+                    currentY += (mouseY - currentY) * 0.15;
+                    cursorFollower.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+                    requestAnimationFrame(animateCursor);
+                }
+                requestAnimationFrame(animateCursor);
+
+                // Hover bloom on interactive elements
+                document.querySelectorAll('a, button, [role="button"], input, select, .motion-card, .glass-card').forEach(target => {
+                    target.addEventListener('mouseenter', () => cursorFollower.classList.add('is-hovering'));
+                    target.addEventListener('mouseleave', () => cursorFollower.classList.remove('is-hovering'));
+                });
+            }
+
+            // 3. Global 3D Card Tilt Engine for all Cards & Grid Boxes
+            const tiltCards = document.querySelectorAll(
+                '.motion-card, .glass-card, [class*="rounded-3xl bg-white"], [class*="rounded-2xl bg-white"], .pricing-interactive-card, section > div > div.grid > div'
+            );
+
+            tiltCards.forEach(card => {
+                if (card.classList.contains('no-tilt') || card.closest('#support-drawer')) return;
+                
+                card.classList.add('motion-card-tilt');
+                
+                // Add sheen element if not present
+                if (!card.querySelector('.card-cursor-sheen')) {
+                    const sheen = document.createElement('div');
+                    sheen.className = 'card-cursor-sheen';
+                    card.appendChild(sheen);
+                }
+
+                card.addEventListener('mousemove', (e) => {
+                    if (window.innerWidth < 1024) return;
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    // Subtle tilt angles (max +/- 6 deg)
+                    const rotateX = ((centerY - y) / centerY) * 6;
+                    const rotateY = ((x - centerX) / centerX) * 6;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.018, 1.018, 1.018)`;
+                    
+                    const sheen = card.querySelector('.card-cursor-sheen');
+                    if (sheen) {
+                        sheen.style.opacity = '1';
+                        sheen.style.setProperty('--mx', `${x}px`);
+                        sheen.style.setProperty('--my', `${y}px`);
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                    const sheen = card.querySelector('.card-cursor-sheen');
+                    if (sheen) {
+                        sheen.style.opacity = '0';
+                    }
+                });
+            });
+
+            // 4. Dynamic Multi-Color Particle Burst on Click
+            document.addEventListener('click', (e) => {
+                const colors = ['#2563EB', '#10B981', '#F97316', '#38BDF8'];
+                const particleCount = 10;
+                const clickX = e.clientX;
+                const clickY = e.clientY;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('span');
+                    particle.className = 'click-particle';
+                    
+                    const size = Math.random() * 6 + 4; // 4px to 10px
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5);
+                    const distance = Math.random() * 45 + 30; // 30px to 75px
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.backgroundColor = color;
+                    particle.style.left = `${clickX - size / 2}px`;
+                    particle.style.top = `${clickY - size / 2}px`;
+                    particle.style.setProperty('--tx', `${tx}px`);
+                    particle.style.setProperty('--ty', `${ty}px`);
+
+                    document.body.appendChild(particle);
+
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 650);
+                }
+            });
+
+            // 5. Live Social Proof Enterprise Activity Ticker
+            const liveActivities = [
+                { icon: 'fa-file-invoice-dollar', text: 'Shree Ram Textiles (Surat) processed 142 employee salaries in 4 mins', time: 'Just now' },
+                { icon: 'fa-fingerprint', text: 'Apollo PolyClinic (Pune) clocked in 48 doctors & nurses via QR Kiosk', time: '1m ago' },
+                { icon: 'fa-brands fa-whatsapp', text: 'Krishna Auto (Jaipur) dispatched 85 WhatsApp automated payslips', time: '2m ago' },
+                { icon: 'fa-shield-halved', text: 'Vardhaman Logistics (Delhi NCR) generated EPFO ECR file with 0 errors', time: '3m ago' },
+                { icon: 'fa-briefcase', text: 'FinEdge Advisory (Bangalore) closed ₹8.4L deal on Hisab Mittra CRM', time: 'Just now' }
+            ];
+
+            let activityIdx = 0;
+            const toast = document.getElementById('live-activity-toast');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastText = document.getElementById('toast-text');
+            const toastTime = document.getElementById('toast-time');
+
+            function showNextActivity() {
+                if (!toast) return;
+                const act = liveActivities[activityIdx];
+                toastIcon.className = `fa-solid ${act.icon} text-sm`;
+                toastText.textContent = act.text;
+                toastTime.textContent = act.time;
+
+                toast.classList.add('show');
+
+                // Hide after 6 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 6000);
+
+                activityIdx = (activityIdx + 1) % liveActivities.length;
+            }
+
+            // Start after 3.5 seconds, repeats every 16 seconds
+            setTimeout(() => {
+                showNextActivity();
+                setInterval(showNextActivity, 16000);
+            }, 3500);
+
+            // 6. Auto-Enhance Cards & Feature Sections with Scroll Stagger
+            const autoTargets = document.querySelectorAll(
+                'section > div > div.grid > div, ' +
+                '.glass-card, ' +
+                '[class*="rounded-3xl bg-white"], ' +
+                '[class*="rounded-2xl bg-white"], ' +
+                '.shadow-luxury-card, ' +
+                '.shadow-soft-elevation'
+            );
+            autoTargets.forEach((el, index) => {
+                if (!el.classList.contains('motion-reveal') && !el.classList.contains('motion-fade-in') && !el.classList.contains('motion-slide-left') && !el.classList.contains('motion-slide-right')) {
+                    el.classList.add('motion-reveal');
+                    const delay = (index % 4) * 100;
+                    if (delay > 0) {
+                        el.classList.add(`delay-${delay}`);
+                    }
+                }
+            });
+
+            // 7. Auto Shimmer on Primary Action Buttons
+            document.querySelectorAll('a[class*="bg-aqua"], button[class*="bg-aqua"], a[class*="bg-blue"], button[class*="bg-blue"], a[class*="bg-emerald"], button[class*="bg-emerald"]').forEach(btn => {
+                btn.classList.add('btn-shimmer');
+            });
+
+            // 8. Intersection Observer for Scroll Reveals
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('motion-visible');
+                        
+                        // Trigger number counters inside this revealed element
+                        const counters = entry.target.querySelectorAll('[data-counter]');
+                        counters.forEach(runCounter);
+
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.10,
+                rootMargin: '0px 0px -30px 0px'
+            });
+
+            document.querySelectorAll('.motion-reveal, .motion-fade-in, .motion-slide-left, .motion-slide-right, [data-motion]').forEach(el => {
+                revealObserver.observe(el);
+            });
+
+            // 9. Dynamic Count-Up Numbers Engine
+            function runCounter(counterEl) {
+                if (counterEl.dataset.counterDone) return;
+                counterEl.dataset.counterDone = 'true';
+
+                const rawText = counterEl.dataset.counter || counterEl.innerText.trim();
+                const match = rawText.match(/^([^0-9]*)([0-9,.]+)(.*)$/);
+                if (!match) return;
+
+                const prefix = match[1] || '';
+                const numStr = match[2].replace(/,/g, '');
+                const suffix = match[3] || '';
+                const target = parseFloat(numStr);
+                if (isNaN(target)) return;
+
+                const hasDecimals = numStr.includes('.');
+                const decimalPlaces = hasDecimals ? numStr.split('.')[1].length : 0;
+                const duration = 1600;
+                const startTime = performance.now();
+
+                function easeOutQuart(t) {
+                    return 1 - Math.pow(1 - t, 4);
+                }
+
+                function updateCounter(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easedProgress = easeOutQuart(progress);
+                    const currentVal = target * easedProgress;
+
+                    let formattedNum = hasDecimals 
+                        ? currentVal.toFixed(decimalPlaces) 
+                        : Math.round(currentVal).toLocaleString('en-IN');
+
+                    counterEl.innerText = `${prefix}${formattedNum}${suffix}`;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counterEl.innerText = rawText;
+                    }
+                }
+
+                requestAnimationFrame(updateCounter);
+            }
+
+            document.querySelectorAll('[data-counter]').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    runCounter(el);
+                }
+            });
+
+            // 10. Interactive Click Ripple Effect on Buttons
+            document.addEventListener('click', (e) => {
+                const target = e.target.closest('.btn-shimmer, .btn-ripple, button, a.rounded-2xl');
+                if (!target) return;
+
+                const rect = target.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                const diameter = Math.max(rect.width, rect.height);
+                const radius = diameter / 2;
+
+                ripple.style.width = ripple.style.height = `${diameter}px`;
+                ripple.style.left = `${e.clientX - rect.left - radius}px`;
+                ripple.style.top = `${e.clientY - rect.top - radius}px`;
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.35)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'rippleMotion 0.6s linear';
+                ripple.style.pointerEvents = 'none';
+
+                target.style.position = target.style.position || 'relative';
+                target.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+
+        });
+    </script>
+    </body>
+</html>
