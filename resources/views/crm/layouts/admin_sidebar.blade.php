@@ -165,13 +165,6 @@
             <span>Reports & Analytics</span>
         </a>
 
-        <!-- Demo Assignments -->
-        <a href="{{ route('crm.admin.demos.assignments') }}" 
-           class="sidebar-dark-item {{ Request::routeIs('crm.admin.demos.assignments*') ? 'sidebar-dark-item-active' : '' }}">
-            <i class="fa-solid fa-calendar-days"></i>
-            <span>Demo Assignments</span>
-        </a>
-
         <!-- Export Leads -->
         <a href="{{ route('crm.admin.leads.export') }}" 
            class="sidebar-dark-item hover:text-blue-600">
