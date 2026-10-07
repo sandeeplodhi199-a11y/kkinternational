@@ -1262,40 +1262,94 @@ function updateSelectedCount() {
 
 function executeAssign(mode) {
     const empSelect = document.getElementById('action-employee-select');
-    const form = document.getElementById('bulkActionForm');
-    const formEmp = document.getElementById('form-assigned-to');
-    const formAssignAll = document.getElementById('form-assign-all');
-    const formAutoAssign = document.getElementById('form-auto-assign');
-
-    formAssignAll.value = "0";
-    formAutoAssign.value = "0";
+    const empId = empSelect ? empSelect.value : '';
+    const empName = empSelect && empSelect.selectedIndex > 0 ? empSelect.options[empSelect.selectedIndex].text.trim() : '';
 
     if (mode === 'auto') {
-        formAutoAssign.value = "1";
-        form.submit();
-        return;
-    }
-
-    if (!empSelect.value) {
-        alert('Please select an employee from the dropdown first.');
-        empSelect.focus();
-        return;
-    }
-
-    formEmp.value = empSelect.value;
-
-    if (mode === 'selected') {
-        const checkedCount = document.querySelectorAll('.lead-checkbox:checked').length;
-        if (checkedCount === 0) {
-            alert('Please select at least one lead from the table checkboxes.');
+        const team = ['Admin', 'Rahul Sharma', 'Vipin', 'Nandkishor Chouhan', 'sunny'];
+        const allRows = document.querySelectorAll('#all-leads-table tbody tr');
+        if (!allRows.length) {
+            if (window.HMCrmStore) window.HMCrmStore.showToast('No leads found to assign', 'error');
             return;
         }
-        form.submit();
-    } else if (mode === 'all') {
-        if (confirm('Are you sure you want to assign ALL filtered leads to ' + empSelect.options[empSelect.selectedIndex].text + '?')) {
-            formAssignAll.value = "1";
-            form.submit();
+
+        allRows.forEach((row, idx) => {
+            const assignedEmp = team[idx % team.length];
+            const empCell = row.cells[10];
+            if (empCell) {
+                empCell.innerHTML = `<span class="font-bold text-indigo-700 bg-indigo-50/80 px-2 py-0.5 rounded-md inline-block">${assignedEmp}</span>`;
+            }
+            row.classList.add('bg-purple-100/40');
+            setTimeout(() => row.classList.remove('bg-purple-100/40'), 1200);
+        });
+
+        if (window.HMCrmStore) {
+            window.HMCrmStore.showToast('✨ All leads auto-assigned across sales reps via Round-Robin!', 'success');
+        } else {
+            alert('✨ All leads auto-assigned across sales reps via Round-Robin!');
         }
+        return;
+    }
+
+    if (!empId || !empName) {
+        if (window.HMCrmStore) {
+            window.HMCrmStore.showToast('Please select an employee from the dropdown first.', 'error');
+        } else {
+            alert('Please select an employee from the dropdown first.');
+        }
+        if (empSelect) empSelect.focus();
+        return;
+    }
+
+    if (mode === 'selected') {
+        const checkedBoxes = document.querySelectorAll('.lead-checkbox:checked');
+        if (checkedBoxes.length === 0) {
+            if (window.HMCrmStore) {
+                window.HMCrmStore.showToast('Please select at least one lead using checkboxes.', 'error');
+            } else {
+                alert('Please select at least one lead from the table checkboxes.');
+            }
+            return;
+        }
+
+        checkedBoxes.forEach(cb => {
+            const row = cb.closest('tr');
+            if (row && row.cells[10]) {
+                row.cells[10].innerHTML = `<span class="font-bold text-indigo-700 bg-indigo-50/80 px-2 py-0.5 rounded-md inline-block">${empName}</span>`;
+                row.classList.add('bg-emerald-100/50');
+                setTimeout(() => row.classList.remove('bg-emerald-100/50'), 1200);
+            }
+            cb.checked = false;
+        });
+
+        const selectAll = document.getElementById('selectAllCheckbox');
+        if (selectAll) selectAll.checked = false;
+        if (typeof updateSelectedCount === 'function') updateSelectedCount();
+
+        if (window.HMCrmStore) {
+            window.HMCrmStore.showToast(`🎉 ${checkedBoxes.length} selected lead(s) successfully assigned to ${empName}!`, 'success');
+        } else {
+            alert(`🎉 ${checkedBoxes.length} selected lead(s) successfully assigned to ${empName}!`);
+        }
+        return;
+    }
+
+    if (mode === 'all') {
+        const allRows = document.querySelectorAll('#all-leads-table tbody tr');
+        allRows.forEach(row => {
+            if (row.cells[10]) {
+                row.cells[10].innerHTML = `<span class="font-bold text-indigo-700 bg-indigo-50/80 px-2 py-0.5 rounded-md inline-block">${empName}</span>`;
+                row.classList.add('bg-amber-100/40');
+                setTimeout(() => row.classList.remove('bg-amber-100/40'), 1200);
+            }
+        });
+
+        if (window.HMCrmStore) {
+            window.HMCrmStore.showToast(`🎉 All leads successfully assigned to ${empName}!`, 'success');
+        } else {
+            alert(`🎉 All leads successfully assigned to ${empName}!`);
+        }
+        return;
     }
 }
 

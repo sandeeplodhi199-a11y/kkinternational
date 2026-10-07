@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Quotation - QT-2026-0251</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b; padding: 40px; font-size: 13px; line-height: 1.5; }
+        .header { display: flex; justify-content: space-between; border-bottom: 2px solid #1b4d3e; padding-bottom: 20px; margin-bottom: 30px; }
+        .company-name { font-size: 22px; font-weight: bold; color: #1b4d3e; }
+        .quote-title { font-size: 20px; font-weight: bold; text-align: right; color: #de7349; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { border-bottom: 2px solid #cbd5e1; text-align: left; padding: 10px; font-size: 11px; text-transform: uppercase; color: #64748b; }
+        td { border-bottom: 1px solid #f1f5f9; padding: 12px 10px; }
+        .totals { margin-top: 30px; float: right; width: 300px; }
+        .totals-row { display: flex; justify-content: space-between; padding: 6px 0; }
+        .grand-total { font-size: 16px; font-weight: bold; color: #1b4d3e; border-top: 2px solid #1b4d3e; padding-top: 8px; margin-top: 6px; }
+        @media print {
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body onload="window.print()">
+    <div class="header">
+        <div>
+            <div class="company-name">Hisab Mittra</div>
+            <div>Excellence in Enterprise Solutions</div>
+            <div>hisabmittra@gmail.com | +91 98765 43210</div>
+        </div>
+        <div>
+            <div class="quote-title">PROFORMA QUOTATION</div>
+            <div><strong>Ref:</strong> QT-2026-0251</div>
+            <div><strong>Date:</strong> 2026-10-03</div>
+            <div><strong>Valid:</strong> 2026-10-18</div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 25px;">
+        <strong>PREPARED FOR:</strong><br>
+        <span style="font-size: 15px; font-weight: bold;">ram</span><br>
+        hi@gmail.com | 7654387654
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Item & Description</th>
+                <th style="text-align: center;">Qty</th>
+                <th style="text-align: right;">Unit Price (INR)</th>
+                <th style="text-align: right;">Total (INR)</th>
+            </tr>
+        </thead>
+        <tbody>
+                            <tr>
+                    <td><strong>Enterprise Cloud CRM Subscription (Annual)</strong></td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: right;">₹150,000.00</td>
+                    <td style="text-align: right;"><strong>₹168,150.00</strong></td>
+                </tr>
+                            <tr>
+                    <td><strong>Custom ERP Data Migration &amp; Onboarding</strong></td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: right;">₹42,000.00</td>
+                    <td style="text-align: right;"><strong>₹49,560.00</strong></td>
+                </tr>
+                    </tbody>
+    </table>
+
+    <div class="totals">
+        <div class="totals-row">
+            <span>Subtotal:</span>
+            <span>₹192,000.00</span>
+        </div>
+                    <div class="totals-row" style="color: #dc2626;">
+                <span>Discount:</span>
+                <span>- ₹7,500.00</span>
+            </div>
+                <div class="totals-row">
+            <span>GST (18%):</span>
+            <span>₹33,210.00</span>
+        </div>
+        <div class="totals-row grand-total">
+            <span>Grand Total:</span>
+            <span>₹217,710.00</span>
+        </div>
+    </div>
+
+    <div style="clear: both; margin-top: 50px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+        <strong>Terms & Conditions:</strong><br>
+        1. Prices quoted are valid for 15 days from the date of quotation.
+2. Payment: 50% advance along with Purchase Order, balance 50% upon delivery/milestone completion.
+3. Standard onboarding and deployment timeline: 7 to 10 working days.
+4. Applicable GST @ 18% extra unless explicitly specified in line items.
+    </div>
+    <script src="/crm/js/crm-leads-store.js"></script>
+</body>
+</html>
