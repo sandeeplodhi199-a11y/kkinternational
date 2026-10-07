@@ -2,7 +2,7 @@
     <!-- Brand Logo (HisabMittra) -->
     <div class="px-5 py-4 border-b border-slate-100/80">
         <a href="{{ route('crm.employee.dashboard') }}" class="flex items-center group py-0.5">
-            <img src="/images/hisab-mittra-logo.png" alt="HisabMittra" class="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform group-hover:scale-102">
+            <img src="/images/hisab-mittra-logo.png" onerror="this.onerror=null; this.src='/crm/images/hisab-mittra-logo.png';" alt="HisabMittra" class="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform group-hover:scale-102">
         </a>
     </div>
 
