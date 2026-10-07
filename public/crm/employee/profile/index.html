@@ -219,7 +219,7 @@
                     <div class="flex flex-col h-full bg-white select-none">
     <!-- Brand Logo (HisabMittra) -->
     <div class="px-5 py-4 border-b border-slate-100/80">
-        <a href="http://localhost/crm/employee/dashboard" class="flex items-center group py-0.5">
+        <a href="/crm/employee/dashboard" class="flex items-center group py-0.5">
             <img src="/images/hisab-mittra-logo.png" alt="HisabMittra" class="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform group-hover:scale-102">
         </a>
     </div>
@@ -231,7 +231,7 @@
             Main
         </div>
 
-        <a href="http://localhost/crm/employee/dashboard" 
+        <a href="/crm/employee/dashboard" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-chart-line"></i>
             <span>My Dashboard</span>
@@ -243,44 +243,44 @@
             Workspace
         </div>
         
-                <a href="http://localhost/crm/employee/leads" 
+                <a href="/crm/employee/leads" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-user-tag"></i>
             <span>My Leads</span>
         </a>
         
-                <a href="http://localhost/crm/employee/customers" 
+                <a href="/crm/employee/customers" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-users"></i>
             <span>My Customers</span>
         </a>
         
-                <a href="http://localhost/crm/employee/deals" 
+                <a href="/crm/employee/deals" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-handshake"></i>
             <span>My Deals</span>
         </a>
         
-                <a href="http://localhost/crm/employee/tasks" 
+                <a href="/crm/employee/tasks" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-list-check"></i>
             <span>My Tasks</span>
         </a>
         
-                <a href="http://localhost/crm/employee/followups" 
+                <a href="/crm/employee/followups" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-clock-rotate-left"></i>
             <span>My Follow-ups</span>
         </a>
         
-        <a href="http://localhost/crm/employee/calendar" 
+        <a href="/crm/employee/calendar" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-calendar-days"></i>
             <span>My Calendar</span>
         </a>
 
         
-        <a href="http://localhost/crm/employee/profile" 
+        <a href="/crm/employee/profile" 
            class="sidebar-dark-item sidebar-dark-item-active">
             <i class="fa-solid fa-id-card"></i>
             <span>My Profile</span>
@@ -298,7 +298,7 @@
             <p class="text-[9px] mt-1 text-slate-500 font-semibold">84% achieved this month</p>
         </div>
 
-        <form action="http://localhost/crm/logout" method="POST">
+        <form action="/crm/logout" method="POST">
             <input type="hidden" name="_token" value="qGF2EIVNtBq5orMOozyWO4KNYbqlGD5PlnG1sOB0" autocomplete="off">            <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border border-rose-200/80 bg-rose-50/70 text-rose-600 text-xs font-black hover:bg-rose-100/80 hover:text-rose-700 transition duration-150 cursor-pointer">
                 <i class="fa-solid fa-power-off text-xs text-rose-500"></i>
                 <span>Sign Out</span>
@@ -332,7 +332,7 @@
     <div class="flex items-center gap-3">
         <!-- Page Back Button (20% enlarged) -->
         <button type="button" 
-                onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = 'http://localhost/crm/employee/dashboard'; }" 
+                onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/crm/employee/dashboard'; }" 
                 title="Go Back" 
                 class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer active:scale-95 group">
             <i class="fa-solid fa-arrow-left text-sm transition-transform group-hover:-translate-x-0.5"></i>
@@ -340,7 +340,7 @@
         </button>
 
         <!-- View Public Website Button (20% enlarged) -->
-        <a href="http://localhost" 
+        <a href="/" 
            title="View Public Website" 
            class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer group">
             <i class="fa-solid fa-globe text-sm transition-transform group-hover:rotate-12"></i>
@@ -356,7 +356,7 @@
     <div class="flex items-center gap-3.5 ml-auto">
         <!-- Functional Inline Search Bar with Live Results Dropdown -->
         <div class="relative w-56 sm:w-72 md:w-96" id="topbar-search-container">
-            <form action="http://localhost/crm/employee/leads" method="GET" class="relative w-full" id="topbar-search-form">
+            <form action="/crm/employee/leads" method="GET" class="relative w-full" id="topbar-search-form">
                 <div class="w-full bg-white border border-slate-200/90 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm transition">
                     <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm shrink-0"></i>
                     <input type="text" 
@@ -388,7 +388,7 @@
 
         <!-- Notification Bell with Quick Badge & Dropdown Preview -->
         <div class="relative group">
-            <a href="http://localhost/crm/employee/notifications" title="Notifications" class="relative w-11 h-11 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:border-emerald-300 transition cursor-pointer">
+            <a href="/crm/employee/notifications" title="Notifications" class="relative w-11 h-11 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:border-emerald-300 transition cursor-pointer">
                 <i class="fa-regular fa-bell text-lg"></i>
                                     <span class="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full bg-rose-500 text-white font-black text-[11px] flex items-center justify-center shadow-sm">
                         18
@@ -402,13 +402,13 @@
                         <h4 class="text-xs font-black text-slate-800">Notifications</h4>
                         <p class="text-[10px] text-slate-400">18 unread alerts</p>
                     </div>
-                    <a href="http://localhost/crm/employee/notifications" class="text-[11px] font-bold text-[#155242] hover:underline">
+                    <a href="/crm/employee/notifications" class="text-[11px] font-bold text-[#155242] hover:underline">
                         View All &rarr;
                     </a>
                 </div>
 
                 <div class="max-h-72 overflow-y-auto divide-y divide-slate-50">
-                                                                    <a href="http://localhost/crm/employee/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                                                                    <a href="/crm/employee/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
                             <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
                                 <i class="fa-solid fa-trophy text-xs"></i>
                             </div>
@@ -420,7 +420,7 @@
                                 <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal &#039;hyy&#039; was successfully WON! Revenue: ₹5,000</p>
                             </div>
                         </a>
-                                                                    <a href="http://localhost/crm/employee/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                                                                    <a href="/crm/employee/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
                             <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
                                 <i class="fa-solid fa-trophy text-xs"></i>
                             </div>
@@ -432,7 +432,7 @@
                                 <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal &#039;hyy&#039; was successfully WON! Revenue: ₹5,000</p>
                             </div>
                         </a>
-                                                                    <a href="http://localhost/crm/employee/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                                                                    <a href="/crm/employee/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
                             <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
                                 <i class="fa-solid fa-trophy text-xs"></i>
                             </div>
@@ -444,7 +444,7 @@
                                 <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal added in pipeline at New stage for ₹5,000</p>
                             </div>
                         </a>
-                                                                    <a href="http://localhost/crm/employee/leads" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                                                                    <a href="/crm/employee/leads" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
                             <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600 border border-emerald-200/60">
                                 <i class="fa-solid fa-user-plus text-xs"></i>
                             </div>
@@ -456,7 +456,7 @@
                                 <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Lead LEAD-9062 received from external webhook. Status: New</p>
                             </div>
                         </a>
-                                                                    <a href="http://localhost/crm/employee/leads" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                                                                    <a href="/crm/employee/leads" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
                             <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600 border border-emerald-200/60">
                                 <i class="fa-solid fa-user-plus text-xs"></i>
                             </div>
@@ -471,7 +471,7 @@
                                     </div>
 
                 <div class="px-4 pt-2 border-t border-slate-100 text-center">
-                    <a href="http://localhost/crm/employee/notifications" class="text-xs font-bold text-slate-700 hover:text-[#155242] inline-block py-1">
+                    <a href="/crm/employee/notifications" class="text-xs font-bold text-slate-700 hover:text-[#155242] inline-block py-1">
                         Go to Notification Center &rarr;
                     </a>
                 </div>
@@ -496,10 +496,10 @@
                     <p class="text-xs font-bold text-slate-800">Vipin</p>
                     <p class="text-[11px] text-slate-400 truncate">vipin@gmail.com</p>
                 </div>
-                                    <a href="http://localhost/crm/employee/profile" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                                    <a href="/crm/employee/profile" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
                         <i class="fa-solid fa-user text-slate-400"></i> My Profile
                     </a>
-                                <form action="http://localhost/crm/logout" method="POST">
+                                <form action="/crm/logout" method="POST">
                     <input type="hidden" name="_token" value="qGF2EIVNtBq5orMOozyWO4KNYbqlGD5PlnG1sOB0" autocomplete="off">                    <button type="submit" class="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 cursor-pointer">
                         <i class="fa-solid fa-arrow-right-from-bracket text-rose-400"></i> Sign Out
                     </button>
@@ -600,7 +600,7 @@
                     <span class="text-slate-600">Assigned Leads, Personal Follow-ups & Deals</span>
                 </div>
                 <div class="pt-2">
-                    <a href="http://localhost/crm/employee/performance" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950 transition-colors">
+                    <a href="/crm/employee/performance" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950 transition-colors">
                         View Detailed Performance
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
