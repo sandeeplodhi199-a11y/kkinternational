@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE">
+    <title>Add New Customer | Hisab Mittra CRM</title>
+    <link rel="icon" type="image/png" href="/images/hisab-mittra-icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <!-- Google Fonts: Plus Jakarta Sans / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7f4',
+                            100: '#dcece5',
+                            200: '#bfdcd0',
+                            300: '#94c6b3',
+                            400: '#5da790',
+                            500: '#0e6f66',
+                            600: '#0b5a53',
+                            700: '#084d47',
+                            800: '#063c37',
+                            900: '#042b27',
+                        },
+                        sage: {
+                            50: '#f5faf7',
+                            100: '#eaf4ee',
+                            200: '#d8eade',
+                            300: '#c2decb',
+                            400: '#a3cdb2',
+                            500: '#80b894',
+                            600: '#619e78',
+                            700: '#4c7f5f',
+                            800: '#3d654d',
+                            900: '#335340',
+                        },
+                        coachTeal: {
+                            light: '#138b80',
+                            DEFAULT: '#0e6f66',
+                            dark: '#084d47',
+                            deep: '#063934',
+                        },
+                        amberAccent: {
+                            50: '#fdf6f0',
+                            100: '#fbeee2',
+                            500: '#e27a4e',
+                            600: '#cb6336',
+                        },
+                        canvas: '#eaf2ee',
+                        cardBorder: '#dcece5',
+                    },
+                    borderRadius: {
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome 6 & Feather Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background-color: #F8F9FD;
+            background-image: 
+                radial-gradient(circle 900px at 15% 0%, rgba(254, 215, 226, 0.45) 0%, rgba(255, 241, 242, 0.20) 40%, transparent 70%),
+                radial-gradient(circle 850px at 85% 10%, rgba(254, 215, 170, 0.35) 0%, rgba(255, 247, 237, 0.18) 40%, transparent 70%),
+                radial-gradient(circle 950px at 50% 50%, rgba(243, 232, 255, 0.30) 0%, rgba(250, 245, 255, 0.15) 50%, transparent 75%),
+                radial-gradient(circle 1000px at 85% 90%, rgba(254, 215, 226, 0.35) 0%, rgba(255, 241, 242, 0.15) 50%, transparent 75%),
+                linear-gradient(135deg, #FDF8F9 0%, #F9F7FB 50%, #F5F7FC 100%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1E293B;
+        }
+
+        /* hr.ad Modern Surface Cards */
+        .crm-card, .hrad-card {
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(226, 232, 240, 0.65), 0 2px 8px -2px rgba(15, 23, 42, 0.03);
+            transition: all 0.2s ease-in-out;
+        }
+        .crm-card:hover, .hrad-card:hover {
+            box-shadow: 0 15px 35px -5px rgba(203, 213, 225, 0.75), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Sidebar scrollbar */
+        .sidebar-dark-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 9999px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb:hover {
+            background: #CBD5E1;
+        }
+
+        /* hr.ad Sidebar Navigation Items (Bold & High Contrast) */
+        .sidebar-dark-item {
+            color: #0F172A;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            margin: 3px 12px;
+            border-radius: 0.85rem;
+            transition: all 0.18s ease-in-out;
+            text-decoration: none;
+            cursor: pointer;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-dark-item span {
+            color: #0F172A;
+            font-weight: 700;
+        }
+        .sidebar-dark-item i {
+            color: #475569;
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            transition: all 0.18s ease-in-out;
+            flex-shrink: 0;
+        }
+        .sidebar-dark-item:hover {
+            background-color: #F1F5F9;
+            color: #000000;
+        }
+        .sidebar-dark-item:hover span {
+            color: #000000;
+            font-weight: 800;
+        }
+        .sidebar-dark-item:hover i {
+            color: #2563EB;
+        }
+        .sidebar-dark-item-active {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            border-radius: 0.85rem !important;
+            box-shadow: 0 8px 20px -3px rgba(37, 99, 235, 0.35) !important;
+            padding-left: 16px !important;
+        }
+        .sidebar-dark-item-active span {
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+        .sidebar-dark-item-active i {
+            color: #ffffff !important;
+        }
+
+        /* hr.ad Table Styling */
+        table thead th {
+            background-color: #F8FAFC !important;
+            color: #64748B !important;
+            border-color: #F1F5F9 !important;
+        }
+        table tbody tr {
+            border-color: #F8FAFC !important;
+        }
+        table tbody tr:hover {
+            background-color: #F8FAFC/70 !important;
+        }
+    </style>
+    </head>
+<body class="h-full flex overflow-hidden text-slate-800">
+
+    <!-- Collapsible / Responsive Mobile Backdrop -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/30 z-40 hidden md:hidden transition-opacity"></div>
+
+    <!-- LEFT SIDEBAR (LeadPro Clean White Theme) -->
+    <aside id="main-sidebar" class="fixed md:static inset-y-0 left-0 z-50 w-64 h-full bg-white border-r border-slate-200/80 flex flex-col overflow-hidden select-none shadow-sm transition-all duration-300 transform -translate-x-full md:translate-x-0">
+                    <div class="flex flex-col h-full bg-white select-none">
+    <!-- Brand Logo (HisabMittra) -->
+    <div class="px-5 py-4 border-b border-slate-100/80">
+        <a href="http://localhost/crm/admin/dashboard" class="flex items-center group py-0.5">
+            <img src="/images/hisab-mittra-logo.png" alt="HisabMittra" class="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform group-hover:scale-102">
+        </a>
+    </div>
+
+    <!-- Navigation Menu (hr.ad Modern Aesthetic - Bold & High Legibility) -->
+    <nav id="sidebar-nav" class="flex-1 overflow-y-auto sidebar-dark-scroll py-3 space-y-1">
+
+        <!-- 1. SECTION: MAIN -->
+        <div class="px-6 pt-2 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Main
+        </div>
+
+        <!-- Dashboard -->
+        <a href="http://localhost/crm/admin/dashboard" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <!-- 2. SECTION: CRM & PIPELINE -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            CRM & Pipeline
+        </div>
+
+        <!-- All Leads -->
+        <a href="http://localhost/crm/admin/leads" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-list-ul"></i>
+            <span>All Leads</span>
+        </a>
+
+        <!-- Deals -->
+        <a href="http://localhost/crm/admin/deals" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-handshake"></i>
+            <span>Deals & Pipeline</span>
+        </a>
+
+        <!-- Customers -->
+        <a href="http://localhost/crm/admin/customers" 
+           class="sidebar-dark-item sidebar-dark-item-active">
+            <i class="fa-solid fa-building"></i>
+            <span>Customers</span>
+        </a>
+
+        <!-- Quotations -->
+        <a href="http://localhost/crm/admin/quotations" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span>Quotations & Proposals</span>
+        </a>
+
+        <!-- 3. SECTION: OPERATIONS -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Operations
+        </div>
+
+        <!-- Follow-ups -->
+        <a href="http://localhost/crm/admin/followups" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Follow-ups</span>
+        </a>
+
+        <!-- Tasks -->
+        <a href="http://localhost/crm/admin/tasks" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Tasks</span>
+        </a>
+
+        <!-- Demos -->
+        <a href="http://localhost/crm/admin/demos" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Demos</span>
+        </a>
+
+        <!-- Reservations -->
+        <a href="http://localhost/crm/admin/reservations" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-book-open"></i>
+            <span>Reservations</span>
+        </a>
+
+        <!-- Bulk Assign -->
+        <a href="http://localhost/crm/admin/leads/bulk-assign" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-shuffle"></i>
+            <span>Bulk Assign</span>
+        </a>
+
+        <!-- Upload Leads -->
+        <a href="http://localhost/crm/admin/leads/upload" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span>Upload Leads</span>
+        </a>
+
+        <!-- 4. SECTION: FINANCE & PRODUCTS -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Finance & Products
+        </div>
+
+        <!-- Payments -->
+        <a href="http://localhost/crm/admin/payments" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-credit-card"></i>
+            <span>Payments & Collections</span>
+        </a>
+
+        <!-- Products -->
+        <a href="http://localhost/crm/admin/products" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Products & Services</span>
+        </a>
+
+        <!-- Billing Calculator -->
+        <a href="http://localhost/crm/admin/tools/billing-calculator" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-calculator"></i>
+            <span>Billing Calculator</span>
+        </a>
+
+        <!-- 5. SECTION: TEAM -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Team Management
+        </div>
+
+        <!-- Employees -->
+        <a href="http://localhost/crm/admin/team" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-users"></i>
+            <span>Employees</span>
+        </a>
+
+        <!-- Sales Targets -->
+        <a href="http://localhost/crm/admin/targets" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-bullseye"></i>
+            <span>Sales Targets</span>
+        </a>
+
+        <!-- Performance -->
+        <a href="http://localhost/crm/admin/performance" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-trophy"></i>
+            <span>Team Performance</span>
+        </a>
+
+        <!-- 6. SECTION: ANALYTICS & REPORTS -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Analytics & Logs
+        </div>
+
+        <!-- Master Reports -->
+        <a href="http://localhost/crm/admin/reports" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Reports & Analytics</span>
+        </a>
+
+        <!-- Demo Assignments -->
+        <a href="http://localhost/crm/admin/demos/assignments" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Demo Assignments</span>
+        </a>
+
+        <!-- Export Leads -->
+        <a href="http://localhost/crm/admin/leads-export" 
+           class="sidebar-dark-item hover:text-blue-600">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>Export Leads (.xlsx)</span>
+        </a>
+
+        <!-- Activity Logs -->
+        <a href="http://localhost/crm/admin/activity-logs" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Activity Logs</span>
+        </a>
+
+        <!-- Live Tracking -->
+        <a href="http://localhost/crm/admin/live-tracking" 
+           class="sidebar-dark-item hover:text-blue-600 ">
+            <i class="fa-solid fa-tower-broadcast text-rose-500 animate-pulse"></i>
+            <span>Live Tracking</span>
+        </a>
+
+        <!-- 7. SECTION: SUPER ADMIN GOVERNANCE -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            Super Admin
+        </div>
+
+        <!-- RBAC Matrix -->
+        <a href="http://localhost/crm/admin/super/rbac" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-shield-halved text-rose-500"></i>
+            <span>RBAC Matrix</span>
+        </a>
+
+
+        <!-- Automation & Routing -->
+        <a href="http://localhost/crm/admin/super/automation" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+            <span>Lead Automation</span>
+        </a>
+
+        <!-- Integrations & APIs -->
+        <a href="http://localhost/crm/admin/super/integrations" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-plug text-blue-500"></i>
+            <span>Integrations & APIs</span>
+        </a>
+
+
+        <!-- Recycle Bin -->
+        <a href="http://localhost/crm/admin/super/recycle-bin" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-trash-can text-rose-500"></i>
+            <span>Recycle Bin</span>
+        </a>
+
+        <!-- Financial Approvals -->
+        <a href="http://localhost/crm/admin/super/approvals" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-stamp text-emerald-600"></i>
+            <span>Financial Approvals</span>
+        </a>
+
+
+        <!-- 8. SECTION: SYSTEM -->
+        <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
+            System Settings
+        </div>
+
+        <!-- Settings -->
+        <a href="http://localhost/crm/admin/settings" 
+           class="sidebar-dark-item ">
+            <i class="fa-solid fa-gear"></i>
+            <span>System Settings</span>
+        </a>
+    </nav>
+
+    <!-- Bottom Sign Out -->
+    <div class="p-4 border-t border-slate-100 bg-white">
+        <form action="http://localhost/crm/logout" method="POST">
+            <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">            <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border border-rose-200/80 bg-rose-50/70 text-rose-600 text-xs font-black hover:bg-rose-100/80 hover:text-rose-700 transition duration-150 cursor-pointer">
+                <i class="fa-solid fa-power-off text-xs text-rose-500"></i>
+                <span>Sign Out</span>
+            </button>
+        </form>
+    </div>
+</div>
+            </aside>
+    <script>
+        // Immediate sidebar scroll restoration prior to page paint to eliminate visual jumping
+        (function() {
+            try {
+                var nav = document.getElementById('sidebar-nav');
+                if (nav) {
+                    var saved = sessionStorage.getItem('crm_sidebar_scroll_pos');
+                    if (saved !== null) {
+                        nav.scrollTop = parseInt(saved, 10);
+                    }
+                }
+            } catch(e) {}
+        })();
+    </script>
+
+    <!-- MAIN WRAPPER -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50/60 backdrop-blur-[2px]">
+        
+        
+        <!-- TOPBAR -->
+        <header class="bg-transparent px-4 md:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30">
+    <!-- Left: Page Back Button, Website Link & Mobile Toggle -->
+    <div class="flex items-center gap-3">
+        <!-- Page Back Button (20% enlarged) -->
+        <button type="button" 
+                onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = 'http://localhost/crm/admin/dashboard'; }" 
+                title="Go Back" 
+                class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer active:scale-95 group">
+            <i class="fa-solid fa-arrow-left text-sm transition-transform group-hover:-translate-x-0.5"></i>
+            <span class="text-sm font-bold hidden sm:inline">Back</span>
+        </button>
+
+        <!-- View Public Website Button (20% enlarged) -->
+        <a href="http://localhost" 
+           title="View Public Website" 
+           class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer group">
+            <i class="fa-solid fa-globe text-sm transition-transform group-hover:rotate-12"></i>
+            <span class="text-sm font-bold hidden sm:inline">Website</span>
+        </a>
+
+        <button type="button" onclick="toggleSidebar()" class="md:hidden text-slate-700 hover:text-blue-600 p-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Center/Right: Search Input, Notification Bell, User Profile Pill -->
+    <div class="flex items-center gap-3.5 ml-auto">
+        <!-- Functional Inline Search Bar with Live Results Dropdown -->
+        <div class="relative w-56 sm:w-72 md:w-96" id="topbar-search-container">
+            <form action="http://localhost/crm/admin/search" method="GET" class="relative w-full" id="topbar-search-form">
+                <div class="w-full bg-white border border-slate-200/90 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm transition">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm shrink-0"></i>
+                    <input type="text" 
+                           id="topbar-search-input" 
+                           name="q" 
+                           autocomplete="off" 
+                           value=""
+                           placeholder="Search leads, deals, customers..." 
+                           class="w-full text-sm font-bold text-slate-900 placeholder-slate-400 bg-transparent outline-none">
+                    
+                    <!-- Clear Button -->
+                    <button type="button" id="clear-search-btn" onclick="clearTopSearch()" class="hidden text-slate-400 hover:text-slate-700 text-xs px-1 cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Inline Live Search Dropdown Result Panel -->
+            <div id="inline-search-dropdown" class="absolute right-0 top-full mt-2 w-80 sm:w-96 md:w-[440px] bg-white rounded-3xl shadow-2xl border border-slate-200 z-50 p-4 text-slate-900 hidden max-h-[460px] overflow-y-auto">
+                <div id="inline-search-loading" class="hidden text-center py-6 text-xs text-slate-600 font-bold">
+                    <i class="fa-solid fa-circle-notch fa-spin text-orange-500 text-base mb-1.5 block mx-auto"></i>
+                    Searching CRM records...
+                </div>
+                <div id="inline-search-content" class="space-y-3 text-xs">
+                    <div class="text-center py-4 text-slate-500 font-bold">Type to search leads, customers, deals, quotations...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Bell with Quick Badge & Dropdown Preview -->
+        <div class="relative group">
+            <a href="http://localhost/crm/admin/notifications" title="Notifications" class="relative w-11 h-11 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:text-emerald-700 hover:border-emerald-300 transition cursor-pointer">
+                <i class="fa-regular fa-bell text-lg"></i>
+                                    <span class="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full bg-rose-500 text-white font-black text-[11px] flex items-center justify-center shadow-sm">
+                        18
+                    </span>
+                            </a>
+
+            <!-- Quick Notification Dropdown Preview -->
+            <div class="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-slate-100 rounded-3xl shadow-2xl py-3 hidden group-hover:block transition z-50">
+                <div class="px-4 pb-2 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h4 class="text-xs font-black text-slate-800">Notifications</h4>
+                        <p class="text-[10px] text-slate-400">18 unread alerts</p>
+                    </div>
+                    <a href="http://localhost/crm/admin/notifications" class="text-[11px] font-bold text-[#155242] hover:underline">
+                        View All &rarr;
+                    </a>
+                </div>
+
+                <div class="max-h-72 overflow-y-auto divide-y divide-slate-50">
+                                                                    <a href="http://127.0.0.1:8000/crm/admin/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
+                                <i class="fa-solid fa-trophy text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">🎉 Deal Won: hyy</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal &#039;hyy&#039; was successfully WON! Revenue: ₹5,000</p>
+                            </div>
+                        </a>
+                                                                    <a href="http://127.0.0.1:8000/crm/admin/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
+                                <i class="fa-solid fa-trophy text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">🎉 Deal Won: hyy</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal &#039;hyy&#039; was successfully WON! Revenue: ₹5,000</p>
+                            </div>
+                        </a>
+                                                                    <a href="http://127.0.0.1:8000/crm/admin/deals" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-orange-50 text-orange-600 border border-orange-200/60">
+                                <i class="fa-solid fa-trophy text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">Deal Added: hyy</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal added in pipeline at New stage for ₹5,000</p>
+                            </div>
+                        </a>
+                                                                    <a href="http://127.0.0.1:8000/crm/admin/leads/37" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600 border border-emerald-200/60">
+                                <i class="fa-solid fa-user-plus text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">New Webhook Lead: Webhook Test Buyer</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Lead LEAD-9062 received from external webhook. Status: New</p>
+                            </div>
+                        </a>
+                                                                    <a href="http://127.0.0.1:8000/crm/admin/leads/33" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600 border border-emerald-200/60">
+                                <i class="fa-solid fa-user-plus text-xs"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center justify-between gap-1">
+                                    <h5 class="text-xs font-bold text-slate-800 truncate">New Webhook Lead: Webhook Test Buyer</h5>
+                                    <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Lead LEAD-3369 received from external webhook. Status: New</p>
+                            </div>
+                        </a>
+                                    </div>
+
+                <div class="px-4 pt-2 border-t border-slate-100 text-center">
+                    <a href="http://localhost/crm/admin/notifications" class="text-xs font-bold text-slate-700 hover:text-[#155242] inline-block py-1">
+                        Go to Notification Center &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Dropdown Pill (20% enlarged) -->
+        <div class="relative group">
+            <button class="flex items-center gap-2.5 p-1.5 pr-3.5 rounded-2xl bg-white border border-white/80 shadow-sm hover:border-slate-200 transition cursor-pointer">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-inner">
+                    A
+                </div>
+                <div class="hidden sm:block text-left pr-1">
+                    <div class="text-sm font-bold text-slate-800 leading-tight">Admin</div>
+                </div>
+                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-slate-700 transition"></i>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div class="absolute right-0 mt-2 w-52 bg-white border border-slate-100 rounded-3xl shadow-xl py-2 hidden group-hover:block transition z-50">
+                <div class="px-4 py-2 border-b border-slate-100">
+                    <p class="text-xs font-bold text-slate-800">Admin</p>
+                    <p class="text-[11px] text-slate-400 truncate">admin@c.com</p>
+                </div>
+                                    <a href="http://localhost/crm/admin/settings" class="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                        <i class="fa-solid fa-sliders text-slate-400"></i> System Settings
+                    </a>
+                                <form action="http://localhost/crm/logout" method="POST">
+                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">                    <button type="submit" class="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 cursor-pointer">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-rose-400"></i> Sign Out
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+
+        <!-- MAIN SCROLLABLE CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+            <!-- Flash Message Alerts -->
+            
+            
+            <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Top Breadcrumb & Header -->
+    <div class="flex items-center justify-between flex-wrap gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-500 mb-1">
+                <a href="http://localhost/crm/admin/customers" class="hover:text-blue-600 transition">Customers</a>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                <span class="text-slate-900 font-extrabold">Add Customer</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+                <span class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-building-user"></i>
+                </span>
+                <span>Add Customer Account</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-600 font-semibold mt-1">
+                Register verified client accounts, billing information, and assign dedicated relationship managers.
+            </p>
+        </div>
+
+        <a href="http://localhost/crm/admin/customers" class="px-4 py-2.5 rounded-2xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-black transition flex items-center gap-2 shadow-xs">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+            <span>Back to Customers</span>
+        </a>
+    </div>
+
+    <!-- Main Card Form -->
+    <div class="crm-card p-6 sm:p-8 bg-white border border-slate-200 shadow-sm rounded-3xl">
+        <form action="http://localhost/crm/admin/customers" method="POST" class="space-y-6">
+            <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
+            <!-- Client Identification -->
+            <div>
+                <div class="pb-3 mb-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-id-badge text-blue-600 text-xs"></i>
+                        <span>Primary Client Identification</span>
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Full Name / Contact Person *</label>
+                        <input type="text" name="name" required placeholder="e.g. Ramesh Chandra" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Company / Legal Business Entity</label>
+                        <input type="text" name="company" placeholder="e.g. Chandra Enterprises Pvt Ltd" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Phone Number</label>
+                        <input type="text" name="phone" placeholder="+91 98290 11223" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-mono font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Email Address</label>
+                        <input type="email" name="email" placeholder="contact@chandraenterprises.com" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing Address & Location -->
+            <div>
+                <div class="pb-3 mb-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-blue-600 text-xs"></i>
+                        <span>Address & Location Details</span>
+                    </h3>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-800 mb-1.5">Billing & Delivery Address</label>
+                    <textarea name="address" rows="2" placeholder="Full street, city, pin code..." class="w-full text-xs p-3.5 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
+                </div>
+            </div>
+
+            <!-- Management & Lifecycle Status -->
+            <div>
+                <div class="pb-3 mb-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-user-tie text-blue-600 text-xs"></i>
+                        <span>Account Assignment & Status</span>
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Account Manager / Representative</label>
+                        <select name="assigned_to" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="">Unassigned</option>
+                                                            <option value="1">Admin</option>
+                                                            <option value="6">Rahul Sharma</option>
+                                                            <option value="7">Vipin</option>
+                                                            <option value="8">Nandkishor Chouhan</option>
+                                                            <option value="9">sunny</option>
+                                                    </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Customer Status *</label>
+                        <select name="status" required class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-black text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="Active" selected>Active Client</option>
+                            <option value="Inactive">Inactive / Suspended</option>
+                            <option value="Lead">Prospective Customer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operational Notes -->
+            <div>
+                <label class="block text-xs font-black text-slate-800 mb-1.5">Account Notes & Terms</label>
+                <textarea name="notes" rows="3" placeholder="Credit terms, special billing conditions, preferences..." class="w-full text-xs p-3.5 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
+            </div>
+
+            <!-- Action Buttons Footer -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+                <a href="http://localhost/crm/admin/customers" class="px-5 py-3 rounded-2xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-black transition cursor-pointer">
+                    Cancel
+                </a>
+                <button type="submit" class="px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-md shadow-blue-600/20 transition cursor-pointer flex items-center gap-2">
+                    <i class="fa-solid fa-check text-xs"></i>
+                    <span>Save Customer</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+        </main>
+    </div>
+
+    <!-- Core Scripts -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const backdrop = document.getElementById('mobile-sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        // Global Keyboard Shortcut: Ctrl + K or / to focus Topbar Search Input
+        document.addEventListener('keydown', function(e) {
+            const searchInput = document.getElementById('topbar-search-input');
+            if (!searchInput) return;
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === 'Escape') {
+                closeInlineSearch();
+            }
+        });
+
+        // Inline Live Search Controller
+        const topSearchInput = document.getElementById('topbar-search-input');
+        const inlineDropdown = document.getElementById('inline-search-dropdown');
+        const inlineContent = document.getElementById('inline-search-content');
+        const inlineLoading = document.getElementById('inline-search-loading');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+
+        let searchDebounceTimeout = null;
+
+        if (topSearchInput) {
+            topSearchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2) {
+                    performLiveSearch(this.value.trim());
+                }
+            });
+
+            topSearchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+
+                if (clearSearchBtn) {
+                    if (query.length > 0) {
+                        clearSearchBtn.classList.remove('hidden');
+                    } else {
+                        clearSearchBtn.classList.add('hidden');
+                    }
+                }
+
+                if (query.length < 2) {
+                    closeInlineSearch();
+                    return;
+                }
+
+                clearTimeout(searchDebounceTimeout);
+                searchDebounceTimeout = setTimeout(() => {
+                    performLiveSearch(query);
+                }, 250);
+            });
+        }
+
+        let currentSearchController = null;
+
+        function performLiveSearch(query) {
+            if (!inlineDropdown || !inlineContent) return;
+
+            const isAdmin = true;
+            const searchUrl = isAdmin ? '/crm/admin/search?q=' + encodeURIComponent(query) : '/crm/employee/leads?search=' + encodeURIComponent(query);
+
+            inlineDropdown.classList.remove('hidden');
+            if (inlineLoading) inlineLoading.classList.remove('hidden');
+            inlineContent.innerHTML = '';
+
+            if (currentSearchController) {
+                currentSearchController.abort();
+            }
+            currentSearchController = new AbortController();
+
+            fetch('/crm/global-search?ajax=1&q=' + encodeURIComponent(query), {
+                signal: currentSearchController.signal,
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('HTTP ' + res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (inlineLoading) inlineLoading.classList.add('hidden');
+
+                    let html = '';
+
+                    // 1. Leads
+                    if (data.leads && data.leads.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5 text-emerald-700">
+                                    <i class="fa-solid fa-bullseye text-emerald-500"></i> Leads (${data.leads.length})
+                                </span>
+                            </div>
+                        `;
+                        data.leads.forEach(l => {
+                            html += `
+                                <a href="${l.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-emerald-50/70 border border-transparent hover:border-emerald-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-emerald-950 text-xs">${l.name}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold truncate flex items-center gap-2">
+                                            <span>${l.company || 'Direct Contact'}</span>
+                                            ${l.phone ? `<span class="font-mono text-slate-600 font-bold">• ${l.phone}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0">${l.status}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 2. Customers
+                    if (data.customers && data.customers.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5 text-sky-700">
+                                    <i class="fa-solid fa-building text-sky-500"></i> Customers (${data.customers.length})
+                                </span>
+                            </div>
+                        `;
+                        data.customers.forEach(c => {
+                            html += `
+                                <a href="${c.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-sky-50/70 border border-transparent hover:border-sky-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-sky-950 text-xs">${c.name}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold truncate flex items-center gap-2">
+                                            <span>${c.company || 'Account'}</span>
+                                            ${c.phone ? `<span class="font-mono text-slate-600 font-bold">• ${c.phone}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <span class="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-300 shrink-0">${c.code || 'Account'}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 3. Deals
+                    if (data.deals && data.deals.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center gap-1.5 text-amber-700">
+                                <i class="fa-solid fa-handshake text-amber-500"></i> Deals (${data.deals.length})
+                            </div>
+                        `;
+                        data.deals.forEach(d => {
+                            html += `
+                                <a href="${d.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-amber-950 text-xs">${d.title}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'Pipeline'}</div>
+                                    </div>
+                                    <span class="text-xs font-black text-slate-900 shrink-0">₹${d.value}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 4. Quotations
+                    if (data.quotations && data.quotations.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center gap-1.5 text-purple-700">
+                                <i class="fa-solid fa-file-invoice-dollar text-purple-500"></i> Quotations (${data.quotations.length})
+                            </div>
+                        `;
+                        data.quotations.forEach(qt => {
+                            html += `
+                                <a href="${qt.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-purple-50/70 border border-transparent hover:border-purple-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-purple-950 text-xs font-mono">${qt.quotation_no}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold truncate">${qt.customer_name}</div>
+                                    </div>
+                                    <span class="text-xs font-black text-purple-900 shrink-0">₹${qt.amount}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    // 5. Products
+                    if (data.products && data.products.length > 0) {
+                        html += `
+                            <div class="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-2.5 mb-1.5 flex items-center gap-1.5 text-orange-700">
+                                <i class="fa-solid fa-boxes-stacked text-orange-500"></i> Products (${data.products.length})
+                            </div>
+                        `;
+                        data.products.forEach(p => {
+                            html += `
+                                <a href="${p.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-orange-50/70 border border-transparent hover:border-orange-200 transition group mb-1">
+                                    <div class="truncate pr-2">
+                                        <div class="font-black text-slate-900 group-hover:text-orange-950 text-xs">${p.name}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${p.category || 'General'}</div>
+                                    </div>
+                                    <span class="text-xs font-black text-orange-600 shrink-0">₹${p.price}</span>
+                                </a>
+                            `;
+                        });
+                    }
+
+                    if (!html) {
+                        html = `
+                            <div class="text-center py-6 text-slate-500">
+                                <i class="fa-solid fa-magnifying-glass text-xl text-slate-300 mb-2 block"></i>
+                                <span class="text-xs font-black text-slate-800">No records matching "<strong>${query}</strong>"</span>
+                                <p class="text-[11px] text-slate-400 font-medium mt-1">Try name, company or phone number</p>
+                            </div>
+                        `;
+                    } else {
+                        // Quick Action to View All Results Page
+                        html += `
+                            <div class="pt-2.5 mt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                                <span class="text-slate-400 font-medium">Press <kbd class="bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-slate-800">Enter</kbd></span>
+                                <a href="${searchUrl}" class="font-black text-orange-600 hover:text-orange-700 flex items-center gap-1.5 cursor-pointer">
+                                    <span>View all ${data.total_count} results</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        `;
+                    }
+
+                    inlineContent.innerHTML = html;
+                })
+                .catch(err => {
+                    if (err.name === 'AbortError') return;
+                    console.error('Search error:', err);
+                    if (inlineLoading) inlineLoading.classList.add('hidden');
+                    inlineContent.innerHTML = `
+                        <div class="text-center py-4 px-2">
+                            <div class="text-xs font-bold text-rose-500 mb-1">Search encountered an issue.</div>
+                            <a href="${searchUrl}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200 hover:bg-orange-100 transition mt-2">
+                                <span>View search page directly</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    `;
+                });
+        }
+
+        function clearTopSearch() {
+            if (topSearchInput) {
+                topSearchInput.value = '';
+                topSearchInput.focus();
+            }
+            if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
+            closeInlineSearch();
+        }
+
+        function closeInlineSearch() {
+            if (inlineDropdown) inlineDropdown.classList.add('hidden');
+        }
+
+        // Close dropdown when clicking anywhere outside the search container
+        document.addEventListener('click', function(event) {
+            const container = document.getElementById('topbar-search-container');
+            if (container && !container.contains(event.target)) {
+                closeInlineSearch();
+            }
+        });
+
+        // =========================================================================
+        // SIDEBAR SCROLL PERSISTENCE & AUTO-ALIGN ACTIVE MENU ITEM
+        // Prevents sidebar from jumping to the top when navigating or clicking links
+        // =========================================================================
+        (function() {
+            function getNav() {
+                return document.getElementById('sidebar-nav');
+            }
+
+            function restoreSidebarScroll() {
+                var nav = getNav();
+                if (!nav) return;
+
+                var savedPos = sessionStorage.getItem('crm_sidebar_scroll_pos');
+                if (savedPos !== null && savedPos !== '') {
+                    nav.scrollTop = parseInt(savedPos, 10);
+                }
+
+                // Ensure the active item is visible in the sidebar viewport
+                var active = nav.querySelector('.sidebar-dark-item-active');
+                if (active) {
+                    var navRect = nav.getBoundingClientRect();
+                    var activeRect = active.getBoundingClientRect();
+                    var isVisible = (activeRect.top >= navRect.top + 10) && (activeRect.bottom <= navRect.bottom - 10);
+                    if (!isVisible) {
+                        active.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                    }
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', restoreSidebarScroll);
+            } else {
+                restoreSidebarScroll();
+            }
+            window.addEventListener('load', restoreSidebarScroll);
+
+            // Continuously save scroll position on user scroll (debounced)
+            var scrollDebounce = null;
+            document.addEventListener('DOMContentLoaded', function() {
+                var nav = getNav();
+                if (!nav) return;
+
+                nav.addEventListener('scroll', function() {
+                    clearTimeout(scrollDebounce);
+                    scrollDebounce = setTimeout(function() {
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                    }, 40);
+                }, { passive: true });
+
+                // Snapshot exact scroll position immediately on link clicks
+                nav.addEventListener('click', function(e) {
+                    var link = e.target.closest('a');
+                    if (link) {
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                    }
+                });
+
+                // Clicking the Brand/Dashboard logo explicitly resets to top (position 0)
+                var brandLogo = document.querySelector('#main-sidebar a[href*="dashboard"]');
+                if (brandLogo) {
+                    brandLogo.addEventListener('click', function() {
+                        sessionStorage.setItem('crm_sidebar_scroll_pos', '0');
+                    });
+                }
+            });
+
+            // Save on beforeunload
+            window.addEventListener('beforeunload', function() {
+                var nav = getNav();
+                if (nav) {
+                    sessionStorage.setItem('crm_sidebar_scroll_pos', nav.scrollTop);
+                }
+            });
+        })();
+    </script>
+    </body>
+</html>
