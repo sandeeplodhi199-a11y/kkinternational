@@ -5,22 +5,23 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Top Header -->
-    <div class="flex items-center justify-between flex-wrap gap-4">
+        <!-- Top Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-                <span>Recycle Bin & Trash Recovery</span>
+                <i class="fa-solid fa-trash-arrow-up text-emerald-600 text-2xl"></i>
+                <span>Recycle Bin &amp; Trash Recovery</span>
             </h1>
-            <p class="text-xs sm:text-sm text-slate-700 font-bold mt-1">
-                Accidentally or maliciously deleted leads, deals, customers, follow-ups, tasks, demos, and quotations can be safely restored with 1-click.
+            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+                Accidentally or maliciously deleted leads, deals, customers, follow-ups, and team records can be safely restored with 1-click.
             </p>
         </div>
 
-        <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center gap-2.5 flex-wrap shrink-0">
             @if($totalTrash > 0)
                 <form action="{{ route('crm.admin.super.recycle_bin.restore_all', ['type' => $type]) }}" method="POST" onsubmit="return confirm('Restore all items in this view?');">
                     @csrf
-                    <button type="submit" class="px-3.5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-rotate-left text-xs"></i>
                         <span>Restore All</span>
                     </button>
@@ -28,75 +29,75 @@
 
                 <form action="{{ route('crm.admin.super.recycle_bin.empty', ['type' => $type]) }}" method="POST" onsubmit="return confirm('WARNING: Permanently purge all records in this view? This cannot be undone.');">
                     @csrf
-                    <button type="submit" class="px-3.5 py-2 rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 font-bold text-xs shadow-sm transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-trash-can text-xs"></i>
                         <span>Empty Trash</span>
                     </button>
                 </form>
             @endif
 
-            <span class="px-4 py-2 rounded-2xl bg-slate-900 text-white font-black text-xs shadow-sm flex items-center gap-1.5">
-                <i class="fa-solid fa-recycle text-emerald-400"></i>
+            <span class="px-4 py-2 rounded-xl bg-slate-900 text-white font-black text-xs shadow-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-recycle text-emerald-400 text-xs"></i>
                 <span>{{ $totalTrash }} Items in Bin</span>
             </span>
         </div>
     </div>
 
     <!-- Filter Category Tabs -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-black scrollbar-none">
-        <a href="?type=all" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'all' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <a href="?type=all" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'all' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>All Trash</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $totalTrash }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'all' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $totalTrash }}</span>
         </a>
 
-        <a href="?type=leads" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'leads' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=leads" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'leads' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Leads</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['leads'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'leads' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['leads'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=customers" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'customers' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=customers" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'customers' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Customers</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'customers' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['customers'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'customers' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['customers'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=deals" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'deals' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=deals" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'deals' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Deals</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'deals' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['deals'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'deals' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['deals'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=quotations" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'quotations' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=quotations" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'quotations' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Quotations</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'quotations' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['quotations'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'quotations' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['quotations'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=followups" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'followups' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=followups" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'followups' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Follow-ups</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'followups' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['followups'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'followups' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['followups'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=tasks" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'tasks' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=tasks" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'tasks' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Tasks</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'tasks' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['tasks'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'tasks' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['tasks'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=demos" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'demos' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=demos" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'demos' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Demos</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'demos' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['demos'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'demos' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['demos'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=payments" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'payments' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=payments" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'payments' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Payments</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'payments' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['payments'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'payments' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['payments'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=employees" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'employees' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=employees" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'employees' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Team</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'employees' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['employees'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'employees' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['employees'] ?? 0 }}</span>
         </a>
 
-        <a href="?type=products" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 {{ $type === 'products' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50' }}">
+        <a href="?type=products" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 {{ $type === 'products' ? 'bg-slate-900 text-white border-slate-900 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' }}">
             <span>Products</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'products' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600' }}">{{ $counts['products'] ?? 0 }}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] {{ $type === 'products' ? 'bg-white/20 text-white font-black' : 'bg-slate-100 text-slate-600 font-bold' }}">{{ $counts['products'] ?? 0 }}</span>
         </a>
     </div>
 
@@ -105,7 +106,12 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
                 <thead>
-                    <tr class="bg-slate-100/80 text-slate-700 font-black text-[11px] uppercase tracking-wider border-b border-slate-200">
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-extrabold text-[11px] uppercase tracking-wider">
+                        <th class="py-3.5 px-4 w-4/12">ITEM / ENTITY</th>
+                        <th class="py-3.5 px-4 w-1/12 text-center">MODULE</th>
+                        <th class="py-3.5 px-4 w-3/12">DETAILS / INFO</th>
+                        <th class="py-3.5 px-4 w-2/12">DELETED AT</th>
+                        <th class="py-3.5 px-4 w-2/12 text-right">RESTORE / PURGE</th>
                         <th class="py-3 px-4">ITEM / ENTITY</th>
                         <th class="py-3 px-4">MODULE</th>
                         <th class="py-3 px-4">DETAILS / INFO</th>

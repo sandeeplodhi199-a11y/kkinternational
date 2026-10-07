@@ -672,182 +672,184 @@
             
             <div class="space-y-6">
 
-    <!-- Top Header -->
-    <div class="flex items-center justify-between flex-wrap gap-4">
+        <!-- Top Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-                <span>Recycle Bin & Trash Recovery</span>
+                <i class="fa-solid fa-trash-arrow-up text-emerald-600 text-2xl"></i>
+                <span>Recycle Bin &amp; Trash Recovery</span>
             </h1>
-            <p class="text-xs sm:text-sm text-slate-700 font-bold mt-1">
-                Accidentally or maliciously deleted leads, deals, customers, follow-ups, tasks, demos, and quotations can be safely restored with 1-click.
+            <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+                Accidentally or maliciously deleted leads, deals, customers, follow-ups, and team records can be safely restored with 1-click.
             </p>
         </div>
 
-        <div class="flex items-center gap-2 flex-wrap">
-                            <form action="/crm/admin/super/recycle-bin/restore-all?type=all" method="POST" onsubmit="return confirm('Restore all items in this view?');">
-                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">                    <button type="submit" class="px-3.5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-rotate-left text-xs"></i>
-                        <span>Restore All</span>
-                    </button>
-                </form>
+        <div class="flex items-center gap-2.5 flex-wrap shrink-0">
+            <form action="/crm/admin/super/recycle-bin/restore-all?type=all" method="POST" onsubmit="return confirm('Restore all items in this view?');">
+                <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
+                <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                    <span>Restore All</span>
+                </button>
+            </form>
 
-                <form action="/crm/admin/super/recycle-bin/empty?type=all" method="POST" onsubmit="return confirm('WARNING: Permanently purge all records in this view? This cannot be undone.');">
-                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">                    <button type="submit" class="px-3.5 py-2 rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 font-bold text-xs shadow-sm transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-trash-can text-xs"></i>
-                        <span>Empty Trash</span>
-                    </button>
-                </form>
-            
-            <span class="px-4 py-2 rounded-2xl bg-slate-900 text-white font-black text-xs shadow-sm flex items-center gap-1.5">
-                <i class="fa-solid fa-recycle text-emerald-400"></i>
+            <form action="/crm/admin/super/recycle-bin/empty?type=all" method="POST" onsubmit="return confirm('WARNING: Permanently purge all records in this view? This cannot be undone.');">
+                <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
+                <button type="submit" class="px-4 py-2 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                    <span>Empty Trash</span>
+                </button>
+            </form>
+
+            <span class="px-4 py-2 rounded-xl bg-slate-900 text-white font-black text-xs shadow-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-recycle text-emerald-400 text-xs"></i>
                 <span>2 Items in Bin</span>
             </span>
         </div>
     </div>
 
     <!-- Filter Category Tabs -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-black scrollbar-none">
-        <a href="?type=all" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-slate-900 text-white border-slate-900 shadow-sm">
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <a href="?type=all" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-slate-900 text-white border-slate-900 shadow-xs">
             <span>All Trash</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-white/20 text-white">2</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-white/20 text-white font-black">2</span>
         </a>
 
-        <a href="?type=leads" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=leads" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Leads</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">1</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">1</span>
         </a>
 
-        <a href="?type=customers" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=customers" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Customers</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
 
-        <a href="?type=deals" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=deals" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Deals</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
 
-        <a href="?type=quotations" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=quotations" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Quotations</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
 
-        <a href="?type=followups" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=followups" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Follow-ups</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
 
-        <a href="?type=tasks" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=tasks" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Tasks</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
 
-        <a href="?type=demos" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=demos" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Demos</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
 
-        <a href="?type=payments" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=payments" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Payments</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
 
-        <a href="?type=employees" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=employees" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Team</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">1</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">1</span>
         </a>
 
-        <a href="?type=products" class="px-4 py-2 rounded-2xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-300 hover:bg-slate-50">
+        <a href="?type=products" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
             <span>Products</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600">0</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
         </a>
     </div>
 
     <!-- Data Table -->
-    <div class="crm-card border border-slate-200 overflow-hidden bg-white rounded-3xl shadow-sm">
+    <div class="crm-card border border-slate-200 overflow-hidden bg-white rounded-3xl shadow-xs">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
                 <thead>
-                    <tr class="bg-slate-100/80 text-slate-700 font-black text-[11px] uppercase tracking-wider border-b border-slate-200">
-                        <th class="py-3 px-4">ITEM / ENTITY</th>
-                        <th class="py-3 px-4">MODULE</th>
-                        <th class="py-3 px-4">DETAILS / INFO</th>
-                        <th class="py-3 px-4">DELETED AT</th>
-                        <th class="py-3 px-4 text-right">RESTORE / PURGE</th>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-extrabold text-[11px] uppercase tracking-wider">
+                        <th class="py-3.5 px-4 w-4/12">ITEM / ENTITY</th>
+                        <th class="py-3.5 px-4 w-1/12 text-center">MODULE</th>
+                        <th class="py-3.5 px-4 w-3/12">DETAILS / INFO</th>
+                        <th class="py-3.5 px-4 w-2/12">DELETED AT</th>
+                        <th class="py-3.5 px-4 w-2/12 text-right">RESTORE / PURGE</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 font-bold">
-                    
-                                            <tr class="hover:bg-slate-50 transition">
-                            <td class="py-3.5 px-4 text-slate-900">
-                                <span class="font-black block">Live Test Client</span>
-                                <span class="text-[10px] text-slate-500 font-semibold">Real-Time Corp • LIVE-3681</span>
-                            </td>
-                            <td class="py-3.5 px-4">
-                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-orange-100 text-orange-800">Lead</span>
-                            </td>
-                            <td class="py-3.5 px-4 text-slate-700 font-mono">+91 91234 56789</td>
-                            <td class="py-3.5 px-4 text-slate-500 text-[11px]">3 days ago</td>
-                            <td class="py-3.5 px-4 text-right">
-                                <div class="inline-flex items-center gap-2">
-                                    <form action="/crm/admin/super/recycle-bin/lead/29/restore" method="POST">
-                                        <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">                                        <button type="submit" class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-black text-[11px] transition cursor-pointer flex items-center gap-1">
-                                            <i class="fa-solid fa-rotate-left text-xs"></i> Restore
-                                        </button>
-                                    </form>
-                                    <form action="/crm/admin/super/recycle-bin/lead/29/force" method="POST" onsubmit="return confirm('Permanently destroy this record? Cannot be undone.');">
-                                        <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">                                        <input type="hidden" name="_method" value="DELETE">                                        <button type="submit" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 font-black text-[11px] transition cursor-pointer flex items-center gap-1">
-                                            <i class="fa-solid fa-trash-can text-xs"></i> Purge
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                                            <tr class="hover:bg-slate-50 transition">
-                            <td class="py-3.5 px-4 text-slate-900">
-                                <span class="font-black block">Test Agent</span>
-                                <span class="text-[10px] text-slate-500 font-semibold">Sales Representative • EMP-144</span>
-                            </td>
-                            <td class="py-3.5 px-4">
-                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800">Team</span>
-                            </td>
-                            <td class="py-3.5 px-4 text-slate-700 font-mono">testemployee_1791012960@example.com</td>
-                            <td class="py-3.5 px-4 text-slate-500 text-[11px]">3 days ago</td>
-                            <td class="py-3.5 px-4 text-right">
-                                <div class="inline-flex items-center gap-2">
-                                    <form action="/crm/admin/super/recycle-bin/employee/10/restore" method="POST">
-                                        <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">                                        <button type="submit" class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-black text-[11px] transition cursor-pointer flex items-center gap-1">
-                                            <i class="fa-solid fa-rotate-left text-xs"></i> Restore
-                                        </button>
-                                    </form>
-                                    <form action="/crm/admin/super/recycle-bin/employee/10/force" method="POST" onsubmit="return confirm('Permanently destroy this record? Cannot be undone.');">
-                                        <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">                                        <input type="hidden" name="_method" value="DELETE">                                        <button type="submit" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 font-black text-[11px] transition cursor-pointer flex items-center gap-1">
-                                            <i class="fa-solid fa-trash-can text-xs"></i> Purge
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    
-                    
-                    
-                                    </tbody>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 text-slate-900">
+                            <span class="font-extrabold text-slate-900 text-sm block leading-tight">Live Test Client</span>
+                            <span class="text-[11px] text-slate-400 font-semibold">Real-Time Corp &bull; LIVE-3681</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-orange-100 text-orange-800 border border-orange-200/60 inline-block">Lead</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-700 font-mono text-xs break-all">
+                            +91 91234 56789
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-500 text-xs font-semibold">
+                            3 days ago
+                        </td>
+                        <td class="py-3.5 px-4 text-right">
+                            <div class="inline-flex items-center gap-2 justify-end">
+                                <form action="/crm/admin/super/recycle-bin/lead/29/restore" method="POST">
+                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
+                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
+                                        <i class="fa-solid fa-rotate-left text-[11px]"></i>
+                                        <span>Restore</span>
+                                    </button>
+                                </form>
+                                <form action="/crm/admin/super/recycle-bin/lead/29/force" method="POST" onsubmit="return confirm('Permanently destroy this record? Cannot be undone.');">
+                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition border border-rose-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
+                                        <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                        <span>Purge</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 text-slate-900">
+                            <span class="font-extrabold text-slate-900 text-sm block leading-tight">Test Agent</span>
+                            <span class="text-[11px] text-slate-400 font-semibold">Sales Representative &bull; EMP-144</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200/60 inline-block">Team</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-700 font-mono text-xs break-all">
+                            testemployee_1791012960@example.com
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-500 text-xs font-semibold">
+                            3 days ago
+                        </td>
+                        <td class="py-3.5 px-4 text-right">
+                            <div class="inline-flex items-center gap-2 justify-end">
+                                <form action="/crm/admin/super/recycle-bin/employee/10/restore" method="POST">
+                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
+                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
+                                        <i class="fa-solid fa-rotate-left text-[11px]"></i>
+                                        <span>Restore</span>
+                                    </button>
+                                </form>
+                                <form action="/crm/admin/super/recycle-bin/employee/10/force" method="POST" onsubmit="return confirm('Permanently destroy this record? Cannot be undone.');">
+                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition border border-rose-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
+                                        <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                        <span>Purge</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
