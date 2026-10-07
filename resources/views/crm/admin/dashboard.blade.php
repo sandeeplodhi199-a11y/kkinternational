@@ -28,13 +28,32 @@
         $collectionRate = ($totalRevenue + $pendingPayments) > 0 ? round(($totalRevenue / ($totalRevenue + $pendingPayments)) * 100) : 71;
     @endphp
 
-    <div class="p-5 sm:p-6 rounded-2xl bg-slate-200 border border-slate-300 shadow-sm">
-        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Hello {{ $isAdmin ? 'Admin' : $currentUser->name }}!
-        </h1>
-        <p class="text-xs sm:text-sm text-slate-700 font-bold mt-1">
-            Measure How Fast You're Growing Monthly Recurring performance management.
-        </p>
+    <div class="p-5 sm:p-6 rounded-2xl bg-slate-200 border border-slate-300 shadow-sm flex items-center justify-between flex-wrap gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Hello {{ $isAdmin ? 'Admin' : $currentUser->name }}!
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-700 font-bold mt-1">
+                Measure How Fast You're Growing Monthly Recurring performance management.
+            </p>
+        </div>
+        <div class="flex items-center gap-2.5">
+            <!-- Auto Refresh Button (Under Admin) -->
+            <div class="inline-flex items-center gap-1.5 p-0.5 bg-white border border-slate-300 rounded-full shadow-xs crm-auto-refresh-widget transition hover:border-emerald-400">
+                <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefresh ? window.HMCrmStore.toggleAutoRefresh(event) : null" title="Click to Refresh Immediately" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full hover:bg-slate-50 text-slate-700 text-xs font-bold transition active:scale-95 cursor-pointer">
+                    <span class="relative flex h-2 w-2">
+                        <span class="auto-refresh-ping animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <i class="auto-refresh-icon fa-solid fa-arrows-rotate text-[11px] text-slate-400"></i>
+                    <span class="auto-refresh-label text-[11px] font-bold">Auto Refresh: <strong class="text-emerald-700 font-black">ON</strong></span>
+                    <span class="auto-refresh-timer px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-black">10s</span>
+                </button>
+                <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefreshState ? window.HMCrmStore.toggleAutoRefreshState(event) : null" title="Toggle Auto Refresh ON/OFF" class="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center text-[10px] transition cursor-pointer">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- OVERVIEW TITLE -->

@@ -1290,16 +1290,34 @@
     }
 
     function injectAutoRefreshButton() {
+        // Remove any misplaced widget in topbar header (e.g. next to Back/Website)
+        document.querySelectorAll('header .crm-auto-refresh-widget').forEach(el => el.remove());
+
         if (document.querySelector('.crm-auto-refresh-widget')) {
             updateAutoRefreshUI();
             return;
         }
 
+        // 1. Dashboard Greeting Card (Hello Admin!) - place on right side under Admin
+        const greetingCard = document.querySelector('main .p-5, main .p-6, main .bg-slate-200');
+        if (greetingCard) {
+            greetingCard.classList.add('flex', 'items-center', 'justify-between', 'flex-wrap', 'gap-4');
+            let actionDiv = greetingCard.querySelector('.crm-greeting-actions');
+            if (!actionDiv) {
+                actionDiv = document.createElement('div');
+                actionDiv.className = 'crm-greeting-actions flex items-center gap-2.5 mt-2 sm:mt-0';
+                greetingCard.appendChild(actionDiv);
+            }
+            actionDiv.innerHTML = createAutoRefreshWidgetHtml();
+            updateAutoRefreshUI();
+            return;
+        }
+
+        // 2. Main Page Header Actions (Only inside main, never in header)
         const headerActionSelectors = [
-            'header .flex.items-center.gap-2',
-            'header .flex.items-center.gap-3',
             'main .flex.items-center.justify-between .flex.items-center',
-            'main .flex.items-center.justify-between div:last-child'
+            'main .flex.items-center.justify-between div:last-child',
+            'main .flex.items-center.justify-between'
         ];
 
         let targetContainer = null;
