@@ -90,7 +90,27 @@
         };
 
         saveItem(STORAGE_KEYS.leads, lead);
+
+        // Auto-save to SQL & MySQL database
+        syncToDatabase({ action: 'save_lead', data: lead });
+
         return lead;
+    }
+
+    function syncToDatabase(payload) {
+        try {
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(r => r.json()).then(res => {
+                if (res && res.success) {
+                    console.log('✅ Auto-saved to SQL database:', res);
+                }
+            }).catch(err => {
+                // CDN / offline resilience
+            });
+        } catch(e) {}
     }
 
     function renderAdminLeadsTable() {
