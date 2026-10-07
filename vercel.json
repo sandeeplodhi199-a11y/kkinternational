@@ -3,6 +3,17 @@
   "outputDirectory": "public",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/crm", "destination": "/crm/login", "permanent": false },
+    { "source": "/crm/", "destination": "/crm/login", "permanent": false },
+    { "source": "/admin", "destination": "/crm/admin/dashboard", "permanent": false },
+    { "source": "/admin/", "destination": "/crm/admin/dashboard", "permanent": false },
+    { "source": "/crm/admin", "destination": "/crm/admin/dashboard", "permanent": false },
+    { "source": "/crm/admin/", "destination": "/crm/admin/dashboard", "permanent": false },
+    { "source": "/crm/employee", "destination": "/crm/employee/dashboard", "permanent": false },
+    { "source": "/crm/employee/", "destination": "/crm/employee/dashboard", "permanent": false },
+    { "source": "/login", "destination": "/crm/login", "permanent": false }
+  ],
   "routes": [
     {
       "handle": "filesystem"
