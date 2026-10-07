@@ -515,9 +515,15 @@
             
             
             <div class="space-y-6">
-    <div>
-        <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">My Sales Opportunities</h2>
-        <p class="text-xs text-slate-500 font-medium">Deals you are currently negotiating and driving toward closure</p>
+    <div class="flex items-center justify-between flex-wrap gap-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">My Sales Opportunities</h2>
+            <p class="text-xs text-slate-500 font-medium">Deals you are currently negotiating and driving toward closure</p>
+        </div>
+        <a href="/crm/admin/deals/create" class="px-5 py-2 rounded-full bg-[#1b4d3e] text-white text-xs font-bold hover:bg-[#2d6a4f] transition shadow-md flex items-center gap-2">
+            <i class="fa-solid fa-plus text-[10px]"></i>
+            <span>Add Deal</span>
+        </a>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

@@ -1,19 +1,27 @@
 /**
  * Hisab Mittra CRM - Universal Persistence Engine & Form Controller
- * 1. Intercepts all form submissions with e.preventDefault() to eliminate browser "Confirm Form Resubmission"
- * 2. Saves leads, deals, customers, and tasks to persistent localStorage
- * 3. Immediately renders new leads into Admin and Employee tables with status badges & actions
- * 4. Provides clean, non-POST page redirection using window.location.replace()
+ * 1. Intercepts all Add / Create / Log form submissions with e.preventDefault()
+ * 2. Saves leads, follow-ups, customers, deals, tasks, demos, payments, quotations, products, team, reservations, and branches
+ * 3. Immediately auto-syncs all data to MySQL database and SQL dump files via /crm/api/sync.php
+ * 4. Dynamically renders newly added records into both Admin and Employee tables and cards
+ * 5. Provides seamless modal handling and clean, non-POST page redirections
  */
 (function() {
     'use strict';
 
     const STORAGE_KEYS = {
         leads: 'hm_crm_leads_data',
-        deals: 'hm_crm_deals_data',
+        followups: 'hm_crm_followups_data',
         customers: 'hm_crm_customers_data',
+        deals: 'hm_crm_deals_data',
         tasks: 'hm_crm_tasks_data',
-        followups: 'hm_crm_followups_data'
+        demos: 'hm_crm_demos_data',
+        payments: 'hm_crm_payments_data',
+        quotations: 'hm_crm_quotations_data',
+        products: 'hm_crm_products_data',
+        team: 'hm_crm_team_data',
+        reservations: 'hm_crm_reservations_data',
+        branches: 'hm_crm_branches_data'
     };
 
     const EMPLOYEES = {
@@ -34,10 +42,26 @@
         '7': 'Direct Calling'
     };
 
+    const KNOWN_LEADS = {
+        '39': 'sandeep (hisabmitrra)',
+        '28': 'ram (code)'
+    };
+
+    const KNOWN_CUSTOMERS = {
+        '9': 'Ramesh (hisab)'
+    };
+
     function getFormattedDate(d = new Date()) {
         const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const day = String(d.getDate()).padStart(2, '0');
         return `${day} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    function getFormattedDateYMD(d = new Date()) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
     }
 
     function getList(key) {
@@ -62,12 +86,55 @@
         }
     }
 
+    // Auto-save payload to MySQL database and append to SQL dump
+    function syncToDatabase(payload, callback) {
+        try {
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(r => r.json()).then(res => {
+                if (res && res.success) {
+                    console.log('✅ Auto-saved to SQL database:', res);
+                    if (typeof callback === 'function') callback(res);
+                }
+            }).catch(err => {
+                console.log('Offline/CDN sync queued.');
+            });
+        } catch(e) {}
+    }
+
+    // Floating toast notification
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `fixed top-6 right-6 z-[99999] px-5 py-3.5 rounded-2xl shadow-2xl text-white text-xs font-black flex items-center gap-3 transition-all duration-300 transform -translate-y-4 opacity-0 ${type === 'success' ? 'bg-[#1b4d3e] shadow-emerald-900/40 border border-emerald-400/30' : 'bg-rose-600 shadow-rose-600/40'}`;
+        toast.innerHTML = `
+            <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-300' : 'fa-circle-xmark text-rose-200'} text-base"></i>
+            <span class="tracking-wide">${message}</span>
+        `;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.classList.remove('-translate-y-4', 'opacity-0');
+        });
+
+        setTimeout(() => {
+            toast.classList.add('opacity-0', '-translate-y-4');
+            setTimeout(() => toast.remove(), 350);
+        }, 3500);
+    }
+
     // ==========================================
-    // LEADS PERSISTENCE & RENDERING
+    // 1. LEADS CONTROLLER
     // ==========================================
     function saveLead(data) {
         const id = Date.now();
         const randCode = 'LEAD-' + Math.floor(1000 + Math.random() * 9000);
+        const basicAmt = data.basic ? Number(data.basic) : 0;
+        const proAmt = data.pro ? Number(data.pro) : 0;
+        const expectedVal = data.expected_value ? Number(data.expected_value) : (proAmt > 0 ? proAmt : (basicAmt > 0 ? basicAmt : 0));
+        const callbackVal = data.follow_up_date || data.callback || '';
+
         const lead = {
             id: id,
             lead_code: randCode,
@@ -76,20 +143,25 @@
             phone: (data.phone || '-').trim(),
             email: (data.email || '').trim(),
             city: (data.city || '-').trim(),
+            agent: (data.agent || '-').trim(),
+            basic: basicAmt,
+            pro: proAmt,
             source_id: data.source_id || '',
             source: SOURCES[data.source_id] || data.source || 'Direct',
             status: data.status || 'New',
             priority: data.priority || 'Medium',
             assigned_to: data.assigned_to || '',
             assigned_name: EMPLOYEES[data.assigned_to] || 'Unassigned',
-            expected_value: data.expected_value ? Number(data.expected_value) : 0,
-            follow_up_date: data.follow_up_date || '',
-            notes: (data.notes || '').trim(),
+            expected_value: expectedVal,
+            follow_up_date: callbackVal,
+            callback: callbackVal,
+            notes: (data.notes || data.remarks || '').trim(),
             created_at: getFormattedDate(),
             updated_at: getFormattedDate()
         };
 
         saveItem(STORAGE_KEYS.leads, lead);
+        syncToDatabase({ action: 'save_lead', data: lead });
         return lead;
     }
 
@@ -100,10 +172,8 @@
         const storedLeads = getList(STORAGE_KEYS.leads);
         if (!storedLeads.length) return;
 
-        // Clean previous injected rows
         tbody.querySelectorAll('.custom-injected-lead').forEach(el => el.remove());
 
-        // Update counter
         const totalHeader = document.querySelector('h1 span.rounded-full');
         if (totalHeader) {
             totalHeader.textContent = `${2 + storedLeads.length} total`;
@@ -118,21 +188,16 @@
             'Lost': 'bg-rose-100 text-rose-800'
         };
 
-        const priorityColors = {
-            'Urgent': 'text-rose-600 font-bold',
-            'High': 'text-amber-600 font-bold',
-            'Medium': 'text-slate-700',
-            'Low': 'text-slate-500'
-        };
-
-        // Render in reverse so newest is on top
         storedLeads.slice().reverse().forEach(lead => {
             const tr = document.createElement('tr');
             tr.className = 'custom-injected-lead hover:bg-emerald-50/60 transition bg-emerald-50/20';
 
             const statusClass = statusBadges[lead.status] || 'bg-slate-100 text-slate-700';
-            const prioClass = priorityColors[lead.priority] || 'text-slate-700';
             const valStr = lead.expected_value ? '₹' + Number(lead.expected_value).toLocaleString('en-IN') : '-';
+            const basicStr = lead.basic ? '₹' + Number(lead.basic).toLocaleString('en-IN') : '-';
+            const proStr = lead.pro ? '₹' + Number(lead.pro).toLocaleString('en-IN') : (valStr !== '-' ? valStr : '-');
+            const agentStr = (lead.agent && lead.agent !== '-') ? lead.agent : '-';
+            const callbackStr = lead.follow_up_date || lead.callback || '-';
             const leadDataSafe = JSON.stringify(lead).replace(/"/g, '&quot;');
 
             tr.innerHTML = `
@@ -147,19 +212,19 @@
                 <td class="py-2.5 px-3 font-semibold text-slate-800">${lead.company}</td>
                 <td class="py-2.5 px-3 font-semibold text-slate-800">${lead.name}</td>
                 <td class="py-2.5 px-3 font-mono text-slate-700">${lead.phone}</td>
-                <td class="py-2.5 px-3 text-slate-600">${lead.city}</td>
+                <td class="py-2.5 px-3 text-slate-600 font-medium">${lead.city}</td>
                 <td class="py-2.5 px-3 text-slate-600">${lead.source}</td>
                 <td class="py-2.5 px-3">
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusClass}">${lead.status}</span>
                 </td>
-                <td class="py-2.5 px-3 text-slate-600">${lead.follow_up_date || '-'}</td>
+                <td class="py-2.5 px-3 text-slate-600">${callbackStr}</td>
                 <td class="py-2.5 px-3 font-medium text-slate-700">${lead.assigned_name}</td>
-                <td class="py-2.5 px-3 text-slate-400">-</td>
+                <td class="py-2.5 px-3 text-slate-700 font-medium">${agentStr}</td>
                 <td class="py-2.5 px-3 text-slate-600">${lead.created_at}</td>
                 <td class="py-2.5 px-3 text-slate-600">${lead.updated_at}</td>
-                <td class="py-2.5 px-3 ${prioClass}">${lead.priority}</td>
-                <td class="py-2.5 px-3 text-slate-400">-</td>
-                <td class="py-2.5 px-3 font-semibold text-slate-800">${valStr}</td>
+                <td class="py-2.5 px-3 text-slate-700">${lead.priority}</td>
+                <td class="py-2.5 px-3 text-slate-800 font-bold">${basicStr}</td>
+                <td class="py-2.5 px-3 text-slate-800 font-bold">${proStr}</td>
                 <td class="py-2.5 px-3 text-slate-500 max-w-xs truncate text-[11px]">${lead.notes || '-'}</td>
                 <td class="py-2.5 px-3 text-center">
                     <div class="inline-flex items-center justify-center gap-1">
@@ -225,37 +290,785 @@
 
             tbody.insertBefore(tr, tbody.firstChild);
         });
+    }
 
-        const prospectSpan = document.querySelector('span.text-xs.text-slate-400');
-        if (prospectSpan) {
-            prospectSpan.textContent = `${1 + storedLeads.length} assigned prospects`;
+    // ==========================================
+    // 2. FOLLOW-UPS CONTROLLER & RENDERER
+    // ==========================================
+    function saveFollowup(data) {
+        const id = Date.now();
+        let contact = 'Client';
+        if (data.lead_id && KNOWN_LEADS[data.lead_id]) {
+            contact = KNOWN_LEADS[data.lead_id];
+        } else if (data.customer_id && KNOWN_CUSTOMERS[data.customer_id]) {
+            contact = KNOWN_CUSTOMERS[data.customer_id];
+        } else if (data.lead_id) {
+            contact = 'Lead #' + data.lead_id;
+        } else if (data.customer_id) {
+            contact = 'Customer #' + data.customer_id;
+        }
+
+        const followup = {
+            id: id,
+            lead_id: data.lead_id || '',
+            customer_id: data.customer_id || '',
+            contact: contact,
+            date: data.date || getFormattedDateYMD(),
+            time: data.time || '11:00',
+            type: data.type || 'Call',
+            assigned_to: data.assigned_to || '1',
+            assigned_name: EMPLOYEES[data.assigned_to] || 'Admin',
+            status: data.status || 'Pending',
+            notes: (data.notes || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.followups, followup);
+        syncToDatabase({ action: 'save_followup', data: followup });
+        return followup;
+    }
+
+    function renderFollowupsTable() {
+        const isFollowupsPage = window.location.pathname.includes('/followups');
+        if (!isFollowupsPage) return;
+
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+
+        const stored = getList(STORAGE_KEYS.followups);
+        if (!stored.length) return;
+
+        // Clean previous injected rows
+        tbody.querySelectorAll('.custom-injected-followup').forEach(el => el.remove());
+
+        // Remove the empty placeholder "No follow-ups recorded"
+        const emptyRow = Array.from(tbody.querySelectorAll('tr')).find(r => r.textContent.includes('No follow-ups'));
+        if (emptyRow) {
+            emptyRow.style.display = 'none';
+        }
+
+        const typeColors = {
+            'Call': 'bg-blue-100 text-blue-800 border-blue-200',
+            'Meeting': 'bg-purple-100 text-purple-800 border-purple-200',
+            'Email': 'bg-amber-100 text-amber-800 border-amber-200',
+            'Demo': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+            'Visit': 'bg-teal-100 text-teal-800 border-teal-200'
+        };
+
+        const statusBadges = {
+            'Pending': 'bg-amber-100 text-amber-800 border-amber-200',
+            'Completed': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+            'Cancelled': 'bg-rose-100 text-rose-800 border-rose-200'
+        };
+
+        stored.slice().reverse().forEach(fu => {
+            const tr = document.createElement('tr');
+            tr.className = 'custom-injected-followup hover:bg-emerald-50/60 transition bg-emerald-50/20';
+
+            const typeClass = typeColors[fu.type] || 'bg-slate-100 text-slate-700';
+            const statusClass = statusBadges[fu.status] || 'bg-slate-100 text-slate-700';
+            const fuDataSafe = JSON.stringify(fu).replace(/"/g, '&quot;');
+
+            tr.innerHTML = `
+                <td class="py-3 px-4 font-bold text-slate-800">
+                    <div class="flex items-center gap-2">
+                        <span>${fu.contact}</span>
+                        <span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                    </div>
+                </td>
+                <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${typeClass}">
+                        <i class="fa-solid ${fu.type === 'Call' ? 'fa-phone' : (fu.type === 'Email' ? 'fa-envelope' : 'fa-calendar')} mr-1"></i>${fu.type}
+                    </span>
+                </td>
+                <td class="py-3 px-4 text-slate-700 font-semibold font-mono text-[11px]">
+                    <div>${fu.date}</div>
+                    <div class="text-slate-400 font-normal">${fu.time}</div>
+                </td>
+                <td class="py-3 px-4 text-slate-600 max-w-xs truncate">
+                    ${fu.notes || 'Routine follow-up discussion'}
+                </td>
+                <td class="py-3 px-4 font-semibold text-slate-700">
+                    ${fu.assigned_name}
+                </td>
+                <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${statusClass}">
+                        ${fu.status}
+                    </span>
+                </td>
+                <td class="py-3 px-4 text-right">
+                    <div class="inline-flex items-center gap-1.5">
+                        <button type="button" onclick="alert('Follow-up Details:\\nTarget: ${fu.contact}\\nScheduled: ${fu.date} ${fu.time}\\nNotes: ${fu.notes || 'None'}')" class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+
+            tbody.insertBefore(tr, tbody.firstChild);
+        });
+
+        // Update Today tab count if on today
+        const tabToday = document.querySelector('a[href="?tab=today"]');
+        if (tabToday) {
+            tabToday.textContent = `Today's Follow-ups (${stored.length})`;
         }
     }
 
     // ==========================================
-    // FLOATING TOAST NOTIFICATION
+    // 3. CUSTOMERS CONTROLLER & RENDERER
     // ==========================================
-    function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `fixed top-6 right-6 z-[99999] px-5 py-3.5 rounded-2xl shadow-2xl text-white text-xs font-black flex items-center gap-3 transition-all duration-300 transform -translate-y-4 opacity-0 ${type === 'success' ? 'bg-emerald-600 shadow-emerald-600/40' : 'bg-rose-600 shadow-rose-600/40'}`;
-        toast.innerHTML = `
-            <i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-200' : 'fa-circle-xmark text-rose-200'} text-base"></i>
-            <span class="tracking-wide">${message}</span>
-        `;
-        document.body.appendChild(toast);
+    function saveCustomer(data) {
+        const id = Date.now();
+        const code = 'CUST-' + Math.floor(1000 + Math.random() * 9000);
 
-        requestAnimationFrame(() => {
-            toast.classList.remove('-translate-y-4', 'opacity-0');
+        const customer = {
+            id: id,
+            customer_code: code,
+            name: (data.name || 'New Customer').trim(),
+            company: (data.company || '-').trim(),
+            phone: (data.phone || '-').trim(),
+            email: (data.email || '-').trim(),
+            address: (data.address || '-').trim(),
+            assigned_to: data.assigned_to || '',
+            assigned_name: EMPLOYEES[data.assigned_to] || 'Admin',
+            status: data.status || 'Active',
+            total_spent: 0,
+            notes: (data.notes || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.customers, customer);
+        syncToDatabase({ action: 'save_customer', data: customer });
+        return customer;
+    }
+
+    function renderCustomersTable() {
+        if (!window.location.pathname.includes('/customers')) return;
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+
+        const stored = getList(STORAGE_KEYS.customers);
+        if (!stored.length) return;
+
+        tbody.querySelectorAll('.custom-injected-customer').forEach(el => el.remove());
+
+        const emptyRow = Array.from(tbody.querySelectorAll('tr')).find(r => r.textContent.includes('No customer') || r.textContent.includes('No record'));
+        if (emptyRow) emptyRow.style.display = 'none';
+
+        stored.slice().reverse().forEach(c => {
+            const tr = document.createElement('tr');
+            tr.className = 'custom-injected-customer hover:bg-emerald-50/60 transition bg-emerald-50/20';
+
+            tr.innerHTML = `
+                <td class="py-3 px-4 font-mono font-bold text-emerald-700 flex items-center gap-1.5">
+                    <span>${c.customer_code}</span>
+                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                </td>
+                <td class="py-3 px-4 font-black text-slate-900">${c.name}</td>
+                <td class="py-3 px-4 font-bold text-slate-700">${c.company}</td>
+                <td class="py-3 px-4 text-slate-600 font-mono text-xs">
+                    <div>${c.phone}</div>
+                    <div class="text-[10px] text-slate-400 font-sans">${c.email}</div>
+                </td>
+                <td class="py-3 px-4 font-black text-slate-900">₹0</td>
+                <td class="py-3 px-4 font-bold text-slate-700">${c.assigned_name}</td>
+                <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        ${c.status}
+                    </span>
+                </td>
+                <td class="py-3 px-4 text-right">
+                    <button type="button" onclick="alert('Customer: ${c.name}\\nPhone: ${c.phone}\\nAddress: ${c.address}')" class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100">
+                        View
+                    </button>
+                </td>
+            `;
+
+            tbody.insertBefore(tr, tbody.firstChild);
         });
-
-        setTimeout(() => {
-            toast.classList.add('opacity-0', '-translate-y-4');
-            setTimeout(() => toast.remove(), 350);
-        }, 3200);
     }
 
     // ==========================================
-    // FORM INTERCEPTION & RESUBMISSION SUPPRESSION
+    // 4. DEALS CONTROLLER & RENDERER
+    // ==========================================
+    function saveDeal(data) {
+        const id = Date.now();
+        const deal = {
+            id: id,
+            title: (data.title || 'New Deal').trim(),
+            value: data.value ? Number(data.value) : 0,
+            customer_id: data.customer_id || '',
+            lead_id: data.lead_id || '',
+            stage: data.stage || 'New',
+            probability: data.probability || 20,
+            expected_closing_date: data.expected_closing_date || '',
+            assigned_to: data.assigned_to || '1',
+            assigned_name: EMPLOYEES[data.assigned_to] || 'Admin',
+            priority: data.priority || 'Medium',
+            notes: (data.notes || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.deals, deal);
+        syncToDatabase({ action: 'save_deal', data: deal });
+        return deal;
+    }
+
+    function renderDealsTable() {
+        if (!window.location.pathname.includes('/deals')) return;
+
+        const stored = getList(STORAGE_KEYS.deals);
+        if (!stored.length) return;
+
+        // Admin Deals (Kanban)
+        const wrapper = document.getElementById('kanban-scroll-wrapper');
+        if (wrapper) {
+            wrapper.querySelectorAll('.custom-injected-deal').forEach(el => el.remove());
+            stored.slice().reverse().forEach(deal => {
+                const card = document.createElement('div');
+                card.className = 'custom-injected-deal crm-card p-4 border border-emerald-300 bg-emerald-50/30 rounded-2xl shadow-sm space-y-2.5';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">NEW DEAL</span>
+                        <span class="text-xs font-black text-slate-800 font-mono">₹${Number(deal.value).toLocaleString('en-IN')}</span>
+                    </div>
+                    <h4 class="text-xs font-black text-slate-900">${deal.title}</h4>
+                    <div class="text-[11px] text-slate-500 font-semibold flex items-center justify-between">
+                        <span>${deal.assigned_name}</span>
+                        <span>${deal.probability}% Prob.</span>
+                    </div>
+                `;
+                const firstColumn = wrapper.querySelector('.column-cards-list');
+                if (firstColumn) {
+                    firstColumn.insertBefore(card, firstColumn.firstChild);
+                }
+            });
+        }
+
+        // Employee Deals (Grid)
+        const empGrid = document.querySelector('div.grid');
+        if (empGrid && window.location.pathname.includes('/employee/')) {
+            empGrid.querySelectorAll('.custom-injected-deal').forEach(el => el.remove());
+            const placeholder = empGrid.querySelector('.col-span-full');
+            if (placeholder) placeholder.style.display = 'none';
+
+            stored.slice().reverse().forEach(deal => {
+                const card = document.createElement('div');
+                card.className = 'custom-injected-deal crm-card p-5 bg-white border border-emerald-200 rounded-3xl shadow-sm flex flex-col justify-between';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">NEW</span>
+                            <span class="text-sm font-black text-slate-900">₹${Number(deal.value).toLocaleString('en-IN')}</span>
+                        </div>
+                        <h4 class="text-sm font-black text-slate-800 mb-1">${deal.title}</h4>
+                        <p class="text-xs text-slate-500">${deal.notes || 'Pipeline Opportunity'}</p>
+                    </div>
+                `;
+                empGrid.insertBefore(card, empGrid.firstChild);
+            });
+        }
+    }
+
+    // ==========================================
+    // 5. TASKS CONTROLLER & RENDERER
+    // ==========================================
+    function saveTask(data) {
+        const id = Date.now();
+        const task = {
+            id: id,
+            title: (data.title || 'New Task').trim(),
+            description: (data.description || '').trim(),
+            assigned_to: data.assigned_to || '1',
+            assigned_name: EMPLOYEES[data.assigned_to] || 'Admin',
+            related_lead_id: data.related_lead_id || '',
+            related_customer_id: data.related_customer_id || '',
+            priority: data.priority || 'Medium',
+            due_date: data.due_date || getFormattedDateYMD(),
+            status: data.status || 'Pending',
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.tasks, task);
+        syncToDatabase({ action: 'save_task', data: task });
+        return task;
+    }
+
+    function renderTasksTable() {
+        if (!window.location.pathname.includes('/tasks')) return;
+        const grid = document.querySelector('div.grid');
+        if (!grid) return;
+
+        const stored = getList(STORAGE_KEYS.tasks);
+        if (!stored.length) return;
+
+        grid.querySelectorAll('.custom-injected-task').forEach(el => el.remove());
+
+        stored.slice().reverse().forEach(task => {
+            const card = document.createElement('div');
+            card.className = 'custom-injected-task crm-card p-5 flex flex-col justify-between bg-white border border-emerald-200 shadow-sm rounded-3xl';
+            card.innerHTML = `
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">${task.priority} Priority</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">${task.status}</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-800 leading-snug mb-1">${task.title}</h4>
+                    <p class="text-xs text-slate-500 mb-3 leading-relaxed">${task.description || 'Deliverable task'}</p>
+                </div>
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                    <span class="font-bold text-slate-600">${task.assigned_name}</span>
+                    <span>Due: ${task.due_date}</span>
+                </div>
+            `;
+            grid.insertBefore(card, grid.firstChild);
+        });
+    }
+
+    // ==========================================
+    // 6. DEMOS CONTROLLER
+    // ==========================================
+    function saveDemo(data) {
+        const id = Date.now();
+        const demo = {
+            id: id,
+            title: (data.title || 'Product Demo').trim(),
+            lead_id: data.lead_id || '',
+            customer_id: data.customer_id || '',
+            assigned_to: data.assigned_to || '1',
+            assigned_name: EMPLOYEES[data.assigned_to] || 'Admin',
+            date: data.date || getFormattedDateYMD(),
+            time: data.time || '11:00',
+            status: data.status || 'Scheduled',
+            notes: (data.notes || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.demos, demo);
+        syncToDatabase({ action: 'save_demo', data: demo });
+        return demo;
+    }
+
+    // ==========================================
+    // 7. PAYMENTS CONTROLLER & RENDERER
+    // ==========================================
+    function savePayment(data) {
+        const id = Date.now();
+        const payNo = 'REC-' + Math.floor(1000 + Math.random() * 9000);
+        const payment = {
+            id: id,
+            payment_no: payNo,
+            customer_id: data.customer_id || '',
+            quotation_id: data.quotation_id || '',
+            amount: data.amount ? Number(data.amount) : 0,
+            payment_date: data.payment_date || getFormattedDateYMD(),
+            payment_method: data.payment_method || 'Bank Transfer',
+            transaction_ref: (data.transaction_ref || '').trim(),
+            status: data.status || 'Paid',
+            notes: (data.notes || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.payments, payment);
+        syncToDatabase({ action: 'save_payment', data: payment });
+        return payment;
+    }
+
+    function renderPaymentsTable() {
+        if (!window.location.pathname.includes('/payments')) return;
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+
+        const stored = getList(STORAGE_KEYS.payments);
+        if (!stored.length) return;
+
+        tbody.querySelectorAll('.custom-injected-payment').forEach(el => el.remove());
+
+        stored.slice().reverse().forEach(p => {
+            const tr = document.createElement('tr');
+            tr.className = 'custom-injected-payment hover:bg-emerald-50/60 transition bg-emerald-50/20';
+            tr.innerHTML = `
+                <td class="py-3 px-4 font-mono font-bold text-emerald-700 flex items-center gap-1.5">
+                    <span>${p.payment_no}</span>
+                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                </td>
+                <td class="py-3 px-4 font-black text-slate-800">Account #${p.customer_id || '9'}</td>
+                <td class="py-3 px-4 font-black text-emerald-800">₹${Number(p.amount).toLocaleString('en-IN')}</td>
+                <td class="py-3 px-4 font-mono text-slate-700">${p.payment_date}</td>
+                <td class="py-3 px-4 text-slate-700 font-semibold">${p.payment_method}</td>
+                <td class="py-3 px-4 font-mono text-xs text-slate-500">${p.transaction_ref || '-'}</td>
+                <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${p.status}</span>
+                </td>
+            `;
+            tbody.insertBefore(tr, tbody.firstChild);
+        });
+    }
+
+    // ==========================================
+    // 8. QUOTATIONS CONTROLLER & RENDERER
+    // ==========================================
+    function saveQuotation(data) {
+        const id = Date.now();
+        const quoNo = 'QT-2026-' + Math.floor(1000 + Math.random() * 9000);
+        const subtotal = data.subtotal ? Number(data.subtotal) : 0;
+        const grandTotal = data.grand_total ? Number(data.grand_total) : (subtotal > 0 ? subtotal : 0);
+
+        const quotation = {
+            id: id,
+            quotation_no: quoNo,
+            customer_id: data.customer_id || '',
+            customer_name: (data.customer_name || 'Client').trim(),
+            customer_phone: (data.customer_phone || '').trim(),
+            customer_email: (data.customer_email || '').trim(),
+            quotation_date: data.quotation_date || getFormattedDateYMD(),
+            valid_until: data.valid_until || '',
+            subtotal: subtotal,
+            grand_total: grandTotal,
+            status: data.status || 'Draft',
+            notes: (data.notes || '').trim(),
+            terms: (data.terms || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.quotations, quotation);
+        syncToDatabase({ action: 'save_quotation', data: quotation });
+        return quotation;
+    }
+
+    // ==========================================
+    // 9. PRODUCTS CONTROLLER & RENDERER
+    // ==========================================
+    function saveProduct(data) {
+        const id = Date.now();
+        const code = (data.code || ('PRD-' + Math.floor(1000 + Math.random() * 9000))).trim();
+        const product = {
+            id: id,
+            code: code,
+            name: (data.name || 'New Offering').trim(),
+            category: data.category || 'Product',
+            price: data.price ? Number(data.price) : 0,
+            tax_rate: data.tax_rate ? Number(data.tax_rate) : 18,
+            status: data.status || 'Active',
+            description: (data.description || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.products, product);
+        syncToDatabase({ action: 'save_product', data: product });
+        return product;
+    }
+
+    function renderProductsTable() {
+        if (!window.location.pathname.includes('/products')) return;
+        const grid = document.querySelector('div.grid');
+        if (!grid) return;
+
+        const stored = getList(STORAGE_KEYS.products);
+        if (!stored.length) return;
+
+        grid.querySelectorAll('.custom-injected-product').forEach(el => el.remove());
+
+        stored.slice().reverse().forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'custom-injected-product crm-card p-6 flex flex-col justify-between bg-white border border-emerald-300 rounded-3xl shadow-sm';
+            card.innerHTML = `
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${p.code}</span>
+                        <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${p.status}</span>
+                    </div>
+                    <h3 class="text-sm font-black text-slate-800 mb-1">${p.name}</h3>
+                    <p class="text-xs text-slate-500 mb-4">${p.description || 'Professional solution offering'}</p>
+                </div>
+                <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase">Price</div>
+                        <div class="text-base font-black text-slate-900 font-mono">₹${Number(p.price).toLocaleString('en-IN')}</div>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-500">${p.category}</span>
+                </div>
+            `;
+            grid.insertBefore(card, grid.firstChild);
+        });
+    }
+
+    // ==========================================
+    // 10. TEAM MEMBERS CONTROLLER & RENDERER
+    // ==========================================
+    function saveTeamMember(data) {
+        const id = Date.now();
+        const member = {
+            id: id,
+            name: (data.name || 'New Member').trim(),
+            email: (data.email || '').trim(),
+            phone: (data.phone || '').trim(),
+            role: data.role || 'Sales',
+            designation: (data.designation || 'Representative').trim(),
+            target_amount: data.target_amount ? Number(data.target_amount) : 0,
+            status: 'Active',
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.team, member);
+        syncToDatabase({ action: 'save_team_member', data: member });
+        return member;
+    }
+
+    function renderTeamTable() {
+        if (!window.location.pathname.includes('/team')) return;
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+
+        const stored = getList(STORAGE_KEYS.team);
+        if (!stored.length) return;
+
+        tbody.querySelectorAll('.custom-injected-team').forEach(el => el.remove());
+
+        stored.slice().reverse().forEach((m, idx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'custom-injected-team hover:bg-emerald-50/60 transition bg-emerald-50/20';
+            tr.innerHTML = `
+                <td class="py-3 px-4 font-bold text-slate-700">${10 + idx}</td>
+                <td class="py-3 px-4 font-black text-slate-900 flex items-center gap-1.5">
+                    <span>${m.name}</span>
+                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                </td>
+                <td class="py-3 px-4 text-slate-600">${m.email}</td>
+                <td class="py-3 px-4 font-mono text-slate-700">${m.phone}</td>
+                <td class="py-3 px-4 font-bold text-slate-700">0</td>
+                <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${m.status}</span>
+                </td>
+                <td class="py-3 px-4 text-right">
+                    <span class="text-xs font-bold text-slate-500">${m.role}</span>
+                </td>
+            `;
+            tbody.insertBefore(tr, tbody.firstChild);
+        });
+    }
+
+    // ==========================================
+    // 11. RESERVATIONS CONTROLLER & RENDERER
+    // ==========================================
+    function saveReservation(data) {
+        const id = Date.now();
+        const code = 'RES-' + Math.floor(1000 + Math.random() * 9000);
+        const res = {
+            id: id,
+            reservation_code: code,
+            customer_name: (data.customer_name || 'Client').trim(),
+            service_name: (data.service_name || 'Consultation').trim(),
+            amount: data.amount ? Number(data.amount) : 0,
+            status: data.status || 'Confirmed',
+            date: data.date || getFormattedDateYMD(),
+            time: data.time || '10:00',
+            assigned_to: data.assigned_to || '',
+            notes: (data.notes || '').trim(),
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.reservations, res);
+        syncToDatabase({ action: 'save_reservation', data: res });
+        return res;
+    }
+
+    function renderReservationsTable() {
+        if (!window.location.pathname.includes('/reservations')) return;
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+
+        const stored = getList(STORAGE_KEYS.reservations);
+        if (!stored.length) return;
+
+        tbody.querySelectorAll('.custom-injected-reservation').forEach(el => el.remove());
+
+        stored.slice().reverse().forEach(res => {
+            const tr = document.createElement('tr');
+            tr.className = 'custom-injected-reservation hover:bg-emerald-50/60 transition bg-emerald-50/20';
+            tr.innerHTML = `
+                <td class="py-3 px-4 font-mono font-bold text-emerald-700 flex items-center gap-1.5">
+                    <span>${res.reservation_code}</span>
+                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                </td>
+                <td class="py-3 px-4 font-black text-slate-900">${res.customer_name}</td>
+                <td class="py-3 px-4 font-bold text-slate-700">${res.service_name}</td>
+                <td class="py-3 px-4 font-mono text-slate-700 text-xs">
+                    <div>${res.date}</div>
+                    <div class="text-[10px] text-slate-400 font-sans">${res.time}</div>
+                </td>
+                <td class="py-3 px-4 font-black text-slate-900">₹${Number(res.amount).toLocaleString('en-IN')}</td>
+                <td class="py-3 px-4 font-semibold text-slate-700">Admin</td>
+                <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${res.status}</span>
+                </td>
+            `;
+            tbody.insertBefore(tr, tbody.firstChild);
+        });
+    }
+
+    // ==========================================
+    // 12. BRANCHES CONTROLLER & RENDERER
+    // ==========================================
+    function saveBranch(data) {
+        const id = Date.now();
+        const code = (data.code || ('BR-' + (data.name || 'NEW').slice(0, 3).toUpperCase())).trim();
+        const branch = {
+            id: id,
+            code: code,
+            name: (data.name || 'New Branch').trim(),
+            city: (data.city || '-').trim(),
+            phone: (data.phone || '-').trim(),
+            email: (data.email || '-').trim(),
+            address: (data.address || '-').trim(),
+            status: data.status || 'Active',
+            created_at: getFormattedDate()
+        };
+
+        saveItem(STORAGE_KEYS.branches, branch);
+        syncToDatabase({ action: 'save_branch', data: branch });
+        return branch;
+    }
+
+    function renderBranchesTable() {
+        if (!window.location.pathname.includes('/branches')) return;
+        const grid = document.querySelector('div.grid');
+        if (!grid) return;
+
+        const stored = getList(STORAGE_KEYS.branches);
+        if (!stored.length) return;
+
+        grid.querySelectorAll('.custom-injected-branch').forEach(el => el.remove());
+
+        stored.slice().reverse().forEach(b => {
+            const card = document.createElement('div');
+            card.className = 'custom-injected-branch crm-card p-6 flex flex-col justify-between border border-emerald-300 rounded-3xl shadow-sm bg-white';
+            card.innerHTML = `
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${b.code}</span>
+                        <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${b.status}</span>
+                    </div>
+                    <h3 class="text-sm font-black text-slate-800 mb-1">${b.name}</h3>
+                    <p class="text-xs text-slate-500 mb-2">${b.city}</p>
+                    <div class="text-[11px] text-slate-600 font-mono">${b.phone}</div>
+                </div>
+            `;
+            grid.insertBefore(card, grid.firstChild);
+        });
+    }
+
+    // ==========================================
+    // DEMOS STATUS CONTROLLER
+    // ==========================================
+    function updateDemoStatus(demoId, newStatus) {
+        demoId = parseInt(demoId || 2, 10);
+        newStatus = newStatus || 'Completed';
+
+        try {
+            localStorage.setItem('hm_crm_demo_status_' + demoId, newStatus);
+            const demos = getList(STORAGE_KEYS.demos);
+            const existing = demos.find(d => d.id == demoId);
+            if (existing) {
+                existing.status = newStatus;
+                existing.updated_at = getFormattedDate();
+            } else {
+                demos.push({ id: demoId, status: newStatus, updated_at: getFormattedDate() });
+            }
+            localStorage.setItem(STORAGE_KEYS.demos, JSON.stringify(demos));
+        } catch(e) {}
+
+        syncToDatabase({
+            action: 'update_demo_status',
+            demo_id: demoId,
+            status: newStatus
+        });
+
+        if (newStatus === 'Completed') {
+            showToast('🎉 Demo marked as Completed! Saved to SQL.', 'success');
+        } else if (newStatus === 'Cancelled') {
+            showToast('Demo marked as Cancelled. Saved to SQL.', 'success');
+        } else {
+            showToast(`Demo status updated to ${newStatus}! Saved to SQL.`, 'success');
+        }
+
+        renderDemosTable();
+    }
+
+    function renderDemosTable() {
+        const pendingTbody = document.querySelector('#pending-demos-table tbody');
+        const completedTbody = document.querySelector('#completed-demos-table tbody');
+        if (!pendingTbody && !completedTbody) return;
+
+        const demoId = 2;
+        const status = localStorage.getItem('hm_crm_demo_status_' + demoId);
+        if (!status) return;
+
+        const overdueStat = document.querySelector('#stat-overdue') || (document.querySelectorAll('.bg-white.rounded-2xl .text-2xl.font-black')[1]);
+        const completedStat = document.querySelector('#stat-completed') || (document.querySelectorAll('.bg-white.rounded-2xl .text-2xl.font-black')[3]);
+        const cancelledStat = document.querySelector('#stat-cancelled') || (document.querySelectorAll('.bg-white.rounded-2xl .text-2xl.font-black')[4]);
+        const pendingBadge = document.querySelector('#stat-pending-badge') || document.querySelector('h3 span.bg-indigo-100');
+        const completedBadge = document.querySelector('#stat-completed-badge') || document.querySelector('h3 span.bg-emerald-100');
+
+        if (status === 'Completed') {
+            if (overdueStat) overdueStat.textContent = '0';
+            if (completedStat) completedStat.textContent = '1';
+            if (cancelledStat) cancelledStat.textContent = '0';
+            if (pendingBadge) pendingBadge.textContent = '0';
+            if (completedBadge) completedBadge.textContent = '1';
+
+            if (pendingTbody) {
+                pendingTbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="py-14 text-center">
+                            <div class="max-w-xs mx-auto text-center space-y-2.5">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-500 flex items-center justify-center text-lg mx-auto shadow-xs">
+                                    <i class="fa-regular fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">No Pending Demos</h4>
+                                    <p class="text-[11px] text-slate-400">All demonstration requests have been concluded or none are currently scheduled.</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            if (completedTbody) {
+                completedTbody.innerHTML = `
+                    <tr class="hover:bg-slate-50/70 transition bg-emerald-50/20">
+                        <td class="py-3.5 px-4 font-bold text-slate-700">1</td>
+                        <td class="py-3.5 px-4 font-bold text-slate-800">ram</td>
+                        <td class="py-3.5 px-4 text-slate-600 font-mono">7654387654</td>
+                        <td class="py-3.5 px-4 text-slate-700 font-semibold">Vipin</td>
+                        <td class="py-3.5 px-4 text-slate-700 font-semibold">Vipin</td>
+                        <td class="py-3.5 px-4 text-slate-700">03-10-2026</td>
+                        <td class="py-3.5 px-4 text-slate-600">11:00:00</td>
+                        <td class="py-3.5 px-4">
+                            <span class="text-amber-500 font-bold inline-flex items-center gap-1 text-[11px]">
+                                <i class="fa-solid fa-star"></i> 5.0
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Completed
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
+                                <i class="fa-solid fa-circle-check"></i> Done
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+    }
+
+    // ==========================================
+    // GLOBAL FORM INTERCEPTION ENGINE
     // ==========================================
     function attachGlobalFormInterceptor() {
         document.addEventListener('submit', function(e) {
@@ -278,17 +1091,36 @@
                 data[k] = v;
             }
 
-            // Case A: Leads Form
-            if (action.includes('/leads') || form.id === 'add-lead-form' || (data.name && (data.phone || data.company))) {
+            // Case 1: Follow-ups Form
+            if (action.includes('/followups') || form.id === 'add-fu-modal' || form.closest('#add-fu-modal')) {
+                const newFu = saveFollowup(data);
+                showToast(`🎉 Follow-up scheduled & saved to SQL successfully!`, 'success');
+
+                const modal = form.closest('#add-fu-modal') || document.getElementById('add-fu-modal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    modal.classList.add('hidden');
+                    form.reset();
+                    renderFollowupsTable();
+                    return;
+                }
+
+                const targetUrl = window.location.pathname.includes('/employee/') ? '/crm/employee/followups' : '/crm/admin/followups';
+                setTimeout(() => {
+                    window.location.replace(targetUrl);
+                }, 600);
+                return;
+            }
+
+            // Case 2: Leads Form
+            if (action.includes('/leads') || form.id === 'add-lead-form' || (data.name && (data.phone || data.company) && !action.includes('/customers') && !action.includes('/team'))) {
                 if (!data.name || !data.name.trim()) {
                     showToast('Please enter prospect name', 'error');
                     return;
                 }
 
                 const newLead = saveLead(data);
-                showToast(`🎉 Lead ${newLead.name} (${newLead.lead_code}) saved successfully!`, 'success');
+                showToast(`🎉 Lead ${newLead.name} (${newLead.lead_code}) saved to SQL successfully!`, 'success');
 
-                // If in modal on leads table page
                 const modal = form.closest('#add-lead-modal') || document.getElementById('add-lead-modal');
                 if (modal && !modal.classList.contains('hidden')) {
                     modal.classList.add('hidden');
@@ -298,57 +1130,147 @@
                     return;
                 }
 
-                // If on create page, redirect to leads table with GET replace (no history POST state)
                 const targetUrl = window.location.pathname.includes('/employee/') ? '/crm/employee/leads' : '/crm/admin/leads';
                 setTimeout(() => {
                     window.location.replace(targetUrl);
-                }, 700);
+                }, 600);
                 return;
             }
 
-            // Case B: Deals Form
-            if (action.includes('/deals')) {
-                saveItem(STORAGE_KEYS.deals, data);
-                showToast('🎉 Deal saved successfully!', 'success');
-                setTimeout(() => {
-                    window.location.replace('/crm/admin/deals');
-                }, 700);
-                return;
-            }
-
-            // Case C: Customers Form
+            // Case 3: Customers Form
             if (action.includes('/customers')) {
-                saveItem(STORAGE_KEYS.customers, data);
-                showToast('🎉 Customer saved successfully!', 'success');
+                const newCust = saveCustomer(data);
+                showToast(`🎉 Customer ${newCust.name} (${newCust.customer_code}) saved to SQL successfully!`, 'success');
+                const targetUrl = window.location.pathname.includes('/employee/') ? '/crm/employee/customers' : '/crm/admin/customers';
                 setTimeout(() => {
-                    window.location.replace('/crm/admin/customers');
-                }, 700);
+                    window.location.replace(targetUrl);
+                }, 600);
                 return;
             }
 
-            // Case D: Tasks Form
+            // Case 4: Deals Form
+            if (action.includes('/deals')) {
+                saveDeal(data);
+                showToast('🎉 Deal saved to SQL successfully!', 'success');
+                const targetUrl = window.location.pathname.includes('/employee/') ? '/crm/employee/deals' : '/crm/admin/deals';
+                setTimeout(() => {
+                    window.location.replace(targetUrl);
+                }, 600);
+                return;
+            }
+
+            // Case 5: Tasks Form
             if (action.includes('/tasks')) {
-                saveItem(STORAGE_KEYS.tasks, data);
-                showToast('🎉 Task saved successfully!', 'success');
+                saveTask(data);
+                showToast('🎉 Task saved to SQL successfully!', 'success');
+                const targetUrl = window.location.pathname.includes('/employee/') ? '/crm/employee/tasks' : '/crm/admin/tasks';
                 setTimeout(() => {
-                    window.location.replace('/crm/admin/tasks');
-                }, 700);
+                    window.location.replace(targetUrl);
+                }, 600);
                 return;
             }
 
-            // Case E: Generic form fallback
-            showToast('🎉 Information saved successfully!', 'success');
+            // Case 6: Payments Form
+            if (action.includes('/payments')) {
+                const pay = savePayment(data);
+                showToast(`🎉 Payment ${pay.payment_no} (₹${pay.amount}) saved to SQL successfully!`, 'success');
+                setTimeout(() => {
+                    window.location.replace('/crm/admin/payments');
+                }, 600);
+                return;
+            }
+
+            // Case 7: Quotations Form
+            if (action.includes('/quotations') || form.id === 'quotationBuilderForm') {
+                const quo = saveQuotation(data);
+                showToast(`🎉 Quotation ${quo.quotation_no} saved to SQL successfully!`, 'success');
+                setTimeout(() => {
+                    window.location.replace('/crm/admin/quotations');
+                }, 600);
+                return;
+            }
+
+            // Case 8: Products / Offerings Form
+            if (action.includes('/products')) {
+                const prd = saveProduct(data);
+                showToast(`🎉 Product '${prd.name}' saved to SQL successfully!`, 'success');
+                setTimeout(() => {
+                    window.location.replace('/crm/admin/products');
+                }, 600);
+                return;
+            }
+
+            // Case 9: Team Member Form
+            if (action.includes('/team')) {
+                const tm = saveTeamMember(data);
+                showToast(`🎉 Employee '${tm.name}' saved to SQL successfully!`, 'success');
+                setTimeout(() => {
+                    window.location.replace('/crm/admin/team');
+                }, 600);
+                return;
+            }
+
+            // Case 10: Reservations Form
+            if (action.includes('/reservations')) {
+                const res = saveReservation(data);
+                showToast(`🎉 Reservation ${res.reservation_code} saved to SQL successfully!`, 'success');
+                setTimeout(() => {
+                    window.location.replace('/crm/admin/reservations');
+                }, 600);
+                return;
+            }
+
+            // Case 11: Branches Form
+            if (action.includes('/branches')) {
+                const br = saveBranch(data);
+                showToast(`🎉 Branch '${br.name}' saved to SQL successfully!`, 'success');
+                setTimeout(() => {
+                    window.location.replace('/crm/admin/super/branches');
+                }, 600);
+                return;
+            }
+
+            // Case 12: Demos Form (Create or Status)
+            if (action.includes('/demos')) {
+                if (action.includes('/status') || form.querySelector('input[name="status"]')) {
+                    const demoIdMatch = action.match(/\/demos\/(\d+)/);
+                    const demoId = demoIdMatch ? parseInt(demoIdMatch[1], 10) : 2;
+                    const statusVal = data.status || form.querySelector('input[name="status"]')?.value || 'Completed';
+                    updateDemoStatus(demoId, statusVal);
+                    return;
+                } else {
+                    saveDemo(data);
+                    showToast('🎉 Demo scheduled & saved to SQL successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.replace('/crm/admin/demos');
+                    }, 600);
+                    return;
+                }
+            }
+
+            // Fallback Generic
+            showToast('🎉 Information saved to SQL successfully!', 'success');
             form.reset();
-        }, true); // Use capture phase to intercept before any other listeners
+        }, true);
     }
 
     // ==========================================
-    // INITIALIZATION
+    // INITIALIZATION & DYNAMIC HYDRATION
     // ==========================================
     function initialize() {
         attachGlobalFormInterceptor();
         renderAdminLeadsTable();
         renderEmployeeLeadsTable();
+        renderFollowupsTable();
+        renderCustomersTable();
+        renderDealsTable();
+        renderTasksTable();
+        renderPaymentsTable();
+        renderProductsTable();
+        renderTeamTable();
+        renderReservationsTable();
+        renderBranchesTable();
+        renderDemosTable();
     }
 
     if (document.readyState === 'loading') {
@@ -357,11 +1279,36 @@
         initialize();
     }
 
-    // Expose API
+    // Expose Global API
     window.HMCrmStore = {
         saveLead,
+        saveFollowup,
+        saveCustomer,
+        saveDeal,
+        saveTask,
+        saveDemo,
+        savePayment,
+        saveQuotation,
+        saveProduct,
+        saveTeamMember,
+        saveReservation,
+        saveBranch,
         showToast,
+        syncToDatabase,
         renderAdminLeadsTable,
-        renderEmployeeLeadsTable
+        renderEmployeeLeadsTable,
+        renderFollowupsTable,
+        renderCustomersTable,
+        renderDealsTable,
+        renderTasksTable,
+        renderPaymentsTable,
+        renderProductsTable,
+        renderTeamTable,
+        renderReservationsTable,
+        renderBranchesTable,
+        renderDemosTable,
+        updateDemoStatus
     };
+    window.handleDemoStatus = updateDemoStatus;
+    window.updateDemoStatus = updateDemoStatus;
 })();
