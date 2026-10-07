@@ -1,2 +1,26 @@
-<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/crm/admin/demos"><script>window.location.replace('/crm/admin/demos');</script></head><body><p>Redirecting to <a href="/crm/admin/demos">/crm/admin/demos</a>...</p>    <script src="/crm/js/crm-leads-store.js"></script>
-</body></html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Updating Demo Status...</title>
+    <script>
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status') || 'Completed';
+            localStorage.setItem('hm_crm_demo_status_2', status);
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update_demo_status', demo_id: 2, status: status })
+            }).finally(() => {
+                window.location.replace('/crm/admin/demos');
+            });
+        } catch(e) {
+            window.location.replace('/crm/admin/demos');
+        }
+    </script>
+</head>
+<body>
+    <p>Updating demo status and redirecting...</p>
+</body>
+</html>

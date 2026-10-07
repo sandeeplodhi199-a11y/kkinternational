@@ -2946,3 +2946,9 @@ INSERT INTO `crm_leads` (`lead_code`, `name`, `email`, `phone`, `company`, `city
 
 -- Auto-Saved Action [2026-10-07 08:51:29]
 INSERT INTO `crm_leads` (`lead_code`, `name`, `email`, `phone`, `company`, `city`, `source_id`, `status`, `priority`, `assigned_to`, `agent`, `basic`, `pro`, `expected_value`, `follow_up_date`, `notes`, `created_at`, `updated_at`) VALUES ('LEAD-9347', 'Kishore Kumar', NULL, '+91 98765 43210', 'KK Steel Mills', 'Jaipur, Rajasthan', NULL, 'Contacted', 'High', NULL, 'Telecaller Raj', 5000, 15000, 0, '2026-10-20', 'Requirement for enterprise package', '2026-10-07 08:51:29', '2026-10-07 08:51:29');
+
+-- Auto-Saved Action [2026-10-07 09:43:42]
+UPDATE `crm_demos` SET `status` = 'Completed', `updated_at` = '2026-10-07 09:43:42' WHERE `id` = 2;
+
+-- Auto-Saved Action [2026-10-07 09:44:28]
+UPDATE `crm_demos` SET `status` = 'Scheduled', `updated_at` = '2026-10-07 09:44:28' WHERE `id` = 2;

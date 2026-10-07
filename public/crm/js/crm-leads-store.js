@@ -13,8 +13,10 @@
         deals: 'hm_crm_deals_data',
         customers: 'hm_crm_customers_data',
         tasks: 'hm_crm_tasks_data',
-        followups: 'hm_crm_followups_data'
+        followups: 'hm_crm_followups_data',
+        demos: 'hm_crm_demos_data'
     };
+
 
     const EMPLOYEES = {
         '1': 'Admin',
@@ -369,10 +371,157 @@
                 return;
             }
 
-            // Case E: Generic form fallback
+            // Case E: Demos Status Form (e.g. /crm/admin/demos/2/status)
+            if (action.includes('/demos') && (action.includes('/status') || form.querySelector('input[name="status"]'))) {
+                const demoIdMatch = action.match(/\/demos\/(\d+)/);
+                const demoId = demoIdMatch ? parseInt(demoIdMatch[1], 10) : 2;
+                const statusVal = data.status || form.querySelector('input[name="status"]')?.value || 'Completed';
+                updateDemoStatus(demoId, statusVal);
+                return;
+            }
+
+            // Case F: Generic form fallback
             showToast('🎉 Information saved successfully!', 'success');
             form.reset();
         }, true); // Use capture phase to intercept before any other listeners
+    }
+
+    // ==========================================
+    // DEMOS PERSISTENCE & STATUS CONTROLLER
+    // ==========================================
+    function updateDemoStatus(demoId, newStatus) {
+        demoId = parseInt(demoId || 2, 10);
+        newStatus = newStatus || 'Completed';
+
+        try {
+            localStorage.setItem('hm_crm_demo_status_' + demoId, newStatus);
+            const demos = getList(STORAGE_KEYS.demos);
+            const existing = demos.find(d => d.id == demoId);
+            if (existing) {
+                existing.status = newStatus;
+                existing.updated_at = getFormattedDate();
+            } else {
+                demos.push({ id: demoId, status: newStatus, updated_at: getFormattedDate() });
+            }
+            localStorage.setItem(STORAGE_KEYS.demos, JSON.stringify(demos));
+        } catch(e) {}
+
+        syncToDatabase({
+            action: 'update_demo_status',
+            demo_id: demoId,
+            status: newStatus
+        });
+
+        if (newStatus === 'Completed') {
+            showToast('🎉 Demo marked as Completed!', 'success');
+        } else if (newStatus === 'Cancelled') {
+            showToast('Demo marked as Cancelled.', 'success');
+        } else {
+            showToast(`Demo status updated to ${newStatus}!`, 'success');
+        }
+
+        renderDemosTable();
+    }
+
+    function renderDemosTable() {
+        const pendingTbody = document.querySelector('#pending-demos-table tbody');
+        const completedTbody = document.querySelector('#completed-demos-table tbody');
+        if (!pendingTbody && !completedTbody) return;
+
+        const demoId = 2;
+        const status = localStorage.getItem('hm_crm_demo_status_' + demoId);
+        if (!status) return;
+
+        const overdueStat = document.querySelector('#stat-overdue') || (document.querySelectorAll('.bg-white.rounded-2xl .text-2xl.font-black')[1]);
+        const completedStat = document.querySelector('#stat-completed') || (document.querySelectorAll('.bg-white.rounded-2xl .text-2xl.font-black')[3]);
+        const cancelledStat = document.querySelector('#stat-cancelled') || (document.querySelectorAll('.bg-white.rounded-2xl .text-2xl.font-black')[4]);
+        const pendingBadge = document.querySelector('#stat-pending-badge') || document.querySelector('h3 span.bg-indigo-100');
+        const completedBadge = document.querySelector('#stat-completed-badge') || document.querySelector('h3 span.bg-emerald-100');
+
+        if (status === 'Completed') {
+            if (overdueStat) overdueStat.textContent = '0';
+            if (completedStat) completedStat.textContent = '1';
+            if (cancelledStat) cancelledStat.textContent = '0';
+            if (pendingBadge) pendingBadge.textContent = '0';
+            if (completedBadge) completedBadge.textContent = '1';
+
+            if (pendingTbody) {
+                pendingTbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="py-14 text-center">
+                            <div class="max-w-xs mx-auto text-center space-y-2.5">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-500 flex items-center justify-center text-lg mx-auto shadow-xs">
+                                    <i class="fa-regular fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">No Pending Demos</h4>
+                                    <p class="text-[11px] text-slate-400">All demonstration requests have been concluded or none are currently scheduled.</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            if (completedTbody) {
+                completedTbody.innerHTML = `
+                    <tr class="hover:bg-slate-50/70 transition bg-emerald-50/20">
+                        <td class="py-3.5 px-4 font-bold text-slate-700">1</td>
+                        <td class="py-3.5 px-4 font-bold text-slate-800">ram</td>
+                        <td class="py-3.5 px-4 text-slate-600 font-mono">7654387654</td>
+                        <td class="py-3.5 px-4 text-slate-700 font-semibold">Vipin</td>
+                        <td class="py-3.5 px-4 text-slate-700 font-semibold">Vipin</td>
+                        <td class="py-3.5 px-4 text-slate-700">03-10-2026</td>
+                        <td class="py-3.5 px-4 text-slate-600">11:00:00</td>
+                        <td class="py-3.5 px-4">
+                            <span class="text-amber-500 font-bold inline-flex items-center gap-1 text-[11px]">
+                                <i class="fa-solid fa-star"></i> 5.0
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Completed
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
+                                <i class="fa-solid fa-circle-check"></i> Done
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }
+        } else if (status === 'Cancelled') {
+            if (overdueStat) overdueStat.textContent = '0';
+            if (completedStat) completedStat.textContent = '0';
+            if (cancelledStat) cancelledStat.textContent = '1';
+            if (pendingBadge) pendingBadge.textContent = '0';
+            if (completedBadge) completedBadge.textContent = '0';
+
+            if (pendingTbody) {
+                pendingTbody.innerHTML = `
+                    <tr class="hover:bg-slate-50/70 transition bg-rose-50/20">
+                        <td class="py-3.5 px-4 font-bold text-slate-700">1</td>
+                        <td class="py-3.5 px-4 font-bold text-slate-800">ram</td>
+                        <td class="py-3.5 px-4 text-slate-600 font-mono">7654387654</td>
+                        <td class="py-3.5 px-4 text-slate-700 font-semibold">Vipin</td>
+                        <td class="py-3.5 px-4 text-slate-700 font-semibold">Vipin</td>
+                        <td class="py-3.5 px-4 text-slate-700">03-10-2026</td>
+                        <td class="py-3.5 px-4 text-slate-600">11:00:00</td>
+                        <td class="py-3.5 px-4">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                Cancelled
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="px-2.5 py-1 rounded-lg bg-rose-100 text-rose-700 text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
+                                <i class="fa-solid fa-circle-xmark"></i> Cancelled
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
     }
 
     // ==========================================
@@ -382,6 +531,7 @@
         attachGlobalFormInterceptor();
         renderAdminLeadsTable();
         renderEmployeeLeadsTable();
+        renderDemosTable();
     }
 
     if (document.readyState === 'loading') {
@@ -395,6 +545,12 @@
         saveLead,
         showToast,
         renderAdminLeadsTable,
-        renderEmployeeLeadsTable
+        renderEmployeeLeadsTable,
+        updateDemoStatus,
+        renderDemosTable,
+        syncToDatabase
     };
+    window.handleDemoStatus = updateDemoStatus;
+    window.updateDemoStatus = updateDemoStatus;
 })();
+
