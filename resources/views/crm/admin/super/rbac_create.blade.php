@@ -26,7 +26,7 @@
 
         <a href="{{ route('crm.admin.super.rbac') }}" class="px-4 py-2.5 rounded-2xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-black transition flex items-center gap-2 shadow-xs">
             <i class="fa-solid fa-arrow-left text-xs"></i>
-            <span>Back to RBAC Matrix</span>
+            <span>Back to Roles & Permissions</span>
         </a>
     </div>
 

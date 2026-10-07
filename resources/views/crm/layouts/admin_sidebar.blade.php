@@ -198,11 +198,11 @@
             Super Admin
         </div>
 
-        <!-- RBAC Matrix -->
+        <!-- Roles & Permissions -->
         <a href="{{ route('crm.admin.super.rbac') }}" 
            class="sidebar-dark-item {{ Request::routeIs('crm.admin.super.rbac*') ? 'sidebar-dark-item-active' : '' }}">
             <i class="fa-solid fa-shield-halved text-rose-500"></i>
-            <span>RBAC Matrix</span>
+            <span>Roles & Permissions</span>
         </a>
 
 
