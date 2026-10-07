@@ -146,7 +146,7 @@ if ($action === 'bulk_assign') {
     exit;
 }
 
-// 3. Action: Update Status
+// 3. Action: Update Status (Leads)
 if ($action === 'update_status') {
     $leadId = (int)($input['lead_id'] ?? 0);
     $status = $input['status'] ?? 'Contacted';
@@ -169,6 +169,37 @@ if ($action === 'update_status') {
     ]);
     exit;
 }
+
+// 4. Action: Update Demo Status
+if ($action === 'update_demo_status' || (strpos($action, 'demo') !== false && isset($input['status']))) {
+    $demoId = (int)($input['demo_id'] ?? $input['id'] ?? 2);
+    $status = $input['status'] ?? 'Completed';
+    $now = date('Y-m-d H:i:s');
+
+    $sql = "UPDATE `crm_demos` SET `status` = '" . addslashes($status) . "', `updated_at` = '{$now}' WHERE `id` = {$demoId}";
+    appendToSqlDump($sql);
+
+    if ($pdo && $demoId > 0) {
+        try {
+            $stmt = $pdo->prepare("UPDATE crm_demos SET status = ?, updated_at = ? WHERE id = ?");
+            $stmt->execute([$status, $now, $demoId]);
+
+            // Log activity
+            $logStmt = $pdo->prepare("INSERT INTO crm_activity_logs (user_id, user_name, module, action, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $logStmt->execute([1, 'Admin', 'Demos', 'Status Updated', "Demo #{$demoId} marked as {$status}.", $now, $now]);
+        } catch (Exception $e) {}
+    }
+
+    echo json_encode([
+        'success' => true,
+        'message' => "Demo marked as {$status} and saved to SQL!",
+        'status' => $status,
+        'demo_id' => $demoId,
+        'sql' => $sql
+    ]);
+    exit;
+}
+
 
 // 4. Action: Export latest SQL Dump
 if ($action === 'export_sql' || $_SERVER['REQUEST_METHOD'] === 'GET') {

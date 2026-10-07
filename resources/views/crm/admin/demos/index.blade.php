@@ -189,17 +189,17 @@
                             </td>
                             <td class="py-3.5 px-4 text-center">
                                 <div class="inline-flex items-center justify-center gap-1.5">
-                                    <form method="POST" action="{{ route('crm.admin.demos.status', $demo->id) }}">
+                                    <form method="POST" action="{{ route('crm.admin.demos.status', $demo->id) }}" onsubmit="event.preventDefault(); updateDemoStatus({{ $demo->id }}, 'Completed');">
                                         @csrf
                                         <input type="hidden" name="status" value="Completed">
-                                        <button type="submit" title="Mark Completed" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-[10px] font-bold transition">
+                                        <button type="button" onclick="updateDemoStatus({{ $demo->id }}, 'Completed')" title="Mark Completed" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 text-[10px] font-bold transition cursor-pointer active:scale-95">
                                             <i class="fa-solid fa-check mr-1"></i> Complete
                                         </button>
                                     </form>
-                                    <form method="POST" action="{{ route('crm.admin.demos.status', $demo->id) }}">
+                                    <form method="POST" action="{{ route('crm.admin.demos.status', $demo->id) }}" onsubmit="event.preventDefault(); updateDemoStatus({{ $demo->id }}, 'Cancelled');">
                                         @csrf
                                         <input type="hidden" name="status" value="Cancelled">
-                                        <button type="submit" title="Cancel Demo" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-[10px] font-bold transition">
+                                        <button type="button" onclick="updateDemoStatus({{ $demo->id }}, 'Cancelled')" title="Cancel Demo" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 text-[10px] font-bold transition cursor-pointer active:scale-95">
                                             <i class="fa-solid fa-xmark mr-1"></i> Cancel
                                         </button>
                                     </form>
