@@ -1,2 +1,708 @@
-<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/crm/admin/leads"><script>window.location.replace('/crm/admin/leads');</script></head><body><p>Redirecting to <a href="/crm/admin/leads">/crm/admin/leads</a>...</p>    <script src="/crm/js/crm-leads-store.js"></script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE">
+    <title>Upload Leads (CSV) | Hisab Mittra CRM</title>
+    <link rel="icon" type="image/png" href="/images/hisab-mittra-icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <!-- Google Fonts: Plus Jakarta Sans / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7f4',
+                            100: '#dcece5',
+                            200: '#bfdcd0',
+                            300: '#94c6b3',
+                            400: '#5da790',
+                            500: '#0e6f66',
+                            600: '#0b5a53',
+                            700: '#084d47',
+                            800: '#063c37',
+                            900: '#042b27',
+                        },
+                        sage: {
+                            50: '#f5faf7',
+                            100: '#eaf4ee',
+                            200: '#d8eade',
+                            300: '#c2decb',
+                            400: '#a3cdb2',
+                            500: '#80b894',
+                            600: '#619e78',
+                            700: '#4c7f5f',
+                            800: '#3d654d',
+                            900: '#335340',
+                        },
+                        coachTeal: {
+                            light: '#138b80',
+                            DEFAULT: '#0e6f66',
+                            dark: '#084d47',
+                            deep: '#063934',
+                        },
+                        amberAccent: {
+                            50: '#fdf6f0',
+                            100: '#fbeee2',
+                            500: '#e27a4e',
+                            600: '#cb6336',
+                        },
+                        canvas: '#eaf2ee',
+                        cardBorder: '#dcece5',
+                    },
+                    borderRadius: {
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome 6 & Feather Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background-color: #F8F9FD;
+            background-image: 
+                radial-gradient(circle 900px at 15% 0%, rgba(254, 215, 226, 0.45) 0%, rgba(255, 241, 242, 0.20) 40%, transparent 70%),
+                radial-gradient(circle 850px at 85% 10%, rgba(254, 215, 170, 0.35) 0%, rgba(255, 247, 237, 0.18) 40%, transparent 70%),
+                radial-gradient(circle 950px at 50% 50%, rgba(243, 232, 255, 0.30) 0%, rgba(250, 245, 255, 0.15) 50%, transparent 75%),
+                radial-gradient(circle 1000px at 85% 90%, rgba(254, 215, 226, 0.35) 0%, rgba(255, 241, 242, 0.15) 50%, transparent 75%),
+                linear-gradient(135deg, #FDF8F9 0%, #F9F7FB 50%, #F5F7FC 100%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1E293B;
+        }
+
+        .crm-card, .hrad-card {
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(226, 232, 240, 0.65), 0 2px 8px -2px rgba(15, 23, 42, 0.03);
+            transition: all 0.2s ease-in-out;
+        }
+        .crm-card:hover, .hrad-card:hover {
+            box-shadow: 0 15px 35px -5px rgba(203, 213, 225, 0.75), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        .sidebar-dark-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 9999px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb:hover {
+            background: #CBD5E1;
+        }
+
+        .sidebar-dark-item {
+            color: #0F172A;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            margin: 3px 12px;
+            border-radius: 0.85rem;
+            transition: all 0.18s ease-in-out;
+            text-decoration: none;
+            cursor: pointer;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-dark-item span {
+            color: #0F172A;
+            font-weight: 700;
+        }
+        .sidebar-dark-item i {
+            color: #475569;
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            transition: all 0.18s ease-in-out;
+            flex-shrink: 0;
+        }
+        .sidebar-dark-item:hover {
+            background-color: #F1F5F9;
+            color: #000000;
+        }
+        .sidebar-dark-item:hover span {
+            color: #000000;
+            font-weight: 800;
+        }
+        .sidebar-dark-item:hover i {
+            color: #2563EB;
+        }
+        .sidebar-dark-item-active {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            border-radius: 0.85rem !important;
+            box-shadow: 0 8px 20px -3px rgba(37, 99, 235, 0.35) !important;
+            padding-left: 16px !important;
+        }
+        .sidebar-dark-item-active span {
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+        .sidebar-dark-item-active i {
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body class="h-full flex overflow-hidden text-slate-800">
+
+    <!-- Mobile Backdrop -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/30 z-40 hidden md:hidden transition-opacity"></div>
+
+    <!-- LEFT SIDEBAR -->
+    <aside id="main-sidebar" class="fixed md:static inset-y-0 left-0 z-50 w-64 h-full bg-white border-r border-slate-200/80 flex flex-col overflow-hidden select-none shadow-sm transition-all duration-300 transform -translate-x-full md:translate-x-0">
+        <div class="flex flex-col h-full bg-white select-none">
+            <!-- Brand Logo -->
+            <div class="px-5 py-4 border-b border-slate-100/80">
+                <a href="/crm/admin/dashboard" class="flex items-center group py-0.5">
+                    <img src="/images/hisab-mittra-logo.png" alt="HisabMittra" class="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform group-hover:scale-102">
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav id="sidebar-nav" class="flex-1 overflow-y-auto sidebar-dark-scroll py-3 space-y-1">
+                <!-- 1. SECTION: MAIN -->
+                <div class="px-6 pt-2 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Main</div>
+                <a href="/crm/admin/dashboard" class="sidebar-dark-item">
+                    <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
+                </a>
+
+                <!-- 2. SECTION: CRM & PIPELINE -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">CRM & Pipeline</div>
+                <a href="/crm/admin/leads" class="sidebar-dark-item">
+                    <i class="fa-solid fa-list-ul"></i><span>All Leads</span>
+                </a>
+                <a href="/crm/admin/deals" class="sidebar-dark-item">
+                    <i class="fa-solid fa-handshake"></i><span>Deals & Pipeline</span>
+                </a>
+                <a href="/crm/admin/customers" class="sidebar-dark-item">
+                    <i class="fa-solid fa-building"></i><span>Customers</span>
+                </a>
+                <a href="/crm/admin/quotations" class="sidebar-dark-item">
+                    <i class="fa-solid fa-file-invoice-dollar"></i><span>Quotations & Proposals</span>
+                </a>
+
+                <!-- 3. SECTION: OPERATIONS -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Operations</div>
+                <a href="/crm/admin/followups" class="sidebar-dark-item">
+                    <i class="fa-solid fa-clock-rotate-left"></i><span>Follow-ups</span>
+                </a>
+                <a href="/crm/admin/tasks" class="sidebar-dark-item">
+                    <i class="fa-solid fa-list-check"></i><span>Tasks</span>
+                </a>
+                <a href="/crm/admin/demos" class="sidebar-dark-item">
+                    <i class="fa-solid fa-calendar-check"></i><span>Demos</span>
+                </a>
+                <a href="/crm/admin/reservations" class="sidebar-dark-item">
+                    <i class="fa-solid fa-book-open"></i><span>Reservations</span>
+                </a>
+                <a href="/crm/admin/leads/bulk-assign" class="sidebar-dark-item">
+                    <i class="fa-solid fa-shuffle"></i><span>Bulk Assign</span>
+                </a>
+                <!-- Upload Leads (Active) -->
+                <a href="/crm/admin/leads/upload" class="sidebar-dark-item sidebar-dark-item-active">
+                    <i class="fa-solid fa-file-arrow-up"></i><span>Upload Leads</span>
+                </a>
+
+                <!-- 4. SECTION: FINANCE & PRODUCTS -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Finance & Products</div>
+                <a href="/crm/admin/payments" class="sidebar-dark-item">
+                    <i class="fa-solid fa-credit-card"></i><span>Payments & Collections</span>
+                </a>
+                <a href="/crm/admin/products" class="sidebar-dark-item">
+                    <i class="fa-solid fa-boxes-stacked"></i><span>Products & Services</span>
+                </a>
+                <a href="/crm/admin/tools/billing-calculator" class="sidebar-dark-item">
+                    <i class="fa-solid fa-calculator"></i><span>Billing Calculator</span>
+                </a>
+
+                <!-- 5. SECTION: TEAM -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Team Management</div>
+                <a href="/crm/admin/team" class="sidebar-dark-item">
+                    <i class="fa-solid fa-users"></i><span>Employees</span>
+                </a>
+                <a href="/crm/admin/targets" class="sidebar-dark-item">
+                    <i class="fa-solid fa-bullseye"></i><span>Sales Targets</span>
+                </a>
+                <a href="/crm/admin/performance" class="sidebar-dark-item">
+                    <i class="fa-solid fa-trophy"></i><span>Team Performance</span>
+                </a>
+
+                <!-- 6. SECTION: ANALYTICS & REPORTS -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Analytics & Logs</div>
+                <a href="/crm/admin/reports" class="sidebar-dark-item">
+                    <i class="fa-solid fa-chart-pie"></i><span>Reports & Analytics</span>
+                </a>
+                <a href="/crm/admin/demos/assignments" class="sidebar-dark-item">
+                    <i class="fa-solid fa-calendar-days"></i><span>Demo Assignments</span>
+                </a>
+                <a href="/crm/admin/leads-export" class="sidebar-dark-item">
+                    <i class="fa-solid fa-file-excel"></i><span>Export Leads (.xlsx)</span>
+                </a>
+                <a href="/crm/admin/activity-logs" class="sidebar-dark-item">
+                    <i class="fa-solid fa-clock-rotate-left"></i><span>Activity Logs</span>
+                </a>
+                <a href="/crm/admin/live-tracking" class="sidebar-dark-item">
+                    <i class="fa-solid fa-tower-broadcast text-rose-500 animate-pulse"></i><span>Live Tracking</span>
+                </a>
+
+                <!-- 7. SECTION: SUPER ADMIN GOVERNANCE -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Super Admin</div>
+                <a href="/crm/admin/super/rbac" class="sidebar-dark-item">
+                    <i class="fa-solid fa-shield-halved text-rose-500"></i><span>RBAC Matrix</span>
+                </a>
+                <a href="/crm/admin/super/automation" class="sidebar-dark-item">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i><span>Lead Automation</span>
+                </a>
+                <a href="/crm/admin/super/integrations" class="sidebar-dark-item">
+                    <i class="fa-solid fa-plug text-blue-500"></i><span>Integrations & APIs</span>
+                </a>
+                <a href="/crm/admin/super/recycle-bin" class="sidebar-dark-item">
+                    <i class="fa-solid fa-trash-can text-rose-500"></i><span>Recycle Bin</span>
+                </a>
+                <a href="/crm/admin/super/approvals" class="sidebar-dark-item">
+                    <i class="fa-solid fa-stamp text-emerald-600"></i><span>Financial Approvals</span>
+                </a>
+
+                <!-- 8. SECTION: SYSTEM -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">System Settings</div>
+                <a href="/crm/admin/settings" class="sidebar-dark-item">
+                    <i class="fa-solid fa-gear"></i><span>System Settings</span>
+                </a>
+            </nav>
+
+            <!-- Bottom Sign Out -->
+            <div class="p-4 border-t border-slate-100 bg-white">
+                <form action="/crm/logout" method="POST">
+                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE">
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border border-rose-200/80 bg-rose-50/70 text-rose-600 text-xs font-black hover:bg-rose-100/80 hover:text-rose-700 transition duration-150 cursor-pointer">
+                        <i class="fa-solid fa-power-off text-xs text-rose-500"></i><span>Sign Out</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50/60 backdrop-blur-[2px]">
+        
+        <!-- TOPBAR -->
+        <header class="bg-transparent px-4 md:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/crm/admin/leads'; }" title="Go Back" class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer active:scale-95 group">
+                    <i class="fa-solid fa-arrow-left text-sm transition-transform group-hover:-translate-x-0.5"></i>
+                    <span class="text-sm font-bold hidden sm:inline">Back</span>
+                </button>
+                <a href="/" title="View Public Website" class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer group">
+                    <i class="fa-solid fa-globe text-sm transition-transform group-hover:rotate-12"></i>
+                    <span class="text-sm font-bold hidden sm:inline">Website</span>
+                </a>
+                <button type="button" onclick="toggleSidebar()" class="md:hidden text-slate-700 hover:text-blue-600 p-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-3.5 ml-auto">
+                <div class="relative group">
+                    <button class="flex items-center gap-2.5 p-1.5 pr-3.5 rounded-2xl bg-white border border-white/80 shadow-sm hover:border-slate-200 transition cursor-pointer">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-inner">A</div>
+                        <div class="hidden sm:block text-left pr-1">
+                            <div class="text-sm font-bold text-slate-800 leading-tight">Admin</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-slate-700 transition"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN SCROLLABLE CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+            <div class="space-y-6 max-w-4xl mx-auto">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-1">
+                            <a href="/crm/admin/leads" class="hover:text-emerald-700">Leads Management</a>
+                            <i class="fa-solid fa-chevron-right text-[9px] text-slate-400"></i>
+                            <span class="text-slate-800 font-bold">CSV Bulk Upload</span>
+                        </div>
+                        <h1 class="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2.5">
+                            <i class="fa-solid fa-file-arrow-up text-emerald-700 text-xl"></i>
+                            <span>Upload & Import Leads</span>
+                        </h1>
+                        <p class="text-xs text-slate-500 mt-1">Quickly import prospective leads from CSV files into your CRM database.</p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <a href="/crm/admin/leads/sample-csv.csv" download="lead_sample.csv" class="px-4 py-2 rounded-full border border-emerald-600 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs transition inline-flex items-center gap-2 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Download Sample CSV</span>
+                        </a>
+                        <a href="/crm/admin/leads" class="px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 font-semibold text-xs transition">
+                            Back to Leads
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Upload Card -->
+                <div class="crm-card p-6 md:p-8 bg-white rounded-3xl border border-slate-200 shadow-sm">
+                    <form id="uploadForm" onsubmit="handleCsvUploadSubmit(event)" class="space-y-6">
+                        <!-- Drag & Drop Zone -->
+                        <div id="dropZone" 
+                             onclick="document.getElementById('csvFileInput').click()"
+                             ondragover="handleDragOver(event)" 
+                             ondragleave="handleDragLeave(event)" 
+                             ondrop="handleDrop(event)"
+                             class="border-2 border-dashed border-[#cbd5e1] hover:border-emerald-600 rounded-3xl p-8 md:p-12 text-center transition cursor-pointer bg-slate-50/50 hover:bg-emerald-50/30">
+                            
+                            <input type="file" id="csvFileInput" accept=".csv,text/csv" class="hidden" onchange="handleFileSelect(this)">
+                            
+                            <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center text-2xl mb-4 shadow-sm">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            
+                            <h3 class="text-base font-bold text-slate-800 mb-1" id="fileSelectedTitle">
+                                Click to browse or drag & drop CSV file
+                            </h3>
+                            <p class="text-xs text-slate-500 max-w-sm mx-auto mb-4" id="fileSelectedSub">
+                                Supports standard CSV format with comma delimiters. Max file size: 5MB.
+                            </p>
+
+                            <button type="button" onclick="event.stopPropagation(); document.getElementById('csvFileInput').click()" class="px-5 py-2.5 rounded-full bg-[#1b4d3e] text-white font-bold text-xs hover:bg-[#153e32] transition shadow-md cursor-pointer">
+                                Choose CSV File
+                            </button>
+                        </div>
+
+                        <!-- CSV Formatting Guide -->
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-info text-emerald-600"></i>
+                                <span>Required CSV Column Order</span>
+                            </h4>
+                            <div class="flex items-center gap-2 overflow-x-auto text-[11px] font-mono text-slate-600 pb-1">
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold text-emerald-700">Name</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold">Email</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold">Phone</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold">Company</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold">City</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold">Agent</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold">Status</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold">Priority</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold text-amber-700">Basic</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold text-amber-700">Pro</span>
+                                <span>&rarr;</span>
+                                <span class="px-2 py-1 bg-white border border-slate-200 rounded font-semibold text-slate-500">Remarks</span>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-end gap-3 pt-2">
+                            <button type="submit" id="processBtn" class="px-7 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md inline-flex items-center gap-2 cursor-pointer active:scale-98">
+                                <i class="fa-solid fa-upload"></i>
+                                <span>Upload & Process Leads Now</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Recently Uploaded Leads -->
+                <div class="crm-card p-6 bg-white rounded-3xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-slate-400"></i>
+                            <span id="recentHeaderTitle">Recently Added Leads</span>
+                        </span>
+                        <a href="/crm/admin/leads" class="text-xs font-bold text-emerald-700 hover:underline">View All Leads &rarr;</a>
+                    </h3>
+                    <div id="recentLeadsList" class="divide-y divide-slate-100 text-xs">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Core Scripts -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const backdrop = document.getElementById('mobile-sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        let selectedCsvFile = null;
+
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                processFileSelection(input.files[0]);
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('dropZone').classList.add('border-emerald-600', 'bg-emerald-50/40');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('dropZone').classList.remove('border-emerald-600', 'bg-emerald-50/40');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('dropZone').classList.remove('border-emerald-600', 'bg-emerald-50/40');
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.name.toLowerCase().endsWith('.csv') || file.type === 'text/csv') {
+                    processFileSelection(file);
+                } else {
+                    Swal.fire({ icon: 'warning', title: 'Invalid File', text: 'Please drop a valid .csv file.' });
+                }
+            }
+        }
+
+        function processFileSelection(file) {
+            selectedCsvFile = file;
+            document.getElementById('fileSelectedTitle').innerText = 'Selected: ' + file.name;
+            document.getElementById('fileSelectedSub').innerText = 'File size: ' + (file.size / 1024).toFixed(1) + ' KB. Ready to process.';
+            document.getElementById('dropZone').classList.add('border-emerald-600', 'bg-emerald-50/40');
+        }
+
+        // CSV Parser utility handling quotes and escaped characters
+        function parseCsvText(text) {
+            const lines = [];
+            let row = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        current += '"';
+                        i++; // skip next quote
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    row.push(current.trim());
+                    current = '';
+                } else if ((char === '\r' || char === '\n') && !inQuotes) {
+                    if (char === '\r' && nextChar === '\n') {
+                        i++; // skip \n
+                    }
+                    row.push(current.trim());
+                    if (row.some(val => val.length > 0)) {
+                        lines.push(row);
+                    }
+                    row = [];
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            if (current.length > 0 || row.length > 0) {
+                row.push(current.trim());
+                if (row.some(val => val.length > 0)) {
+                    lines.push(row);
+                }
+            }
+            return lines;
+        }
+
+        function handleCsvUploadSubmit(e) {
+            e.preventDefault();
+
+            if (!selectedCsvFile) {
+                Swal.fire({ icon: 'warning', title: 'No File Selected', text: 'Please choose or drop a CSV file first.' });
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                const rows = parseCsvText(csvData);
+
+                if (!rows || rows.length === 0) {
+                    Swal.fire({ icon: 'error', title: 'Empty CSV', text: 'The uploaded CSV file contains no data.' });
+                    return;
+                }
+
+                // Check if first row is header
+                let startIndex = 0;
+                const firstRowLower = rows[0].map(c => c.toLowerCase());
+                const isHeader = firstRowLower.includes('name') || firstRowLower.includes('email') || firstRowLower.includes('phone') || firstRowLower.includes('contact');
+                if (isHeader) {
+                    startIndex = 1;
+                }
+
+                let importedCount = 0;
+                const newLeads = [];
+
+                for (let r = startIndex; r < rows.length; r++) {
+                    const row = rows[r];
+                    if (!row || row.length === 0 || !row[0]) continue;
+
+                    const name = row[0];
+                    if (!name.trim()) continue;
+
+                    const leadData = {
+                        name: name.trim(),
+                        email: (row[1] || '').trim(),
+                        phone: (row[2] || '').trim(),
+                        company: (row[3] || '').trim(),
+                        city: (row[4] || '').trim(),
+                        agent: (row[5] || '').trim(),
+                        status: (row[6] || 'New').trim(),
+                        priority: (row[7] || 'Medium').trim(),
+                        basic: parseFloat(row[8]) || 0,
+                        pro: parseFloat(row[9]) || 0,
+                        notes: (row[10] || '').trim()
+                    };
+
+                    if (window.HMCrmStore && window.HMCrmStore.saveLead) {
+                        const saved = window.HMCrmStore.saveLead(leadData);
+                        newLeads.push(saved);
+                    } else {
+                        // Fallback saving directly to localStorage
+                        const leadObj = {
+                            id: Date.now() + Math.floor(Math.random() * 1000),
+                            lead_code: 'LEAD-' + Math.floor(1000 + Math.random() * 9000),
+                            ...leadData,
+                            created_at: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                        };
+                        const list = JSON.parse(localStorage.getItem('hm_crm_leads_data') || '[]');
+                        list.unshift(leadObj);
+                        localStorage.setItem('hm_crm_leads_data', JSON.stringify(list));
+                        newLeads.push(leadObj);
+                    }
+                    importedCount++;
+                }
+
+                if (importedCount === 0) {
+                    Swal.fire({ icon: 'warning', title: 'No Leads Imported', text: 'Could not find any valid lead rows in CSV.' });
+                    return;
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Import Successful!',
+                    text: `Successfully imported ${importedCount} leads into CRM database!`,
+                    confirmButtonText: 'View All Leads',
+                    showCancelButton: true,
+                    cancelButtonText: 'Stay on Page'
+                }).then((result) => {
+                    renderRecentLeads();
+                    if (result.isConfirmed) {
+                        window.location.replace('/crm/admin/leads');
+                    }
+                });
+            };
+
+            reader.readAsText(selectedCsvFile);
+        }
+
+        function renderRecentLeads() {
+            const container = document.getElementById('recentLeadsList');
+            if (!container) return;
+
+            let leads = [];
+            try {
+                const stored = localStorage.getItem('hm_crm_leads_data');
+                if (stored) leads = JSON.parse(stored);
+            } catch(e) {}
+
+            const recentCountHeader = document.getElementById('recentHeaderTitle');
+            if (recentCountHeader) {
+                recentCountHeader.innerText = `Recently Added Leads (${leads.length})`;
+            }
+
+            if (!leads || leads.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-xs py-4 text-center">No leads uploaded yet.</p>';
+                return;
+            }
+
+            container.innerHTML = leads.slice(0, 8).map(lead => `
+                <div class="py-2.5 flex items-center justify-between">
+                    <div>
+                        <span class="font-bold text-slate-800">${lead.name}</span>
+                        <span class="text-slate-400 text-[10px] ml-2 font-mono">${lead.lead_code || 'LEAD'}</span>
+                        <span class="text-slate-500 block text-[11px]">${lead.company || 'Individual'} • ${lead.phone || lead.email || '-'}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">${lead.status || 'New'}</span>
+                        <span class="text-slate-400 text-[10px] block mt-0.5">${lead.created_at || 'Recently'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderRecentLeads();
+        });
+    </script>
+    <script src="/crm/js/crm-leads-store.js"></script>
+</body>
+</html>
