@@ -1,2 +1,735 @@
-<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/crm/admin/leads"><script>window.location.replace('/crm/admin/leads');</script></head><body><p>Redirecting to <a href="/crm/admin/leads">/crm/admin/leads</a>...</p>    <script src="/crm/js/crm-leads-store.js"></script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE">
+    <title>Bulk Assign Leads | Hisab Mittra CRM</title>
+    <link rel="icon" type="image/png" href="/images/hisab-mittra-icon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <!-- Google Fonts: Plus Jakarta Sans / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7f4',
+                            100: '#dcece5',
+                            200: '#bfdcd0',
+                            300: '#94c6b3',
+                            400: '#5da790',
+                            500: '#0e6f66',
+                            600: '#0b5a53',
+                            700: '#084d47',
+                            800: '#063c37',
+                            900: '#042b27',
+                        },
+                        sage: {
+                            50: '#f5faf7',
+                            100: '#eaf4ee',
+                            200: '#d8eade',
+                            300: '#c2decb',
+                            400: '#a3cdb2',
+                            500: '#80b894',
+                            600: '#619e78',
+                            700: '#4c7f5f',
+                            800: '#3d654d',
+                            900: '#335340',
+                        },
+                        coachTeal: {
+                            light: '#138b80',
+                            DEFAULT: '#0e6f66',
+                            dark: '#084d47',
+                            deep: '#063934',
+                        },
+                        amberAccent: {
+                            50: '#fdf6f0',
+                            100: '#fbeee2',
+                            500: '#e27a4e',
+                            600: '#cb6336',
+                        },
+                        canvas: '#eaf2ee',
+                        cardBorder: '#dcece5',
+                    },
+                    borderRadius: {
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome 6 & Feather Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background-color: #F8F9FD;
+            background-image: 
+                radial-gradient(circle 900px at 15% 0%, rgba(254, 215, 226, 0.45) 0%, rgba(255, 241, 242, 0.20) 40%, transparent 70%),
+                radial-gradient(circle 850px at 85% 10%, rgba(254, 215, 170, 0.35) 0%, rgba(255, 247, 237, 0.18) 40%, transparent 70%),
+                radial-gradient(circle 950px at 50% 50%, rgba(243, 232, 255, 0.30) 0%, rgba(250, 245, 255, 0.15) 50%, transparent 75%),
+                radial-gradient(circle 1000px at 85% 90%, rgba(254, 215, 226, 0.35) 0%, rgba(255, 241, 242, 0.15) 50%, transparent 75%),
+                linear-gradient(135deg, #FDF8F9 0%, #F9F7FB 50%, #F5F7FC 100%);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1E293B;
+        }
+
+        .crm-card, .hrad-card {
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(226, 232, 240, 0.65), 0 2px 8px -2px rgba(15, 23, 42, 0.03);
+            transition: all 0.2s ease-in-out;
+        }
+        .crm-card:hover, .hrad-card:hover {
+            box-shadow: 0 15px 35px -5px rgba(203, 213, 225, 0.75), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        .sidebar-dark-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 9999px;
+        }
+        .sidebar-dark-scroll::-webkit-scrollbar-thumb:hover {
+            background: #CBD5E1;
+        }
+
+        .sidebar-dark-item {
+            color: #0F172A;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            margin: 3px 12px;
+            border-radius: 0.85rem;
+            transition: all 0.18s ease-in-out;
+            text-decoration: none;
+            cursor: pointer;
+            letter-spacing: -0.01em;
+        }
+        .sidebar-dark-item span {
+            color: #0F172A;
+            font-weight: 700;
+        }
+        .sidebar-dark-item i {
+            color: #475569;
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            transition: all 0.18s ease-in-out;
+            flex-shrink: 0;
+        }
+        .sidebar-dark-item:hover {
+            background-color: #F1F5F9;
+            color: #000000;
+        }
+        .sidebar-dark-item:hover span {
+            color: #000000;
+            font-weight: 800;
+        }
+        .sidebar-dark-item:hover i {
+            color: #2563EB;
+        }
+        .sidebar-dark-item-active {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            border-radius: 0.85rem !important;
+            box-shadow: 0 8px 20px -3px rgba(37, 99, 235, 0.35) !important;
+            padding-left: 16px !important;
+        }
+        .sidebar-dark-item-active span {
+            color: #ffffff !important;
+            font-weight: 800 !important;
+        }
+        .sidebar-dark-item-active i {
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body class="h-full flex overflow-hidden text-slate-800">
+
+    <!-- Collapsible / Responsive Mobile Backdrop -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/30 z-40 hidden md:hidden transition-opacity"></div>
+
+    <!-- LEFT SIDEBAR -->
+    <aside id="main-sidebar" class="fixed md:static inset-y-0 left-0 z-50 w-64 h-full bg-white border-r border-slate-200/80 flex flex-col overflow-hidden select-none shadow-sm transition-all duration-300 transform -translate-x-full md:translate-x-0">
+        <div class="flex flex-col h-full bg-white select-none">
+            <!-- Brand Logo -->
+            <div class="px-5 py-4 border-b border-slate-100/80">
+                <a href="/crm/admin/dashboard" class="flex items-center group py-0.5">
+                    <img src="/images/hisab-mittra-logo.png" alt="HisabMittra" class="h-10 sm:h-11 w-auto max-w-[210px] object-contain transition-transform group-hover:scale-102">
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav id="sidebar-nav" class="flex-1 overflow-y-auto sidebar-dark-scroll py-3 space-y-1">
+                <!-- 1. SECTION: MAIN -->
+                <div class="px-6 pt-2 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Main</div>
+                <a href="/crm/admin/dashboard" class="sidebar-dark-item">
+                    <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
+                </a>
+
+                <!-- 2. SECTION: CRM & PIPELINE -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">CRM & Pipeline</div>
+                <a href="/crm/admin/leads" class="sidebar-dark-item">
+                    <i class="fa-solid fa-list-ul"></i><span>All Leads</span>
+                </a>
+                <a href="/crm/admin/deals" class="sidebar-dark-item">
+                    <i class="fa-solid fa-handshake"></i><span>Deals & Pipeline</span>
+                </a>
+                <a href="/crm/admin/customers" class="sidebar-dark-item">
+                    <i class="fa-solid fa-building"></i><span>Customers</span>
+                </a>
+                <a href="/crm/admin/quotations" class="sidebar-dark-item">
+                    <i class="fa-solid fa-file-invoice-dollar"></i><span>Quotations & Proposals</span>
+                </a>
+
+                <!-- 3. SECTION: OPERATIONS -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Operations</div>
+                <a href="/crm/admin/followups" class="sidebar-dark-item">
+                    <i class="fa-solid fa-clock-rotate-left"></i><span>Follow-ups</span>
+                </a>
+                <a href="/crm/admin/tasks" class="sidebar-dark-item">
+                    <i class="fa-solid fa-list-check"></i><span>Tasks</span>
+                </a>
+                <a href="/crm/admin/demos" class="sidebar-dark-item">
+                    <i class="fa-solid fa-calendar-check"></i><span>Demos</span>
+                </a>
+                <a href="/crm/admin/reservations" class="sidebar-dark-item">
+                    <i class="fa-solid fa-book-open"></i><span>Reservations</span>
+                </a>
+                <!-- Bulk Assign (Active) -->
+                <a href="/crm/admin/leads/bulk-assign" class="sidebar-dark-item sidebar-dark-item-active">
+                    <i class="fa-solid fa-shuffle"></i><span>Bulk Assign</span>
+                </a>
+                <a href="/crm/admin/leads/upload" class="sidebar-dark-item">
+                    <i class="fa-solid fa-file-arrow-up"></i><span>Upload Leads</span>
+                </a>
+
+                <!-- 4. SECTION: FINANCE & PRODUCTS -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Finance & Products</div>
+                <a href="/crm/admin/payments" class="sidebar-dark-item">
+                    <i class="fa-solid fa-credit-card"></i><span>Payments & Collections</span>
+                </a>
+                <a href="/crm/admin/products" class="sidebar-dark-item">
+                    <i class="fa-solid fa-boxes-stacked"></i><span>Products & Services</span>
+                </a>
+                <a href="/crm/admin/tools/billing-calculator" class="sidebar-dark-item">
+                    <i class="fa-solid fa-calculator"></i><span>Billing Calculator</span>
+                </a>
+
+                <!-- 5. SECTION: TEAM -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Team Management</div>
+                <a href="/crm/admin/team" class="sidebar-dark-item">
+                    <i class="fa-solid fa-users"></i><span>Employees</span>
+                </a>
+                <a href="/crm/admin/targets" class="sidebar-dark-item">
+                    <i class="fa-solid fa-bullseye"></i><span>Sales Targets</span>
+                </a>
+                <a href="/crm/admin/performance" class="sidebar-dark-item">
+                    <i class="fa-solid fa-trophy"></i><span>Team Performance</span>
+                </a>
+
+                <!-- 6. SECTION: ANALYTICS & REPORTS -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Analytics & Logs</div>
+                <a href="/crm/admin/reports" class="sidebar-dark-item">
+                    <i class="fa-solid fa-chart-pie"></i><span>Reports & Analytics</span>
+                </a>
+                <a href="/crm/admin/demos/assignments" class="sidebar-dark-item">
+                    <i class="fa-solid fa-calendar-days"></i><span>Demo Assignments</span>
+                </a>
+                <a href="/crm/admin/leads-export" class="sidebar-dark-item">
+                    <i class="fa-solid fa-file-excel"></i><span>Export Leads (.xlsx)</span>
+                </a>
+                <a href="/crm/admin/activity-logs" class="sidebar-dark-item">
+                    <i class="fa-solid fa-clock-rotate-left"></i><span>Activity Logs</span>
+                </a>
+                <a href="/crm/admin/live-tracking" class="sidebar-dark-item">
+                    <i class="fa-solid fa-tower-broadcast text-rose-500 animate-pulse"></i><span>Live Tracking</span>
+                </a>
+
+                <!-- 7. SECTION: SUPER ADMIN GOVERNANCE -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">Super Admin</div>
+                <a href="/crm/admin/super/rbac" class="sidebar-dark-item">
+                    <i class="fa-solid fa-shield-halved text-rose-500"></i><span>RBAC Matrix</span>
+                </a>
+                <a href="/crm/admin/super/automation" class="sidebar-dark-item">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i><span>Lead Automation</span>
+                </a>
+                <a href="/crm/admin/super/integrations" class="sidebar-dark-item">
+                    <i class="fa-solid fa-plug text-blue-500"></i><span>Integrations & APIs</span>
+                </a>
+                <a href="/crm/admin/super/recycle-bin" class="sidebar-dark-item">
+                    <i class="fa-solid fa-trash-can text-rose-500"></i><span>Recycle Bin</span>
+                </a>
+                <a href="/crm/admin/super/approvals" class="sidebar-dark-item">
+                    <i class="fa-solid fa-stamp text-emerald-600"></i><span>Financial Approvals</span>
+                </a>
+
+                <!-- 8. SECTION: SYSTEM -->
+                <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">System Settings</div>
+                <a href="/crm/admin/settings" class="sidebar-dark-item">
+                    <i class="fa-solid fa-gear"></i><span>System Settings</span>
+                </a>
+            </nav>
+
+            <!-- Bottom Sign Out -->
+            <div class="p-4 border-t border-slate-100 bg-white">
+                <form action="/crm/logout" method="POST">
+                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE">
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl border border-rose-200/80 bg-rose-50/70 text-rose-600 text-xs font-black hover:bg-rose-100/80 hover:text-rose-700 transition duration-150 cursor-pointer">
+                        <i class="fa-solid fa-power-off text-xs text-rose-500"></i><span>Sign Out</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50/60 backdrop-blur-[2px]">
+        
+        <!-- TOPBAR -->
+        <header class="bg-transparent px-4 md:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = '/crm/admin/leads'; }" title="Go Back" class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer active:scale-95 group">
+                    <i class="fa-solid fa-arrow-left text-sm transition-transform group-hover:-translate-x-0.5"></i>
+                    <span class="text-sm font-bold hidden sm:inline">Back</span>
+                </button>
+                <a href="/" title="View Public Website" class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer group">
+                    <i class="fa-solid fa-globe text-sm transition-transform group-hover:rotate-12"></i>
+                    <span class="text-sm font-bold hidden sm:inline">Website</span>
+                </a>
+                <button type="button" onclick="toggleSidebar()" class="md:hidden text-slate-700 hover:text-blue-600 p-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-3.5 ml-auto">
+                <div class="relative group">
+                    <button class="flex items-center gap-2.5 p-1.5 pr-3.5 rounded-2xl bg-white border border-white/80 shadow-sm hover:border-slate-200 transition cursor-pointer">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-inner">A</div>
+                        <div class="hidden sm:block text-left pr-1">
+                            <div class="text-sm font-bold text-slate-800 leading-tight">Admin</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-slate-700 transition"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN SCROLLABLE CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+            <div class="max-w-6xl mx-auto space-y-6">
+
+                <!-- Breadcrumb & Header -->
+                <div class="flex items-center justify-between flex-wrap gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-1">
+                            <a href="/crm/admin/leads" class="hover:text-indigo-600 transition">Leads</a>
+                            <i class="fa-solid fa-chevron-right text-[9px] text-slate-400"></i>
+                            <span class="text-slate-800 font-bold">Bulk Distribution</span>
+                        </div>
+                        <h1 class="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2.5">
+                            <i class="fa-solid fa-shuffle text-indigo-600 text-xl"></i>
+                            <span>Distribute Leads (Round-Robin)</span>
+                        </h1>
+                        <p class="text-xs text-slate-500 mt-1">Automatically balance and allocate lead pipelines equally among sales team members.</p>
+                    </div>
+
+                    <a href="/crm/admin/leads" class="px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 font-semibold text-xs transition inline-flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                        <span>Back to Leads</span>
+                    </a>
+                </div>
+
+                <!-- Two-Column Grid: Left Form, Right Distribution Summary -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    <!-- LEFT PANEL: Distribute Leads Form -->
+                    <div class="lg:col-span-8 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-7 shadow-sm space-y-5">
+                        
+                        <!-- Header -->
+                        <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                            <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm font-bold">
+                                <i class="fa-solid fa-shuffle"></i>
+                            </span>
+                            <div>
+                                <h2 class="text-sm font-bold text-slate-800">Distribute Leads Engine</h2>
+                                <p class="text-[11px] text-slate-400">Select candidate leads pool and assignees</p>
+                            </div>
+                        </div>
+
+                        <!-- Information Alert Box -->
+                        <div class="bg-[#f0f9ff] border border-blue-200/70 rounded-2xl p-4 text-xs text-[#0369a1] flex items-center gap-3">
+                            <i class="fa-solid fa-circle-info text-[#0284c7] text-base shrink-0"></i>
+                            <span>This tool will take a pool of leads and distribute them equally among the employees you select below using a fair round-robin algorithm.</span>
+                        </div>
+
+                        <!-- Form -->
+                        <form id="distributeForm" onsubmit="handleDistributeSubmit(event)" class="space-y-4">
+                            <!-- 1. Select Lead Pool -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Select Lead Pool *</label>
+                                <select name="lead_pool" id="lead_pool" onchange="calculateDistribution()" required class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">— Select Pool —</option>
+                                    <option value="unassigned" data-count="0" data-label="All Unassigned Leads">All Unassigned Leads (0)</option>
+                                    <option value="all" data-count="0" data-label="All Leads">All Leads (0)</option>
+                                    <option value="New" data-count="0" data-label="New Leads">New Leads (0)</option>
+                                    <option value="Contacted" data-count="0" data-label="Contacted Leads">Contacted Leads (0)</option>
+                                    <option value="In Progress" data-count="0" data-label="In Progress Leads">In Progress Leads (0)</option>
+                                    <option value="Qualified" data-count="0" data-label="Qualified Leads">Qualified Leads (0)</option>
+                                </select>
+                            </div>
+
+                            <!-- 2. Number of Leads to Distribute -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Number of Leads to Distribute</label>
+                                <input type="number" min="1" name="lead_count" id="lead_count" oninput="calculateDistribution()" placeholder="e.g. 50 (Leave empty to assign all matching in pool)" class="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <p class="text-[11px] text-slate-400 mt-1.5">If you select 3 employees and enter 90 leads, each will get exactly 30.</p>
+                            </div>
+
+                            <!-- 3. Select Employees -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <label class="text-xs font-bold text-slate-700">Select Employees *</label>
+                                    <button type="button" onclick="toggleSelectAllEmployees()" id="select-all-btn" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline cursor-pointer">Select All</button>
+                                </div>
+
+                                <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50/50">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                        <label class="flex items-center gap-2.5 text-xs font-semibold text-slate-700 cursor-pointer select-none hover:text-slate-900 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
+                                            <input type="checkbox" name="employee_ids[]" value="1" data-name="Admin" onchange="calculateDistribution()" class="emp-checkbox w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                            <span>Admin</span>
+                                        </label>
+                                        <label class="flex items-center gap-2.5 text-xs font-semibold text-slate-700 cursor-pointer select-none hover:text-slate-900 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
+                                            <input type="checkbox" name="employee_ids[]" value="6" data-name="Rahul Sharma" onchange="calculateDistribution()" class="emp-checkbox w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                            <span>Rahul Sharma</span>
+                                        </label>
+                                        <label class="flex items-center gap-2.5 text-xs font-semibold text-slate-700 cursor-pointer select-none hover:text-slate-900 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
+                                            <input type="checkbox" name="employee_ids[]" value="7" data-name="Vipin" onchange="calculateDistribution()" class="emp-checkbox w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                            <span>Vipin</span>
+                                        </label>
+                                        <label class="flex items-center gap-2.5 text-xs font-semibold text-slate-700 cursor-pointer select-none hover:text-slate-900 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
+                                            <input type="checkbox" name="employee_ids[]" value="8" data-name="Nandkishor Chouhan" onchange="calculateDistribution()" class="emp-checkbox w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                            <span>Nandkishor Chouhan</span>
+                                        </label>
+                                        <label class="flex items-center gap-2.5 text-xs font-semibold text-slate-700 cursor-pointer select-none hover:text-slate-900 bg-white p-2.5 rounded-xl border border-slate-200/60 shadow-2xs">
+                                            <input type="checkbox" name="employee_ids[]" value="9" data-name="sunny" onchange="calculateDistribution()" class="emp-checkbox w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                            <span>sunny</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4. Submit Button -->
+                            <div class="pt-2">
+                                <button type="submit" id="submitBtn" class="w-full py-3.5 px-5 rounded-2xl bg-[#4f46e5] hover:bg-[#4338ca] text-white text-xs font-black transition shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 cursor-pointer active:scale-98">
+                                    <i class="fa-solid fa-bolt text-xs"></i>
+                                    <span>Distribute Leads Now</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- RIGHT PANEL: Distribution Summary Card -->
+                    <div class="lg:col-span-4 bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-sm self-start">
+                        <!-- Header -->
+                        <div class="bg-[#ecfdf5] border-b border-emerald-100/80 px-5 py-3.5 flex items-center gap-2.5">
+                            <i class="fa-solid fa-chart-pie text-emerald-600 text-sm"></i>
+                            <h3 class="font-bold text-xs text-emerald-800">Distribution Summary</h3>
+                        </div>
+
+                        <!-- Body: Empty State -->
+                        <div id="summary-empty" class="p-8 text-center text-xs text-slate-400">
+                            <i class="fa-solid fa-users-viewfinder text-3xl text-slate-300 mb-2 block mx-auto"></i>
+                            Select options on the left to see how leads will be distributed.
+                        </div>
+
+                        <!-- Body: Live Calculated Preview -->
+                        <div id="summary-content" class="p-5 space-y-4 hidden text-xs">
+                            <div class="space-y-2 pb-3 border-b border-slate-100">
+                                <div class="flex justify-between items-center text-slate-600">
+                                    <span>Selected Pool:</span>
+                                    <span id="summary-pool" class="font-bold text-slate-800">-</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-600">
+                                    <span>Available in Pool:</span>
+                                    <span id="summary-pool-count" class="font-bold text-slate-800">0</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-600">
+                                    <span>Leads to Distribute:</span>
+                                    <span id="summary-distribute-count" class="font-bold text-indigo-600 text-sm">0</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-600">
+                                    <span>Selected Employees:</span>
+                                    <span id="summary-emp-count" class="font-bold text-slate-800">0</span>
+                                </div>
+                            </div>
+
+                            <!-- Per Employee Calculation -->
+                            <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-3 text-center">
+                                <span class="text-[11px] text-indigo-700 font-semibold block">Distribution Estimate</span>
+                                <div id="summary-per-emp" class="text-lg font-black text-indigo-900 mt-0.5">~ 0 leads / rep</div>
+                            </div>
+
+                            <!-- Breakdown of reps -->
+                            <div>
+                                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Recipient Breakdown</span>
+                                <ul id="summary-emp-list" class="divide-y divide-slate-100 max-h-56 overflow-y-auto pr-1"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Core Scripts -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const backdrop = document.getElementById('mobile-sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        let allSelected = false;
+
+        function toggleSelectAllEmployees() {
+            allSelected = !allSelected;
+            const checkboxes = document.querySelectorAll('.emp-checkbox');
+            checkboxes.forEach(cb => cb.checked = allSelected);
+            document.getElementById('select-all-btn').innerText = allSelected ? 'Deselect All' : 'Select All';
+            calculateDistribution();
+        }
+
+        // Default seed leads if empty in localStorage
+        const DEFAULT_LEADS = [
+            { id: 40, lead_code: 'LEAD-40', name: 'Rahul Sharma', company: 'Tech Solutions', phone: '9876543210', city: 'Jaipur', status: 'New', priority: 'High', assigned_to: '', assigned_name: 'Unassigned', basic: 5000, pro: 15000 },
+            { id: 39, lead_code: 'LEAD-39', name: 'Vipin Kumar', company: 'Vipin Logistics', phone: '9811223344', city: 'Delhi', status: 'Contacted', priority: 'Medium', assigned_to: '', assigned_name: 'Unassigned', basic: 4000, pro: 12000 },
+            { id: 37, lead_code: 'LEAD-37', name: 'Webhook Test Buyer', company: 'Apex Corp', phone: '9822334455', city: 'Mumbai', status: 'New', priority: 'High', assigned_to: '1', assigned_name: 'Admin', basic: 6000, pro: 18000 },
+            { id: 33, lead_code: 'LEAD-33', name: 'Pooja Verma', company: 'Verma Traders', phone: '9765432100', city: 'Jaipur', status: 'In Progress', priority: 'Urgent', assigned_to: '6', assigned_name: 'Rahul Sharma', basic: 7000, pro: 20000 },
+            { id: 29, lead_code: 'LEAD-29', name: 'Amit Jain', company: 'Jain Enterprises', phone: '9988776611', city: 'Ahmedabad', status: 'Qualified', priority: 'Medium', assigned_to: '', assigned_name: 'Unassigned', basic: 5000, pro: 15000 },
+            { id: 28, lead_code: 'LEAD-28', name: 'Sneha Patel', company: 'Patel Exports', phone: '9844332211', city: 'Surat', status: 'New', priority: 'Low', assigned_to: '', assigned_name: 'Unassigned', basic: 3000, pro: 9000 }
+        ];
+
+        function getAllLeads() {
+            try {
+                const stored = localStorage.getItem('hm_crm_leads_data');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        return parsed;
+                    }
+                }
+            } catch(e) {}
+            // If empty, initialize localStorage with default leads
+            localStorage.setItem('hm_crm_leads_data', JSON.stringify(DEFAULT_LEADS));
+            return DEFAULT_LEADS;
+        }
+
+        function refreshPoolCounts() {
+            const leads = getAllLeads();
+            const counts = {
+                unassigned: leads.filter(l => !l.assigned_to || l.assigned_to === '' || l.assigned_name === 'Unassigned').length,
+                all: leads.length,
+                'New': leads.filter(l => l.status === 'New').length,
+                'Contacted': leads.filter(l => l.status === 'Contacted').length,
+                'In Progress': leads.filter(l => l.status === 'In Progress').length,
+                'Qualified': leads.filter(l => l.status === 'Qualified').length
+            };
+
+            const select = document.getElementById('lead_pool');
+            for (let opt of select.options) {
+                if (counts[opt.value] !== undefined) {
+                    opt.setAttribute('data-count', counts[opt.value]);
+                    const baseLabel = opt.getAttribute('data-label') || opt.text.split(' (')[0];
+                    opt.text = `${baseLabel} (${counts[opt.value]})`;
+                }
+            }
+        }
+
+        function calculateDistribution() {
+            const poolSelect = document.getElementById('lead_pool');
+            const selectedOption = poolSelect.options[poolSelect.selectedIndex];
+            const countInput = document.getElementById('lead_count');
+            const checkedEmps = document.querySelectorAll('.emp-checkbox:checked');
+
+            const emptyBox = document.getElementById('summary-empty');
+            const contentBox = document.getElementById('summary-content');
+
+            if (!poolSelect.value && checkedEmps.length === 0) {
+                emptyBox.classList.remove('hidden');
+                contentBox.classList.add('hidden');
+                return;
+            }
+
+            emptyBox.classList.add('hidden');
+            contentBox.classList.remove('hidden');
+
+            const poolLabel = selectedOption ? (selectedOption.getAttribute('data-label') || 'None') : '-';
+            const availablePool = selectedOption ? parseInt(selectedOption.getAttribute('data-count') || '0', 10) : 0;
+            
+            let toDistribute = availablePool;
+            if (countInput.value && parseInt(countInput.value, 10) > 0) {
+                toDistribute = Math.min(parseInt(countInput.value, 10), availablePool);
+            }
+
+            const empCount = checkedEmps.length;
+            const perEmp = empCount > 0 ? Math.floor(toDistribute / empCount) : 0;
+            const remainder = empCount > 0 ? (toDistribute % empCount) : 0;
+
+            document.getElementById('summary-pool').innerText = poolLabel;
+            document.getElementById('summary-pool-count').innerText = availablePool;
+            document.getElementById('summary-distribute-count').innerText = toDistribute;
+            document.getElementById('summary-emp-count').innerText = empCount;
+            document.getElementById('summary-per-emp').innerText = empCount > 0 ? `~ ${perEmp} leads / rep` : 'Select employees';
+
+            const empList = document.getElementById('summary-emp-list');
+            empList.innerHTML = '';
+
+            if (empCount === 0) {
+                empList.innerHTML = '<li class="py-2 text-slate-400 text-center">No employees selected</li>';
+            } else {
+                checkedEmps.forEach((cb, index) => {
+                    const extra = index < remainder ? 1 : 0;
+                    const allocated = perEmp + extra;
+                    const li = document.createElement('li');
+                    li.className = 'py-2 flex items-center justify-between text-slate-700 font-medium';
+                    li.innerHTML = `<span>${cb.getAttribute('data-name')}</span><span class="font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full text-[10px]">${allocated} leads</span>`;
+                    empList.appendChild(li);
+                });
+            }
+        }
+
+        function handleDistributeSubmit(e) {
+            e.preventDefault();
+
+            const poolSelect = document.getElementById('lead_pool');
+            const poolValue = poolSelect.value;
+            if (!poolValue) {
+                Swal.fire({ icon: 'warning', title: 'Select Pool', text: 'Please select a lead pool to distribute.' });
+                return;
+            }
+
+            const checkedEmps = Array.from(document.querySelectorAll('.emp-checkbox:checked'));
+            if (checkedEmps.length === 0) {
+                Swal.fire({ icon: 'warning', title: 'Select Employees', text: 'Please select at least one sales representative.' });
+                return;
+            }
+
+            const allLeads = getAllLeads();
+            let matchingLeads = [];
+
+            if (poolValue === 'unassigned') {
+                matchingLeads = allLeads.filter(l => !l.assigned_to || l.assigned_to === '' || l.assigned_name === 'Unassigned');
+            } else if (poolValue === 'all') {
+                matchingLeads = [...allLeads];
+            } else {
+                matchingLeads = allLeads.filter(l => l.status === poolValue);
+            }
+
+            if (matchingLeads.length === 0) {
+                Swal.fire({ icon: 'info', title: 'No Leads Available', text: 'There are no leads matching the selected pool.' });
+                return;
+            }
+
+            const countInput = document.getElementById('lead_count');
+            let toDistributeCount = matchingLeads.length;
+            if (countInput.value && parseInt(countInput.value, 10) > 0) {
+                toDistributeCount = Math.min(parseInt(countInput.value, 10), matchingLeads.length);
+            }
+
+            const targetLeads = matchingLeads.slice(0, toDistributeCount);
+            const targetIds = targetLeads.map(l => l.id);
+
+            // Round Robin assignment
+            targetLeads.forEach((lead, idx) => {
+                const rep = checkedEmps[idx % checkedEmps.length];
+                lead.assigned_to = rep.value;
+                lead.assigned_name = rep.dataset.name;
+                lead.updated_at = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            });
+
+            // Update localStorage
+            const leadsMap = new Map(allLeads.map(l => [l.id, l]));
+            targetLeads.forEach(l => leadsMap.set(l.id, l));
+            const updatedAll = Array.from(leadsMap.values());
+            localStorage.setItem('hm_crm_leads_data', JSON.stringify(updatedAll));
+
+            // Sync with backend API (sync.php)
+            try {
+                fetch('/crm/api/sync.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'bulk_assign',
+                        lead_ids: targetIds,
+                        assigned_to: checkedEmps[0].value
+                    })
+                }).catch(() => {});
+            } catch(e) {}
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Leads Distributed!',
+                text: `Successfully distributed ${toDistributeCount} leads among ${checkedEmps.length} representatives.`,
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.replace('/crm/admin/leads');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshPoolCounts();
+        });
+    </script>
+    <script src="/crm/js/crm-leads-store.js"></script>
+</body>
+</html>

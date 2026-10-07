@@ -68,6 +68,11 @@
     function saveLead(data) {
         const id = Date.now();
         const randCode = 'LEAD-' + Math.floor(1000 + Math.random() * 9000);
+        const basicAmt = data.basic ? Number(data.basic) : 0;
+        const proAmt = data.pro ? Number(data.pro) : 0;
+        const expectedVal = data.expected_value ? Number(data.expected_value) : (proAmt > 0 ? proAmt : (basicAmt > 0 ? basicAmt : 0));
+        const callbackVal = data.follow_up_date || data.callback || '';
+
         const lead = {
             id: id,
             lead_code: randCode,
@@ -76,15 +81,19 @@
             phone: (data.phone || '-').trim(),
             email: (data.email || '').trim(),
             city: (data.city || '-').trim(),
+            agent: (data.agent || '-').trim(),
+            basic: basicAmt,
+            pro: proAmt,
             source_id: data.source_id || '',
             source: SOURCES[data.source_id] || data.source || 'Direct',
             status: data.status || 'New',
             priority: data.priority || 'Medium',
             assigned_to: data.assigned_to || '',
             assigned_name: EMPLOYEES[data.assigned_to] || 'Unassigned',
-            expected_value: data.expected_value ? Number(data.expected_value) : 0,
-            follow_up_date: data.follow_up_date || '',
-            notes: (data.notes || '').trim(),
+            expected_value: expectedVal,
+            follow_up_date: callbackVal,
+            callback: callbackVal,
+            notes: (data.notes || data.remarks || '').trim(),
             created_at: getFormattedDate(),
             updated_at: getFormattedDate()
         };
@@ -153,6 +162,10 @@
             const statusClass = statusBadges[lead.status] || 'bg-slate-100 text-slate-700';
             const prioClass = priorityColors[lead.priority] || 'text-slate-700';
             const valStr = lead.expected_value ? '₹' + Number(lead.expected_value).toLocaleString('en-IN') : '-';
+            const basicStr = lead.basic ? '₹' + Number(lead.basic).toLocaleString('en-IN') : '-';
+            const proStr = lead.pro ? '₹' + Number(lead.pro).toLocaleString('en-IN') : (valStr !== '-' ? valStr : '-');
+            const agentStr = (lead.agent && lead.agent !== '-') ? lead.agent : '-';
+            const callbackStr = lead.follow_up_date || lead.callback || '-';
             const leadDataSafe = JSON.stringify(lead).replace(/"/g, '&quot;');
 
             tr.innerHTML = `
@@ -167,19 +180,19 @@
                 <td class="py-2.5 px-3 font-semibold text-slate-800">${lead.company}</td>
                 <td class="py-2.5 px-3 font-semibold text-slate-800">${lead.name}</td>
                 <td class="py-2.5 px-3 font-mono text-slate-700">${lead.phone}</td>
-                <td class="py-2.5 px-3 text-slate-600">${lead.city}</td>
+                <td class="py-2.5 px-3 text-slate-600 font-medium">${lead.city}</td>
                 <td class="py-2.5 px-3 text-slate-600">${lead.source}</td>
                 <td class="py-2.5 px-3">
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusClass}">${lead.status}</span>
                 </td>
-                <td class="py-2.5 px-3 text-slate-600">${lead.follow_up_date || '-'}</td>
+                <td class="py-2.5 px-3 text-slate-600">${callbackStr}</td>
                 <td class="py-2.5 px-3 font-medium text-slate-700">${lead.assigned_name}</td>
-                <td class="py-2.5 px-3 text-slate-400">-</td>
+                <td class="py-2.5 px-3 text-slate-700 font-medium">${agentStr}</td>
                 <td class="py-2.5 px-3 text-slate-600">${lead.created_at}</td>
                 <td class="py-2.5 px-3 text-slate-600">${lead.updated_at}</td>
                 <td class="py-2.5 px-3 ${prioClass}">${lead.priority}</td>
-                <td class="py-2.5 px-3 text-slate-400">-</td>
-                <td class="py-2.5 px-3 font-semibold text-slate-800">${valStr}</td>
+                <td class="py-2.5 px-3 text-slate-800 font-bold">${basicStr}</td>
+                <td class="py-2.5 px-3 text-slate-800 font-bold">${proStr}</td>
                 <td class="py-2.5 px-3 text-slate-500 max-w-xs truncate text-[11px]">${lead.notes || '-'}</td>
                 <td class="py-2.5 px-3 text-center">
                     <div class="inline-flex items-center justify-center gap-1">

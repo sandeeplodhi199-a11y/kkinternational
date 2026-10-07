@@ -578,7 +578,7 @@
 
 <!-- MODAL: ADD LEAD (EMPLOYEE) -->
 <div id="emp-add-lead-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
             <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
                 <i class="fa-solid fa-user-plus text-emerald-600"></i>
@@ -587,52 +587,95 @@
             <button type="button" onclick="document.getElementById('emp-add-lead-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer">&times;</button>
         </div>
         <form id="add-lead-form" action="/crm/employee/leads" method="POST" class="space-y-3.5">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Contact Name *</label>
-                <input type="text" name="name" required placeholder="e.g. Rahul Verma" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
-            </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number *</label>
-                    <input type="text" name="phone" required placeholder="e.g. 9876543210" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Contact Name * (CONTACT)</label>
+                    <input type="text" name="name" required placeholder="e.g. Rahul Verma" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Company / Firm (FIRM NAME)</label>
+                    <input type="text" name="company" placeholder="e.g. Apex Traders" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number * (PHONE)</label>
+                    <input type="text" name="phone" required placeholder="e.g. +91 98765 43210" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">City / Location (CITY)</label>
+                    <input type="text" name="city" placeholder="e.g. Jaipur, Rajasthan" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
                     <input type="email" name="email" placeholder="e.g. rahul@company.com" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Company / Firm</label>
-                    <input type="text" name="company" placeholder="e.g. Apex Traders" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Expected Value (₹)</label>
-                    <input type="number" name="expected_value" placeholder="e.g. 25000" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Priority</label>
-                    <select name="priority" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                        <option value="Urgent">Urgent</option>
-                        <option value="Low">Low</option>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Lead Source (SRC)</label>
+                    <select name="source_id" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+                        <option value="">Direct / Walk-in</option>
+                        <option value="1">Website</option>
+                        <option value="2">WhatsApp</option>
+                        <option value="3">Referral</option>
+                        <option value="4">Facebook</option>
+                        <option value="5">Instagram</option>
+                        <option value="6">Google Search</option>
+                        <option value="7">Direct Calling</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Response / Status * (RESPONSE)</label>
                     <select name="status" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
                         <option value="New">New</option>
                         <option value="In Progress" selected>In Progress</option>
                         <option value="Contacted">Contacted</option>
                         <option value="Qualified">Qualified</option>
+                        <option value="Converted">Converted</option>
+                        <option value="Lost">Lost</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Priority (PRIORITY)</label>
+                    <select name="priority" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
                     </select>
                 </div>
             </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Agent / Caller (AGENT)</label>
+                    <input type="text" name="agent" placeholder="e.g. Vipin" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Callback Date (CALLBACK)</label>
+                    <input type="date" name="follow_up_date" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Basic Plan (₹) (BASIC)</label>
+                    <input type="number" step="0.01" name="basic" placeholder="e.g. 5000" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Pro Plan (₹) (PRO)</label>
+                    <input type="number" step="0.01" name="pro" placeholder="e.g. 15000" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+            </div>
+
             <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Inbound Notes / Remarks</label>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Remarks / Inquiry Notes (REMARKS)</label>
                 <textarea name="notes" rows="2" placeholder="Prospect requirement details..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
             </div>
             <div class="pt-2 flex justify-end gap-2">
