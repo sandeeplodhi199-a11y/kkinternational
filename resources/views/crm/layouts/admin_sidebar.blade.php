@@ -206,21 +206,6 @@
         </a>
 
 
-        <!-- Automation & Routing -->
-        <a href="{{ route('crm.admin.super.automation') }}" 
-           class="sidebar-dark-item {{ Request::routeIs('crm.admin.super.automation*') ? 'sidebar-dark-item-active' : '' }}">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
-            <span>Lead Automation</span>
-        </a>
-
-        <!-- Integrations & APIs -->
-        <a href="{{ route('crm.admin.super.integrations') }}" 
-           class="sidebar-dark-item {{ Request::routeIs('crm.admin.super.integrations*') ? 'sidebar-dark-item-active' : '' }}">
-            <i class="fa-solid fa-plug text-blue-500"></i>
-            <span>Integrations & APIs</span>
-        </a>
-
-
         <!-- Recycle Bin -->
         <a href="{{ route('crm.admin.super.recycle_bin') }}" 
            class="sidebar-dark-item {{ Request::routeIs('crm.admin.super.recycle_bin*') ? 'sidebar-dark-item-active' : '' }}">
