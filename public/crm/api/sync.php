@@ -62,20 +62,28 @@ if ($action === 'save_lead') {
     $priority = $data['priority'] ?? 'Medium';
     $assignedTo = !empty($data['assigned_to']) ? (int)$data['assigned_to'] : null;
     $expectedValue = !empty($data['expected_value']) ? (float)$data['expected_value'] : 0.00;
-    $followUpDate = !empty($data['follow_up_date']) ? $data['follow_up_date'] : null;
-    $notes = !empty($data['notes']) ? trim($data['notes']) : null;
+    $followUpDate = !empty($data['follow_up_date']) ? $data['follow_up_date'] : (!empty($data['callback']) ? $data['callback'] : null);
+    $notes = !empty($data['notes']) ? trim($data['notes']) : (!empty($data['remarks']) ? trim($data['remarks']) : null);
+    $city = !empty($data['city']) ? trim($data['city']) : null;
+    $agent = !empty($data['agent']) ? trim($data['agent']) : null;
+    $basic = !empty($data['basic']) ? (float)$data['basic'] : 0.00;
+    $pro = !empty($data['pro']) ? (float)$data['pro'] : ($expectedValue > 0 ? $expectedValue : 0.00);
     $now = date('Y-m-d H:i:s');
 
-    $sqlInsert = "INSERT INTO `crm_leads` (`lead_code`, `name`, `email`, `phone`, `company`, `source_id`, `status`, `priority`, `assigned_to`, `expected_value`, `follow_up_date`, `notes`, `created_at`, `updated_at`) VALUES (" .
+    $sqlInsert = "INSERT INTO `crm_leads` (`lead_code`, `name`, `email`, `phone`, `company`, `city`, `source_id`, `status`, `priority`, `assigned_to`, `agent`, `basic`, `pro`, `expected_value`, `follow_up_date`, `notes`, `created_at`, `updated_at`) VALUES (" .
         "'" . addslashes($leadCode) . "', " .
         "'" . addslashes($name) . "', " .
         ($email ? "'" . addslashes($email) . "'" : "NULL") . ", " .
         ($phone ? "'" . addslashes($phone) . "'" : "NULL") . ", " .
         ($company ? "'" . addslashes($company) . "'" : "NULL") . ", " .
+        ($city ? "'" . addslashes($city) . "'" : "NULL") . ", " .
         ($sourceId ? $sourceId : "NULL") . ", " .
         "'" . addslashes($status) . "', " .
         "'" . addslashes($priority) . "', " .
         ($assignedTo ? $assignedTo : "NULL") . ", " .
+        ($agent ? "'" . addslashes($agent) . "'" : "NULL") . ", " .
+        $basic . ", " .
+        $pro . ", " .
         $expectedValue . ", " .
         ($followUpDate ? "'" . addslashes($followUpDate) . "'" : "NULL") . ", " .
         ($notes ? "'" . addslashes($notes) . "'" : "NULL") . ", " .
@@ -86,13 +94,13 @@ if ($action === 'save_lead') {
     $insertedId = null;
     if ($pdo) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO crm_leads (lead_code, name, email, phone, company, source_id, status, priority, assigned_to, expected_value, follow_up_date, notes, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$leadCode, $name, $email, $phone, $company, $sourceId, $status, $priority, $assignedTo, $expectedValue, $followUpDate, $notes, $now, $now]);
+            $stmt = $pdo->prepare("INSERT INTO crm_leads (lead_code, name, email, phone, company, city, source_id, status, priority, assigned_to, agent, basic, pro, expected_value, follow_up_date, notes, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$leadCode, $name, $email, $phone, $company, $city, $sourceId, $status, $priority, $assignedTo, $agent, $basic, $pro, $expectedValue, $followUpDate, $notes, $now, $now]);
             $insertedId = $pdo->lastInsertId();
 
             // Log activity
             $logStmt = $pdo->prepare("INSERT INTO crm_activity_logs (user_id, user_name, module, action, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $logStmt->execute([1, 'Admin', 'Leads', 'Created', "Lead {$name} ({$leadCode}) automatically created and saved to SQL.", $now, $now]);
+            $logStmt->execute([1, 'Admin', 'Leads', 'Created', "Lead {$name} ({$leadCode}) with City: {$city}, Agent: {$agent}, Basic: ₹{$basic}, Pro: ₹{$pro} automatically created and saved to SQL.", $now, $now]);
         } catch (Exception $ex) {
             // MySQL error handled gracefully
         }

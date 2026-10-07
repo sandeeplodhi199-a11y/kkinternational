@@ -201,17 +201,11 @@
                                 <td class="py-2.5 px-3 text-slate-600">
                                     {{ $lead->follow_up_date ? \Carbon\Carbon::parse($lead->follow_up_date)->format('d M Y') : '-' }}
                                 </td>
-                                <td class="py-2.5 px-3 text-slate-600">
-                                    {{ $lead->assignedEmployee ? 'EMP-' . $lead->assignedEmployee->id : '-' }}
+                                <td class="py-2.5 px-3 font-medium text-slate-700">
+                                    {{ $lead->assignedEmployee ? $lead->assignedEmployee->name : 'Unassigned' }}
                                 </td>
-                                <td class="py-2.5 px-3">
-                                    @if($lead->assignedEmployee)
-                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#ede9fe] text-[#7c3aed] inline-block">
-                                            {{ $lead->assignedEmployee->name }}
-                                        </span>
-                                    @else
-                                        <span class="text-slate-400 font-medium">-</span>
-                                    @endif
+                                <td class="py-2.5 px-3 text-slate-700 font-medium">
+                                    {{ $lead->agent ?: '-' }}
                                 </td>
                                 <td class="py-2.5 px-3 text-slate-600">
                                     {{ $lead->created_at ? $lead->created_at->format('d M Y') : '-' }}
@@ -219,13 +213,17 @@
                                 <td class="py-2.5 px-3 text-slate-600">
                                     {{ $lead->updated_at ? $lead->updated_at->format('d M Y') : '-' }}
                                 </td>
-                                <td class="py-2.5 px-3 text-slate-600">
+                                <td class="py-2.5 px-3 text-slate-700 font-bold">
                                     {{ $lead->priority ?: '-' }}
                                 </td>
-                                <td class="py-2.5 px-3 text-slate-400">-</td>
-                                <td class="py-2.5 px-3 text-slate-400">-</td>
+                                <td class="py-2.5 px-3 text-slate-800 font-bold">
+                                    {{ $lead->basic ? '₹' . number_format($lead->basic, 2) : '-' }}
+                                </td>
+                                <td class="py-2.5 px-3 text-slate-800 font-bold">
+                                    {{ $lead->pro ? '₹' . number_format($lead->pro, 2) : ($lead->expected_value ? '₹' . number_format($lead->expected_value, 2) : '-') }}
+                                </td>
                                 <td class="py-2.5 px-3 text-slate-500 max-w-xs truncate text-[11px]">
-                                    {{ $lead->notes ? Str::limit($lead->notes, 20) : '[System - ' . ($lead->created_at ? $lead->created_at->format('d M Y') : 'Lead') . ']' }}
+                                    {{ $lead->notes ? Str::limit($lead->notes, 30) : '-' }}
                                 </td>
                                 <td class="py-2.5 px-3 text-center">
                                     <div class="inline-flex items-center justify-center gap-1">
@@ -287,54 +285,80 @@
 
 <!-- MODAL: ADD LEAD -->
 <div id="add-lead-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-            <h3 class="text-base font-bold text-slate-800">Add New Lead</h3>
-            <button type="button" onclick="document.getElementById('add-lead-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-emerald-600"></i>
+                <span>Add New Lead</span>
+            </h3>
+            <button type="button" onclick="document.getElementById('add-lead-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer">&times;</button>
         </div>
         <form action="{{ route('crm.admin.leads.store') }}" method="POST" class="space-y-3.5">
             @csrf
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Contact Name *</label>
-                <input type="text" name="name" required placeholder="e.g. John Doe" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number *</label>
-                    <input type="text" name="phone" required placeholder="e.g. 9876543210" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Contact Name * (CONTACT)</label>
+                    <input type="text" name="name" required placeholder="e.g. John Doe" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Company / Firm (FIRM NAME)</label>
+                    <input type="text" name="company" placeholder="e.g. Acme Industries" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number * (PHONE)</label>
+                    <input type="text" name="phone" required placeholder="e.g. +91 98765 43210" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">City / Location (CITY)</label>
+                    <input type="text" name="city" placeholder="e.g. Jaipur, Rajasthan" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
                     <input type="email" name="email" placeholder="e.g. user@example.com" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Lead Source (SRC)</label>
+                    <select name="source_id" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        <option value="">Direct / Walk-in</option>
+                        @foreach($sources as $src)
+                            <option value="{{ $src->id }}">{{ $src->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
+
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Firm / Company</label>
-                    <input type="text" name="company" placeholder="e.g. Acme Industries" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Initial Status</label>
-                    <select name="status" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="New">New</option>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Response / Status * (RESPONSE)</label>
+                    <select name="status" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        <option value="New" selected>New</option>
                         <option value="Contacted">Contacted</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Qualified">Qualified</option>
+                        <option value="Converted">Converted</option>
+                        <option value="Lost">Lost</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Priority (PRIORITY)</label>
+                    <select name="priority" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
                     </select>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-3">
+
+            <div class="grid grid-cols-3 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Priority</label>
-                    <select name="priority" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                        <option value="Urgent">Urgent</option>
-                        <option value="Low">Low</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Assign To</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Assign Sales Rep (EMP)</label>
                     <select name="assigned_to" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         <option value="">Unassigned</option>
                         @foreach($employees as $emp)
@@ -342,14 +366,37 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Agent / Caller (AGENT)</label>
+                    <input type="text" name="agent" placeholder="e.g. Agent Name" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Callback Date (CALLBACK)</label>
+                    <input type="date" name="follow_up_date" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
             </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Basic Plan (₹) (BASIC)</label>
+                    <input type="number" step="0.01" name="basic" placeholder="e.g. 5000" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Pro Plan (₹) (PRO)</label>
+                    <input type="number" step="0.01" name="pro" placeholder="e.g. 15000" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+
             <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Remarks / Notes</label>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Remarks / Notes (REMARKS)</label>
                 <textarea name="notes" rows="2" placeholder="Initial conversation or inquiry details..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
             <div class="pt-2 flex justify-end gap-2">
-                <button type="button" onclick="document.getElementById('add-lead-modal').classList.add('hidden')" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
-                <button type="submit" class="px-5 py-2 rounded-xl bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold shadow-sm transition">Save Lead</button>
+                <button type="button" onclick="document.getElementById('add-lead-modal').classList.add('hidden')" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer">Cancel</button>
+                <button type="submit" class="px-5 py-2 rounded-xl bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold shadow-sm transition cursor-pointer flex items-center gap-1.5">
+                    <i class="fa-solid fa-check text-xs"></i>
+                    <span>Save Lead</span>
+                </button>
             </div>
         </form>
     </div>
@@ -357,83 +404,123 @@
 
 <!-- MODAL: VIEW LEAD -->
 <div id="view-lead-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-            <h3 class="text-base font-bold text-slate-800">Lead Details</h3>
-            <button type="button" onclick="document.getElementById('view-lead-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-address-card text-indigo-600"></i>
+                <span>Lead Full Details</span>
+            </h3>
+            <button type="button" onclick="document.getElementById('view-lead-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer">&times;</button>
         </div>
         <div class="space-y-3 text-xs">
-            <div>
-                <span class="text-slate-400 font-semibold block">Contact Name:</span>
-                <span id="view-name" class="text-slate-800 font-bold text-sm"></span>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <span class="text-slate-400 font-semibold block">Contact Name (CONTACT):</span>
+                    <span id="view-name" class="text-slate-800 font-bold text-sm"></span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-semibold block">Firm / Company (FIRM NAME):</span>
+                    <span id="view-company" class="text-slate-800 font-bold text-sm"></span>
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <span class="text-slate-400 font-semibold block">Firm / Company:</span>
-                    <span id="view-company" class="text-slate-700 font-semibold"></span>
-                </div>
-                <div>
-                    <span class="text-slate-400 font-semibold block">Phone / Mobile:</span>
+                    <span class="text-slate-400 font-semibold block">Phone / Mobile (PHONE):</span>
                     <span id="view-phone" class="text-slate-700 font-semibold font-mono"></span>
                 </div>
+                <div>
+                    <span class="text-slate-400 font-semibold block">City / Location (CITY):</span>
+                    <span id="view-city" class="text-slate-700 font-semibold"></span>
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <span class="text-slate-400 font-semibold block">Status:</span>
+                    <span class="text-slate-400 font-semibold block">Status (RESPONSE):</span>
                     <span id="view-status" class="text-slate-700 font-semibold"></span>
                 </div>
                 <div>
-                    <span class="text-slate-400 font-semibold block">Priority:</span>
+                    <span class="text-slate-400 font-semibold block">Priority (PRIORITY):</span>
                     <span id="view-priority" class="text-slate-700 font-semibold"></span>
                 </div>
             </div>
-            <div>
-                <span class="text-slate-400 font-semibold block">Assigned Agent:</span>
-                <span id="view-agent" class="text-slate-700 font-semibold"></span>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <span class="text-slate-400 font-semibold block">Assigned Staff (EMP):</span>
+                    <span id="view-emp" class="text-slate-700 font-semibold"></span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-semibold block">Telecaller / Agent (AGENT):</span>
+                    <span id="view-agent" class="text-slate-700 font-semibold"></span>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <span class="text-slate-400 font-semibold block">Basic (BASIC):</span>
+                    <span id="view-basic" class="text-slate-800 font-bold"></span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-semibold block">Pro (PRO):</span>
+                    <span id="view-pro" class="text-slate-800 font-bold"></span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-semibold block">Callback (CALLBACK):</span>
+                    <span id="view-callback" class="text-slate-700 font-semibold"></span>
+                </div>
             </div>
             <div>
-                <span class="text-slate-400 font-semibold block">Remarks:</span>
-                <div id="view-remarks" class="text-slate-700 bg-slate-50 p-2.5 rounded-xl mt-1 border border-slate-100"></div>
+                <span class="text-slate-400 font-semibold block">Remarks (REMARKS):</span>
+                <div id="view-remarks" class="text-slate-700 bg-slate-50 p-2.5 rounded-xl mt-1 border border-slate-100 whitespace-pre-wrap"></div>
             </div>
         </div>
         <div class="pt-4 flex justify-end">
-            <button type="button" onclick="document.getElementById('view-lead-modal').classList.add('hidden')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">Close</button>
+            <button type="button" onclick="document.getElementById('view-lead-modal').classList.add('hidden')" class="px-5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer">Close</button>
         </div>
     </div>
 </div>
 
 <!-- MODAL: EDIT LEAD -->
 <div id="edit-lead-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-            <h3 class="text-base font-bold text-slate-800">Edit Lead</h3>
-            <button type="button" onclick="document.getElementById('edit-lead-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-amber-500"></i>
+                <span>Edit Lead Details</span>
+            </h3>
+            <button type="button" onclick="document.getElementById('edit-lead-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer">&times;</button>
         </div>
         <form id="editLeadForm" method="POST" class="space-y-3.5">
             @csrf
             @method('PUT')
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Contact Name *</label>
-                <input type="text" id="edit-name" name="name" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Contact Name *</label>
+                    <input type="text" id="edit-name" name="name" required class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Firm Name</label>
+                    <input type="text" id="edit-company" name="company" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Phone</label>
-                    <input type="text" id="edit-phone" name="phone" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="edit-phone" name="phone" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">City</label>
+                    <input type="text" id="edit-city" name="city" placeholder="City name" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
                     <input type="email" id="edit-email" name="email" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
+
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Firm Name</label>
-                    <input type="text" id="edit-company" name="company" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Status</label>
-                    <select id="edit-status" name="status" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Status (RESPONSE)</label>
+                    <select id="edit-status" name="status" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                         <option value="New">New</option>
                         <option value="Contacted">Contacted</option>
                         <option value="In Progress">In Progress</option>
@@ -442,19 +529,20 @@
                         <option value="Lost">Lost</option>
                     </select>
                 </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Priority</label>
-                    <select id="edit-priority" name="priority" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <select id="edit-priority" name="priority" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
                         <option value="High">High</option>
                         <option value="Urgent">Urgent</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Assigned To</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Assigned To (EMP)</label>
                     <select id="edit-assigned-to" name="assigned_to" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         <option value="">Unassigned</option>
                         @foreach($employees as $emp)
@@ -462,14 +550,34 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Agent (AGENT)</label>
+                    <input type="text" id="edit-agent" name="agent" placeholder="Agent Name" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Callback Date</label>
+                    <input type="date" id="edit-callback" name="follow_up_date" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
             </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Basic Plan (₹) (BASIC)</label>
+                    <input type="number" step="0.01" id="edit-basic" name="basic" placeholder="Basic Amount" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Pro Plan (₹) (PRO)</label>
+                    <input type="number" step="0.01" id="edit-pro" name="pro" placeholder="Pro Amount" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                </div>
+            </div>
+
             <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Remarks</label>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Remarks (REMARKS)</label>
                 <textarea id="edit-notes" name="notes" rows="2" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
             <div class="pt-2 flex justify-end gap-2">
-                <button type="button" onclick="document.getElementById('edit-lead-modal').classList.add('hidden')" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
-                <button type="submit" class="px-5 py-2 rounded-xl bg-[#f59e0b] hover:bg-[#d97706] text-white text-xs font-bold shadow-sm transition">Update Lead</button>
+                <button type="button" onclick="document.getElementById('edit-lead-modal').classList.add('hidden')" class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer">Cancel</button>
+                <button type="submit" class="px-5 py-2 rounded-xl bg-[#f59e0b] hover:bg-[#d97706] text-white text-xs font-bold shadow-sm transition cursor-pointer">Update Lead</button>
             </div>
         </form>
     </div>
@@ -584,9 +692,16 @@ function viewLeadModal(lead) {
     document.getElementById('view-name').innerText = lead.name || '-';
     document.getElementById('view-company').innerText = lead.company || '-';
     document.getElementById('view-phone').innerText = lead.phone || '-';
+    if (document.getElementById('view-city')) document.getElementById('view-city').innerText = lead.city || '-';
     document.getElementById('view-status').innerText = lead.status || '-';
     document.getElementById('view-priority').innerText = lead.priority || '-';
-    document.getElementById('view-agent').innerText = lead.assigned_employee ? lead.assigned_employee.name : (lead.assignedEmployee ? lead.assignedEmployee.name : 'Unassigned');
+    if (document.getElementById('view-emp')) {
+        document.getElementById('view-emp').innerText = lead.assigned_name || (lead.assigned_employee ? lead.assigned_employee.name : (lead.assignedEmployee ? lead.assignedEmployee.name : 'Unassigned'));
+    }
+    document.getElementById('view-agent').innerText = lead.agent || '-';
+    if (document.getElementById('view-callback')) document.getElementById('view-callback').innerText = lead.follow_up_date || lead.callback || '-';
+    if (document.getElementById('view-basic')) document.getElementById('view-basic').innerText = lead.basic ? ('₹' + Number(lead.basic).toLocaleString('en-IN')) : '-';
+    if (document.getElementById('view-pro')) document.getElementById('view-pro').innerText = lead.pro ? ('₹' + Number(lead.pro).toLocaleString('en-IN')) : (lead.expected_value ? ('₹' + Number(lead.expected_value).toLocaleString('en-IN')) : '-');
     document.getElementById('view-remarks').innerText = lead.notes || 'No remarks available.';
     document.getElementById('view-lead-modal').classList.remove('hidden');
 }
@@ -596,9 +711,14 @@ function editLeadModal(lead) {
     document.getElementById('edit-phone').value = lead.phone || '';
     document.getElementById('edit-email').value = lead.email || '';
     document.getElementById('edit-company').value = lead.company || '';
+    if (document.getElementById('edit-city')) document.getElementById('edit-city').value = lead.city || '';
     document.getElementById('edit-status').value = lead.status || 'New';
     document.getElementById('edit-priority').value = lead.priority || 'Medium';
     document.getElementById('edit-assigned-to').value = lead.assigned_to || '';
+    if (document.getElementById('edit-agent')) document.getElementById('edit-agent').value = lead.agent || '';
+    if (document.getElementById('edit-callback')) document.getElementById('edit-callback').value = lead.follow_up_date || lead.callback || '';
+    if (document.getElementById('edit-basic')) document.getElementById('edit-basic').value = lead.basic || '';
+    if (document.getElementById('edit-pro')) document.getElementById('edit-pro').value = lead.pro || (lead.expected_value || '');
     document.getElementById('edit-notes').value = lead.notes || '';
     document.getElementById('editLeadForm').action = "/crm/admin/leads/" + lead.id;
     document.getElementById('edit-lead-modal').classList.remove('hidden');
