@@ -1254,11 +1254,240 @@
         }, true);
     }
 
+
+    // ==========================================
+    // AUTO-REFRESH & LIVE DATABASE SYNC ENGINE
+    // ==========================================
+    const AUTO_REFRESH_CONFIG = {
+        intervalSeconds: 10,
+        storageKey: 'hm_crm_auto_refresh_enabled'
+    };
+
+    let autoRefreshState = {
+        enabled: localStorage.getItem(AUTO_REFRESH_CONFIG.storageKey) !== 'false',
+        countdown: AUTO_REFRESH_CONFIG.intervalSeconds,
+        timerId: null,
+        isRefreshing: false
+    };
+
+    function createAutoRefreshWidgetHtml() {
+        return `
+            <div class="inline-flex items-center gap-1.5 p-0.5 bg-white border border-slate-200/90 rounded-full shadow-xs crm-auto-refresh-widget transition hover:border-emerald-400">
+                <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefresh ? window.HMCrmStore.toggleAutoRefresh(event) : null" title="Click to Refresh Immediately" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full hover:bg-slate-50 text-slate-700 text-xs font-bold transition active:scale-95 cursor-pointer">
+                    <span class="relative flex h-2 w-2">
+                        <span class="auto-refresh-ping animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <i class="auto-refresh-icon fa-solid fa-arrows-rotate text-[11px] text-slate-400 transition-transform"></i>
+                    <span class="auto-refresh-label text-[11px] font-bold">Auto Refresh: <strong class="text-emerald-700 font-black">ON</strong></span>
+                    <span class="auto-refresh-timer px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-black">${autoRefreshState.countdown}s</span>
+                </button>
+                <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefreshState ? window.HMCrmStore.toggleAutoRefreshState(event) : null" title="Toggle Auto Refresh ON/OFF" class="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center text-[10px] transition cursor-pointer">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function injectAutoRefreshButton() {
+        if (document.querySelector('.crm-auto-refresh-widget')) {
+            updateAutoRefreshUI();
+            return;
+        }
+
+        const headerActionSelectors = [
+            'header .flex.items-center.gap-2',
+            'header .flex.items-center.gap-3',
+            'main .flex.items-center.justify-between .flex.items-center',
+            'main .flex.items-center.justify-between div:last-child'
+        ];
+
+        let targetContainer = null;
+        for (const sel of headerActionSelectors) {
+            const el = document.querySelector(sel);
+            if (el && el.tagName !== 'H2') {
+                targetContainer = el;
+                break;
+            }
+        }
+
+        if (targetContainer) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'inline-block';
+            wrapper.innerHTML = createAutoRefreshWidgetHtml();
+            targetContainer.insertBefore(wrapper.firstElementChild, targetContainer.firstChild);
+        }
+        updateAutoRefreshUI();
+    }
+
+    function updateAutoRefreshUI() {
+        const widgets = document.querySelectorAll('.crm-auto-refresh-widget');
+        widgets.forEach(widget => {
+            const ping = widget.querySelector('.auto-refresh-ping');
+            const dot = widget.querySelector('.auto-refresh-dot');
+            const label = widget.querySelector('.auto-refresh-label');
+            const timer = widget.querySelector('.auto-refresh-timer');
+
+            if (autoRefreshState.enabled) {
+                if (ping) ping.classList.remove('hidden');
+                if (dot) {
+                    dot.className = 'auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-emerald-500';
+                }
+                if (label) {
+                    label.innerHTML = 'Auto Refresh: <strong class="text-emerald-700 font-black">ON</strong>';
+                }
+                if (timer) {
+                    timer.className = 'auto-refresh-timer px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-black';
+                    timer.textContent = `${autoRefreshState.countdown}s`;
+                }
+            } else {
+                if (ping) ping.classList.add('hidden');
+                if (dot) {
+                    dot.className = 'auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-slate-400';
+                }
+                if (label) {
+                    label.innerHTML = 'Auto Refresh: <strong class="text-slate-500 font-black">PAUSED</strong>';
+                }
+                if (timer) {
+                    timer.className = 'auto-refresh-timer px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-500 font-mono text-[10px] font-black';
+                    timer.textContent = 'PAUSED';
+                }
+            }
+        });
+    }
+
+    function triggerLiveRefresh(isManual = false) {
+        if (autoRefreshState.isRefreshing) return;
+        autoRefreshState.isRefreshing = true;
+
+        const icons = document.querySelectorAll('.auto-refresh-icon');
+        icons.forEach(ic => ic.classList.add('fa-spin'));
+
+        const path = window.location.pathname.toLowerCase();
+        let tableName = 'leads';
+        if (path.includes('followups')) tableName = 'followups';
+        else if (path.includes('customers')) tableName = 'customers';
+        else if (path.includes('deals')) tableName = 'deals';
+        else if (path.includes('tasks')) tableName = 'tasks';
+        else if (path.includes('demos')) tableName = 'demos';
+        else if (path.includes('payments')) tableName = 'payments';
+        else if (path.includes('quotations')) tableName = 'quotations';
+        else if (path.includes('products')) tableName = 'products';
+        else if (path.includes('team') || path.includes('employees')) tableName = 'team';
+        else if (path.includes('reservations')) tableName = 'reservations';
+        else if (path.includes('branches')) tableName = 'branches';
+
+        const apiUrl = `/crm/api/sync.php?action=get_records&table=${tableName}&_t=${Date.now()}`;
+
+        fetch(apiUrl)
+            .then(res => {
+                if (!res.ok) throw new Error('Network response not ok');
+                return res.text();
+            })
+            .then(text => {
+                if (!text.trim().startsWith('<?php')) {
+                    try {
+                        const data = JSON.parse(text);
+                        if (data && data.success && Array.isArray(data.records) && data.records.length > 0) {
+                            const storageKey = STORAGE_KEYS[tableName] || STORAGE_KEYS.leads;
+                            const localItems = getList(storageKey);
+                            const localMap = new Map();
+                            localItems.forEach(it => {
+                                const k = it.id || it.lead_code || it.email || it.phone || JSON.stringify(it);
+                                localMap.set(k, it);
+                            });
+
+                            let updated = false;
+                            data.records.forEach(rec => {
+                                const rk = rec.id || rec.lead_code || rec.email || rec.phone;
+                                if (rk && !localMap.has(rk)) {
+                                    localItems.push(rec);
+                                    updated = true;
+                                }
+                            });
+
+                            if (updated) {
+                                localStorage.setItem(storageKey, JSON.stringify(localItems));
+                            }
+                        }
+                    } catch (e) {}
+                }
+                reRenderAllTables();
+            })
+            .catch(() => {
+                reRenderAllTables();
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    icons.forEach(ic => ic.classList.remove('fa-spin'));
+                    autoRefreshState.isRefreshing = false;
+                    if (isManual) {
+                        showToast('🔄 Real-time data refreshed!', 'info');
+                    }
+                }, 400);
+            });
+    }
+
+    function reRenderAllTables() {
+        renderAdminLeadsTable();
+        renderEmployeeLeadsTable();
+        renderFollowupsTable();
+        renderCustomersTable();
+        renderDealsTable();
+        renderTasksTable();
+        renderPaymentsTable();
+        renderProductsTable();
+        renderTeamTable();
+        renderReservationsTable();
+        renderBranchesTable();
+        renderDemosTable();
+    }
+
+    function toggleAutoRefresh(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        autoRefreshState.countdown = AUTO_REFRESH_CONFIG.intervalSeconds;
+        updateAutoRefreshUI();
+        triggerLiveRefresh(true);
+    }
+
+    function toggleAutoRefreshState(e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        if (e && e.preventDefault) e.preventDefault();
+        autoRefreshState.enabled = !autoRefreshState.enabled;
+        localStorage.setItem(AUTO_REFRESH_CONFIG.storageKey, autoRefreshState.enabled ? 'true' : 'false');
+        if (autoRefreshState.enabled) {
+            autoRefreshState.countdown = AUTO_REFRESH_CONFIG.intervalSeconds;
+            showToast('✅ Auto Refresh activated (10s live sync)', 'info');
+        } else {
+            showToast('⏸️ Auto Refresh paused', 'info');
+        }
+        updateAutoRefreshUI();
+    }
+
+    function startAutoRefreshTimer() {
+        if (autoRefreshState.timerId) clearInterval(autoRefreshState.timerId);
+        autoRefreshState.timerId = setInterval(() => {
+            if (!autoRefreshState.enabled) {
+                updateAutoRefreshUI();
+                return;
+            }
+
+            autoRefreshState.countdown--;
+            if (autoRefreshState.countdown <= 0) {
+                autoRefreshState.countdown = AUTO_REFRESH_CONFIG.intervalSeconds;
+                triggerLiveRefresh(false);
+            }
+            updateAutoRefreshUI();
+        }, 1000);
+    }
+
     // ==========================================
     // INITIALIZATION & DYNAMIC HYDRATION
     // ==========================================
     function initialize() {
         attachGlobalFormInterceptor();
+        injectAutoRefreshButton();
+        startAutoRefreshTimer();
         renderAdminLeadsTable();
         renderEmployeeLeadsTable();
         renderFollowupsTable();
@@ -1307,7 +1536,10 @@
         renderReservationsTable,
         renderBranchesTable,
         renderDemosTable,
-        updateDemoStatus
+        updateDemoStatus,
+        toggleAutoRefresh,
+        toggleAutoRefreshState,
+        triggerLiveRefresh
     };
     window.handleDemoStatus = updateDemoStatus;
     window.updateDemoStatus = updateDemoStatus;
