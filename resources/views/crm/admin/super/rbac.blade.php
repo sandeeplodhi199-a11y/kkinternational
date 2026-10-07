@@ -25,30 +25,30 @@
         </div>
     </div>
 
-    <!-- Active Roles Overview Cards (Only Employee Role & Custom Employee Roles) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Active Roles Overview Cards (Compact & Clean) -->
+    <div class="flex items-center flex-wrap gap-3">
         @foreach($roles as $role)
-            <div class="crm-card p-5 border border-emerald-200 bg-emerald-50/20 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-200 font-black text-sm flex items-center justify-center shadow-xs">
+            <div class="crm-card p-3 sm:p-3.5 border border-emerald-200 bg-emerald-50/20 rounded-2xl max-w-sm shadow-xs">
+                <div class="flex items-center justify-between gap-3 mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 border border-emerald-200 font-black text-xs flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-user-tie"></i>
                         </span>
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
-                            {{ $role->permissions->count() }} Active Rights
-                        </span>
+                        <div>
+                            <h3 class="text-xs font-black text-slate-900 leading-tight">{{ $role->name }} Role</h3>
+                            <span class="text-[10px] font-mono text-slate-400">{{ $role->slug }}</span>
+                        </div>
                     </div>
-                    <h3 class="text-base font-black text-slate-900">{{ $role->name }} Role</h3>
-                    <span class="text-[11px] font-mono font-bold text-slate-500 block mb-1">{{ $role->slug }}</span>
-                    <p class="text-xs font-semibold text-slate-600 leading-snug">
-                        Applies directly to all assigned portal employees (Vipin, Rahul, Nandkishor, sunny, etc.).
-                    </p>
-                </div>
-                <div class="pt-3 border-t border-emerald-200/60 mt-3 flex items-center justify-between text-xs">
-                    <span class="font-bold text-slate-500">Access Scope:</span>
-                    <span class="font-black text-emerald-700">
-                        EMPLOYEE PORTAL
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
+                        {{ $role->permissions->count() }} Active Rights
                     </span>
+                </div>
+                <p class="text-[11px] font-medium text-slate-600 leading-tight">
+                    Applies directly to assigned portal employees (Vipin, Rahul, Nandkishor, sunny, etc.).
+                </p>
+                <div class="pt-2 border-t border-emerald-200/60 mt-2 flex items-center justify-between text-[11px]">
+                    <span class="font-bold text-slate-400 text-[10px] uppercase tracking-wider">Access Scope:</span>
+                    <span class="font-black text-emerald-700 text-[10px] tracking-wider">EMPLOYEE PORTAL</span>
                 </div>
             </div>
         @endforeach
