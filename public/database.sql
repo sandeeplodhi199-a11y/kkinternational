@@ -1,6 +1,19 @@
+-- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
+--
+-- Host: localhost    Database: hisabmittra_crm
+-- ------------------------------------------------------
+-- Server version	10.4.32-MariaDB
 
--- Auto-Saved Action [2026-10-07 08:12:20]
-INSERT INTO `crm_leads` (`lead_code`, `name`, `email`, `phone`, `company`, `source_id`, `status`, `priority`, `assigned_to`, `expected_value`, `follow_up_date`, `notes`, `created_at`, `updated_at`) VALUES ('LEAD-3931', 'Auto SQL Test User', 'test@auto-sql.com', '+91 99999 88888', 'Test Company Pvt Ltd', NULL, 'New', 'High', NULL, 50000, NULL, 'Testing auto SQL persistence.', '2026-10-07 08:12:20', '2026-10-07 08:12:20');
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Auto-Saved Action [2026-10-07 08:13:48]
 INSERT INTO `crm_leads` (`lead_code`, `name`, `email`, `phone`, `company`, `source_id`, `status`, `priority`, `assigned_to`, `expected_value`, `follow_up_date`, `notes`, `created_at`, `updated_at`) VALUES ('LEAD-1798', 'Auto SQL Test User', 'test@auto-sql.com', '+91 99999 88888', 'Test Company Pvt Ltd', NULL, 'New', 'High', NULL, 50000, NULL, 'Testing auto SQL persistence.', '2026-10-07 08:13:48', '2026-10-07 08:13:48');
