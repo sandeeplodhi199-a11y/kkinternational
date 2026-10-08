@@ -1,4 +1,4 @@
-@php
+﻿@php
     $currentUser = Auth::user();
     $currentEmp = $currentUser ? (\App\Models\Crm\CrmEmployee::where('user_id', $currentUser->id)->first() ?? 
                   \App\Models\Crm\CrmEmployee::where('email', $currentUser->email)->first()) : null;
@@ -23,14 +23,6 @@
             <i class="fa-solid fa-arrow-left text-sm transition-transform group-hover:-translate-x-0.5"></i>
             <span class="text-sm font-bold hidden sm:inline">Back</span>
         </button>
-
-        <!-- View Public Website Button (20% enlarged) -->
-        <a href="{{ route('hisab.home') }}" 
-           title="View Public Website" 
-           class="flex items-center gap-2 px-4.5 py-2.5 rounded-2xl bg-white border border-white/90 text-slate-700 hover:text-blue-600 hover:bg-slate-50 shadow-sm transition shrink-0 cursor-pointer group">
-            <i class="fa-solid fa-globe text-sm transition-transform group-hover:rotate-12"></i>
-            <span class="text-sm font-bold hidden sm:inline">Website</span>
-        </a>
 
         <button type="button" onclick="toggleSidebar()" class="md:hidden text-slate-700 hover:text-blue-600 p-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
             <i class="fa-solid fa-bars text-xl"></i>
@@ -172,3 +164,4 @@
         </div>
     </div>
 </header>
+
