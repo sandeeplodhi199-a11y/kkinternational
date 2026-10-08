@@ -727,16 +727,12 @@
             </div>
         </div>
 
-        <!-- Right: Primary Actions (Export, Save SQL & Add Lead) -->
+        <!-- Right: Primary Actions (Export & Add Lead) -->
         <div class="flex items-center gap-2">
             <button type="button" onclick="exportTableToCSV('all-leads-table', 'all_leads.csv')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer">
                 <i class="fa-solid fa-file-excel text-emerald-600 text-xs"></i>
                 <span>Export CSV</span>
             </button>
-            <a href="/crm/api/sync.php?action=export_sql" download="hisabmittra_crm.sql" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer" title="Download Complete SQL Database Dump">
-                <i class="fa-solid fa-database text-amber-400 text-xs"></i>
-                <span>Save SQL</span>
-            </a>
             <a href="/crm/admin/leads/create" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold shadow-sm transition active:scale-95 cursor-pointer">
                 <i class="fa-solid fa-plus text-xs"></i>
                 <span>Add Lead</span>
