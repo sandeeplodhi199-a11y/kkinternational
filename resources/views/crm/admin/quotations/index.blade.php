@@ -330,9 +330,30 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</textare
 
                 <!-- Footer: Bank Details, EXACT QR Code, EXACT Seal & Signature (matching user uploaded reference) -->
         <div class="quotation-footer-container border-t-2 border-[#1e3a8a] pt-3 mt-4" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; width: 100%; gap: 14px;">
-            <!-- 1. Left: EXACT QR Code Block (Matching user uploaded Image) -->
-            <div class="quotation-qr-col" style="flex: 0 0 170px; width: 170px; text-align: center;">
-                <img src="/crm/images/hisab-mittra-qr-col.png?v=4" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 165px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+            <!-- 1. Left: EXACT Crisp Vector QR Code Block (Matching user uploaded reference) -->
+            <div class="quotation-qr-col" style="flex: 0 0 165px; width: 165px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 900; color: #0b192c; letter-spacing: 0.2px; line-height: 1.2; text-align: center;">HISABMITTRA</div>
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 11.5px; font-weight: 700; color: #0b192c; margin-top: 2px; line-height: 1.2; text-align: center;">
+                    UPI ID: <span style="color: #b91c1c; font-weight: 800;">hisabmitra@idfcbank</span>
+                </div>
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 8px; font-weight: 600; color: #1e293b; margin-top: 2px; line-height: 1.2; text-align: center; letter-spacing: -0.1px;">
+                    Scan this QR code with any UPI app to transfer
+                </div>
+                <div style="margin: 4px auto; width: 125px; height: 125px; display: flex; align-items: center; justify-content: center;">
+                    <img src="/crm/images/hisab-mittra-qr.png" alt="HisabMittra UPI QR" class="quotation-qr-img" style="width: 125px; height: 125px; display: block; object-fit: contain; margin: 0 auto;">
+                </div>
+                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; background-color: #991b24; color: #ffffff; padding: 3px 9px; border-radius: 3px; margin: 0 auto; box-sizing: border-box;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0; display: block;">
+                        <rect x="2" y="2" width="20" height="20" rx="1.5" stroke="white" stroke-width="2.2"/>
+                        <line x1="6" y1="7" x2="18.5" y2="7" stroke="white" stroke-width="2.2" stroke-linecap="square"/>
+                        <line x1="6" y1="12" x2="15" y2="12" stroke="white" stroke-width="2.2" stroke-linecap="square"/>
+                        <rect x="6" y="15.5" width="2.5" height="2.5" fill="white"/>
+                    </svg>
+                    <div style="text-align: left; line-height: 1.15; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+                        <div style="font-size: 9.5px; font-weight: 900; letter-spacing: 0.2px; color: #ffffff; white-space: nowrap;">IDFC FIRST</div>
+                        <div style="font-size: 8px; font-weight: 700; color: #ffffff; white-space: nowrap;">Bank</div>
+                    </div>
+                </div>
             </div>
 
             <!-- 2. Middle: Bank Details (Matching user uploaded reference) -->
@@ -368,7 +389,7 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</textare
 
             <!-- 3. Right: EXACT Official Seal Stamp & Signature Block (Matching user uploaded Image) -->
             <div class="quotation-sign-col" style="flex: 0 0 210px; width: 210px; text-align: center;">
-                <img src="/crm/images/hisab-mittra-seal-sign-exact.png" alt="For HISABMITTRA - Authorized Signatory" class="quotation-seal-img" style="width: 195px; height: auto; max-height: 145px; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+                <img src="/crm/images/hisab-mittra-seal-sign-exact.png" alt="For HISABMITTRA - Authorized Signatory" class="quotation-seal-img" style="width: 195px; height: auto; max-height: 145px; object-fit: contain; display: block; margin: 0 auto;  ">
             </div>
         </div>
 
@@ -445,17 +466,16 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</div>
     }
     .quotation-qr-col {
         display: block !important;
-        flex: 0 0 150px !important;
-        width: 150px !important;
+        flex: 0 0 165px !important;
+        width: 165px !important;
         text-align: center !important;
     }
     .quotation-qr-col img, .quotation-qr-img {
         display: block !important;
-        width: 160px !important;
-        max-width: 160px !important;
-        height: auto !important;
+        width: 125px !important;
+        max-width: 125px !important;
+        height: 125px !important;
         margin: 0 auto !important;
-        image-rendering: -webkit-optimize-contrast !important;
     }
     .quotation-bank-col {
         display: block !important;
@@ -474,7 +494,7 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</div>
         max-width: 195px !important;
         height: auto !important;
         margin: 0 auto !important;
-        image-rendering: -webkit-optimize-contrast !important;
+        
     }
     .quotation-notes-block {
         page-break-inside: avoid !important;
