@@ -19,7 +19,7 @@
                 <i class="fa-solid fa-print text-xs text-amber-400"></i>
                 <span>Print Quotation</span>
             </button>
-            <button type="button" onclick="printQuotationDoc()" class="px-4 py-2 rounded-xl bg-[#0e6f66] hover:bg-[#0b5a53] text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+            <button type="button" onclick="downloadQuotationPdf()" class="px-4 py-2 rounded-xl bg-[#0e6f66] hover:bg-[#0b5a53] text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-file-pdf text-xs"></i>
                 <span>Download PDF</span>
             </button>
@@ -209,7 +209,7 @@ Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</textare
                     <i class="fa-solid fa-rotate-left text-xs"></i>
                     <span>Reset</span>
                 </button>
-                <button type="button" onclick="printQuotationDoc()" class="px-5 py-2.5 rounded-xl bg-[#0e6f66] hover:bg-[#0b5a53] text-white font-bold text-xs transition shadow-sm flex items-center gap-2 cursor-pointer">
+                <button type="button" onclick="downloadQuotationPdf()" class="px-5 py-2.5 rounded-xl bg-[#0e6f66] hover:bg-[#0b5a53] text-white font-bold text-xs transition shadow-sm flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-print text-xs"></i>
                     <span>Print / Save PDF</span>
                 </button>
@@ -340,40 +340,52 @@ Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</textare
             </table>
         </div>
 
-        <!-- Footer: Bank Details, EXACT QR Code, EXACT Seal & Signature (matching user uploaded reference) -->
-        <div class="border-t-2 border-[#1e3a8a] pt-4 mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-end text-xs">
-            <!-- 1. QR Code Block -->
-            <div class="flex flex-col items-center sm:items-start">
-                <img src="/crm/images/hisab-mittra-qr.png" alt="HisabMittra QR" class="w-28 sm:w-32 h-auto object-contain">
+                <!-- Footer: Bank Details, EXACT QR Code, EXACT Seal & Signature (matching user uploaded reference) -->
+        <div class="quotation-footer-container border-t-2 border-[#1e3a8a] pt-3 mt-4" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%; gap: 14px;">
+            <!-- 1. Left: EXACT QR Code Block (Matching user uploaded Image 2 Left) -->
+            <div class="quotation-qr-col" style="flex: 0 0 160px; width: 160px; text-align: center;">
+                <img src="/crm/images/hisab-mittra-qr-col.png" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 155px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
             </div>
 
-            <!-- 2. Bank Details -->
-            <div class="text-[11px] text-slate-800 leading-relaxed font-medium">
-                <div class="font-black text-slate-900 text-xs mb-1">Bank Details:</div>
-                <div class="space-y-0.5">
-                    <div>Company: <strong class="text-slate-900">HISABMITTRA</strong></div>
-                    <div>Bank: <strong class="text-slate-900">IDFC FIRST Bank</strong></div>
-                    <div>Account #: <strong class="text-slate-900 font-mono">10298073180</strong></div>
-                    <div>IFSC Code: <strong class="text-slate-900 font-mono">IDFB0043413</strong></div>
-                    <div>SWIFT Code: <strong class="text-slate-900 font-mono">IDFBINBBMUM</strong></div>
-                    <div>Branch: <strong class="text-slate-900">JAIPUR - PRATAP NAGAR BRANCH</strong></div>
-                </div>
+            <!-- 2. Middle: Bank Details (Matching user uploaded Image 2 Right) -->
+            <div class="quotation-bank-col" style="flex: 1 1 auto; padding: 0 10px; font-size: 11px; line-height: 1.5; color: #1e293b;">
+                <div style="font-weight: 800; font-size: 12px; color: #0f172a; margin-bottom: 4px;">Bank Details:</div>
+                <table style="border-collapse: collapse; width: 100%; font-size: 11px; line-height: 1.5;">
+                    <tr>
+                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; width: 75px; font-weight: 500;">Company:</td>
+                        <td style="padding: 1.5px 0; font-weight: 700; color: #0f172a;">HISABMITTRA</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">Bank:</td>
+                        <td style="padding: 1.5px 0; font-weight: 700; color: #0f172a;">IDFC FIRST Bank</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">Account #:</td>
+                        <td style="padding: 1.5px 0; font-weight: 800; font-family: monospace; color: #0f172a; letter-spacing: 0.5px;">10296073180</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">IFSC Code:</td>
+                        <td style="padding: 1.5px 0; font-weight: 800; font-family: monospace; color: #0f172a;">IDFB0043413</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">SWIFT Code:</td>
+                        <td style="padding: 1.5px 0; font-weight: 800; font-family: monospace; color: #0f172a;">IDFBINBBMUM</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">Branch:</td>
+                        <td style="padding: 1.5px 0; font-weight: 700; color: #0f172a;">JAIPUR - PRATAP NAGAR BRANCH</td>
+                    </tr>
+                </table>
             </div>
 
-            <!-- 3. Stamp & Signature Block -->
-            <div class="text-center sm:text-right flex flex-col items-center sm:items-end">
-                <div class="font-bold text-slate-900 text-xs mb-1">For HISABMITTRA</div>
-                <div class="my-1">
-                    <img src="/crm/images/hisab-mittra-seal-sign.png" alt="Authorized Seal & Signature" class="h-16 w-auto object-contain inline-block">
-                </div>
-                <div class="text-[11px] font-bold text-slate-800 pt-0.5">
-                    Authorized Signatory
-                </div>
+            <!-- 3. Right: EXACT Official Seal Stamp & Signature Block (Matching user uploaded Image 3) -->
+            <div class="quotation-sign-col" style="flex: 0 0 210px; width: 210px; text-align: center;">
+                <img src="/crm/images/hisab-mittra-seal-sign-exact.png" alt="For HISABMITTRA - Authorized Signatory" class="quotation-seal-img" style="width: 195px; height: auto; max-height: 145px; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
             </div>
         </div>
 
         <!-- Bottom Notes (exact recreation of Image 1) -->
-        <div class="mt-6 pt-3 border-t border-slate-200 text-[11px] text-slate-800 leading-relaxed">
+        <div class="quotation-notes-block mt-4 pt-3 border-t border-slate-200 text-[11px] text-slate-800 leading-relaxed">
             <strong class="text-slate-900 block mb-1 text-xs">Notes:</strong>
             <div id="preview-notes" class="whitespace-pre-line text-slate-800 font-medium">License: Valid for 1 year; for internal business use only.
 Support: Available during business hours only.
@@ -389,25 +401,98 @@ Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</div>
 <!-- PRINT STYLES -->
 <style>
 @media print {
-    body * {
-        visibility: hidden !important;
+    @page {
+        size: A4 portrait;
+        margin: 5mm 8mm 5mm 8mm;
     }
-    #quotation-print-container, #quotation-print-container * {
-        visibility: visible !important;
+    *, *::before, *::after {
+        box-sizing: border-box !important;
     }
-    #quotation-print-container {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
+    html, body {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        overflow: visible !important;
+    }
+    aside, header, nav, .no-print, [onclick*="toggleSidebar"], .crm-auto-refresh-widget {
+        display: none !important;
+    }
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
-        margin: 0 !important;
-        padding: 20px !important;
+        overflow: visible !important;
+    }
+    #quotation-print-container {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 4mm 6mm !important;
         box-shadow: none !important;
         border: none !important;
+        background: #ffffff !important;
+        overflow: visible !important;
+        page-break-inside: auto !important;
     }
-    .no-print {
-        display: none !important;
+    .quotation-footer-container {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-end !important;
+        width: 100% !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin-top: 10px !important;
+        padding-top: 6px !important;
+        border-top: 2px solid #1e3a8a !important;
+    }
+    .quotation-qr-col {
+        display: block !important;
+        flex: 0 0 150px !important;
+        width: 150px !important;
+        text-align: center !important;
+    }
+    .quotation-qr-col img, .quotation-qr-img {
+        display: block !important;
+        width: 145px !important;
+        max-width: 145px !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        image-rendering: -webkit-optimize-contrast !important;
+    }
+    .quotation-bank-col {
+        display: block !important;
+        flex: 1 1 auto !important;
+        padding: 0 12px !important;
+    }
+    .quotation-sign-col {
+        display: block !important;
+        flex: 0 0 210px !important;
+        width: 210px !important;
+        text-align: center !important;
+    }
+    .quotation-sign-col img, .quotation-seal-img {
+        display: block !important;
+        width: 195px !important;
+        max-width: 195px !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        image-rendering: -webkit-optimize-contrast !important;
+    }
+    .quotation-notes-block {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        margin-top: 8px !important;
+        padding-top: 6px !important;
     }
 }
 </style>
@@ -726,9 +811,35 @@ function updateQuotationPreview() {
     hsnTbody.appendChild(totHtr);
 }
 
-function printQuotationDoc() {
-    window.print();
-}
+    function printQuotationDoc() {
+        window.print();
+    }
+
+    function downloadQuotationPdf() {
+        const el = document.getElementById('quotation-print-container');
+        if (!el) {
+            window.print();
+            return;
+        }
+        const quoteNo = (document.getElementById('preview-quote-no') ? document.getElementById('preview-quote-no').textContent.trim() : 'MHSB-001');
+        const filename = 'Quotation-' + quoteNo.replace(/[^a-zA-Z0-9_-]/g, '_') + '.pdf';
+
+        if (window.html2pdf) {
+            const opt = {
+                margin: [4, 6, 4, 6],
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, logging: false },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(el).save().catch(err => {
+                console.warn('html2pdf fallback to print:', err);
+                window.print();
+            });
+        } else {
+            window.print();
+        }
+    }
 
 // Initialize on Load
 document.addEventListener('DOMContentLoaded', function() {
