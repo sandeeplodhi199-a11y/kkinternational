@@ -479,6 +479,29 @@ if ($action === 'save_product') {
     $status = !empty($data['status']) ? $data['status'] : 'Active';
     $description = !empty($data['description']) ? trim($data['description']) : null;
 
+    $prodId = (int)($data['id'] ?? 0);
+    if ($prodId > 0) {
+        $sqlUpdate = "UPDATE `crm_products` SET `name` = '" . addslashes($name) . "', `code` = '" . addslashes($code) . "', `category` = '" . addslashes($category) . "', `description` = " . ($description ? "'" . addslashes($description) . "'" : "NULL") . ", `price` = {$price}, `tax_rate` = {$taxRate}, `status` = '" . addslashes($status) . "', `updated_at` = '{$now}' WHERE `id` = {$prodId}";
+        appendToSqlDump($sqlUpdate);
+
+        if ($pdo) {
+            try {
+                $stmt = $pdo->prepare("UPDATE crm_products SET name = ?, code = ?, category = ?, description = ?, price = ?, tax_rate = ?, status = ?, updated_at = ? WHERE id = ?");
+                $stmt->execute([$name, $code, $category, $description, $price, $taxRate, $status, $now, $prodId]);
+                logActivity($pdo, 'Products', 'Updated', "Product '{$name}' ({$code}) updated.");
+            } catch (Exception $ex) {}
+        }
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Offering/Product successfully updated and saved to SQL!',
+            'code' => $code,
+            'id' => $prodId,
+            'sql' => $sqlUpdate
+        ]);
+        exit;
+    }
+
     $sqlInsert = "INSERT INTO `crm_products` (`name`, `code`, `category`, `description`, `price`, `tax_rate`, `status`, `created_at`, `updated_at`) VALUES (" .
         "'" . addslashes($name) . "', " .
         "'" . addslashes($code) . "', " .
@@ -783,6 +806,42 @@ if ($action === 'delete_employee' || $action === 'delete_team_member') {
     echo json_encode([
         'success' => true,
         'message' => 'Employee successfully deleted in SQL & MySQL database!',
+        'sql' => $sql
+    ]);
+    exit;
+}
+
+// ==========================================
+// 14c. ACTION: DELETE PRODUCT / OFFERING
+// ==========================================
+if ($action === 'delete_product') {
+    $prodId = (int)($input['prod_id'] ?? $input['id'] ?? 0);
+    $prodCode = trim($input['code'] ?? '');
+    $prodName = trim($input['name'] ?? '');
+
+    $cond = $prodId > 0 ? "`id` = {$prodId}" : (!empty($prodCode) ? "`code` = '" . addslashes($prodCode) . "'" : "`name` = '" . addslashes($prodName) . "'");
+    $sql = "DELETE FROM `crm_products` WHERE {$cond}";
+    appendToSqlDump($sql);
+
+    if ($pdo) {
+        try {
+            if ($prodId > 0) {
+                $stmt = $pdo->prepare("DELETE FROM crm_products WHERE id = ?");
+                $stmt->execute([$prodId]);
+            } else if (!empty($prodCode)) {
+                $stmt = $pdo->prepare("DELETE FROM crm_products WHERE code = ?");
+                $stmt->execute([$prodCode]);
+            } else if (!empty($prodName)) {
+                $stmt = $pdo->prepare("DELETE FROM crm_products WHERE name = ?");
+                $stmt->execute([$prodName]);
+            }
+            logActivity($pdo, 'Products', 'Delete Product', "Deleted product ID: {$prodId} / Code: {$prodCode} / Name: {$prodName}");
+        } catch (Exception $e) {}
+    }
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Product successfully deleted in SQL & MySQL database!',
         'sql' => $sql
     ]);
     exit;

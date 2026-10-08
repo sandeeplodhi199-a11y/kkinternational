@@ -1212,7 +1212,7 @@
     // 9. PRODUCTS CONTROLLER & RENDERER
     // ==========================================
     function saveProduct(data) {
-        const id = Date.now();
+        const id = data.id ? Number(data.id) : Date.now();
         const code = (data.code || ('PRD-' + Math.floor(1000 + Math.random() * 9000))).trim();
         const product = {
             id: id,
@@ -1220,13 +1220,26 @@
             name: (data.name || 'New Offering').trim(),
             category: data.category || 'Product',
             price: data.price ? Number(data.price) : 0,
-            tax_rate: data.tax_rate ? Number(data.tax_rate) : 18,
+            tax_rate: data.tax_rate !== undefined ? Number(data.tax_rate) : 18,
             status: data.status || 'Active',
             description: (data.description || '').trim(),
-            created_at: getFormattedDate()
+            created_at: data.created_at || getFormattedDate()
         };
 
-        saveItem(STORAGE_KEYS.products, product);
+        // If existing product, update in place
+        try {
+            let prods = getList(STORAGE_KEYS.products);
+            const idx = prods.findIndex(p => String(p.id) === String(id) || (code && String(p.code) === String(code)));
+            if (idx !== -1) {
+                prods[idx] = { ...prods[idx], ...product };
+                localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(prods));
+            } else {
+                saveItem(STORAGE_KEYS.products, product);
+            }
+        } catch (e) {
+            saveItem(STORAGE_KEYS.products, product);
+        }
+
         syncToDatabase({ action: 'save_product', data: product });
         return product;
     }
@@ -1236,29 +1249,73 @@
         const grid = document.querySelector('div.grid');
         if (!grid) return;
 
+        const deleted = JSON.parse(localStorage.getItem('hm_crm_deleted_product_ids') || '[]');
+        deleted.forEach(delId => {
+            const card = document.getElementById('prod-card-' + delId) || 
+                         (delId ? document.querySelector(`[data-code="${delId}"]`) : null) || 
+                         document.querySelector(`[data-id="${delId}"]`);
+            if (card) card.remove();
+        });
+
+        const overrides = JSON.parse(localStorage.getItem('hm_crm_products_overrides') || '{}');
+        if (typeof updateProductCardInDOM === 'function') {
+            Object.keys(overrides).forEach(k => {
+                updateProductCardInDOM(k, overrides[k]);
+            });
+        }
+
         const stored = getList(STORAGE_KEYS.products);
+        grid.querySelectorAll('.custom-injected-product').forEach(el => el.remove());
         if (!stored.length) return;
 
-        grid.querySelectorAll('.custom-injected-product').forEach(el => el.remove());
-
         stored.slice().reverse().forEach(p => {
+            if (deleted.includes(String(p.id)) || deleted.includes(String(p.code))) return;
+
+            const pId = p.id;
+            const pName = (p.name || 'Offering').replace(/"/g, '&quot;');
+            const pCode = (p.code || '').replace(/"/g, '&quot;');
+            const pCat = p.category || 'Software';
+            const pPrice = Number(p.price || 0);
+            const pTax = Number(p.tax_rate !== undefined ? p.tax_rate : 18);
+            const pStatus = p.status || 'Active';
+            const pDesc = (p.description || '').replace(/"/g, '&quot;');
+            const isAct = String(pStatus).toLowerCase() === 'active';
+
             const card = document.createElement('div');
+            card.id = 'prod-card-' + p.id;
+            card.setAttribute('data-id', p.id);
+            card.setAttribute('data-code', p.code);
             card.className = 'custom-injected-product crm-card p-6 flex flex-col justify-between bg-white border border-emerald-300 rounded-3xl shadow-sm';
             card.innerHTML = `
                 <div>
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${p.code}</span>
-                        <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">${p.status}</span>
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 prod-category-badge">${pCat}</span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isAct ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'} prod-status-badge">${pStatus}</span>
+                            <button type="button" 
+                                    onclick="openEditProductModal('${pId}', '${pName}', '${pCode}', '${pCat}', ${pPrice}, ${pTax}, '${pStatus}', '${pDesc}')" 
+                                    class="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center transition shadow-sm active:scale-95 cursor-pointer" 
+                                    title="Edit Offering">
+                                <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                            </button>
+                            <button type="button" 
+                                    onclick="confirmDeleteProduct('${pId}', '${pName}', '${pCode}')" 
+                                    class="w-7 h-7 rounded-lg bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center transition shadow-sm active:scale-95 cursor-pointer" 
+                                    title="Delete Offering">
+                                <i class="fa-solid fa-trash text-[11px]"></i>
+                            </button>
+                        </div>
                     </div>
-                    <h3 class="text-sm font-black text-slate-800 mb-1">${p.name}</h3>
-                    <p class="text-xs text-slate-500 mb-4">${p.description || 'Professional solution offering'}</p>
+                    <h3 class="text-base font-extrabold text-slate-800 mb-1 prod-name">${p.name}</h3>
+                    <p class="text-xs text-slate-400 font-mono mb-3 prod-code">${p.code}</p>
+                    <p class="text-xs text-slate-500 mb-4 leading-relaxed font-medium prod-desc">${p.description || 'Professional solution offering'}</p>
                 </div>
                 <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
                     <div>
-                        <div class="text-[10px] text-slate-400 font-bold uppercase">Price</div>
-                        <div class="text-base font-black text-slate-900 font-mono">₹${Number(p.price).toLocaleString('en-IN')}</div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Standard Price</span>
+                        <span class="text-lg font-black text-slate-900 prod-price">₹${pPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
-                    <span class="text-[11px] font-bold text-slate-500">${p.category}</span>
+                    <span class="text-[11px] font-semibold text-slate-500 prod-tax">+ ${pTax.toFixed(2)}% GST</span>
                 </div>
             `;
             grid.insertBefore(card, grid.firstChild);
