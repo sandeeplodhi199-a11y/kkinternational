@@ -19,14 +19,14 @@
                 <i class="fa-solid fa-print text-xs text-amber-400"></i>
                 <span>Print Quotation</span>
             </button>
-            <button type="button" onclick="printQuotationDoc()" class="px-4 py-2 rounded-xl bg-[#1b4d3e] hover:bg-[#2d6a4f] text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+            <button type="button" onclick="printQuotationDoc()" class="px-4 py-2 rounded-xl bg-[#0e6f66] hover:bg-[#0b5a53] text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-file-pdf text-xs"></i>
                 <span>Download PDF</span>
             </button>
         </div>
     </div>
 
-    <!-- 1. QUOTATION BUILDER FORM CONTAINER (Exact match to Image 1) -->
+    <!-- 1. QUOTATION BUILDER FORM CONTAINER (Exact match to Images) -->
     <div class="bg-white border border-slate-200/90 shadow-sm rounded-2xl p-5 sm:p-7 no-print">
         <form id="quotationBuilderForm" onsubmit="event.preventDefault(); updateQuotationPreview();">
 
@@ -45,13 +45,13 @@
                         @if(isset($customers) && $customers->count())
                             <optgroup label="Active Accounts">
                                 @foreach($customers as $c)
-                                    <option value="cust_{{ $c->id }}"
-                                        data-name="{{ $c->name }}"
-                                        data-company="{{ $c->company }}"
-                                        data-phone="{{ $c->phone }}"
-                                        data-email="{{ $c->email }}"
-                                        data-address="{{ $c->address }}">
-                                        {{ $c->name }} ({{ $c->company ?: 'Client' }})
+                                    <option value="cust_{ $c->id }"
+                                        data-name="{ $c->name }"
+                                        data-company="{ $c->company }"
+                                        data-phone="{ $c->phone }"
+                                        data-email="{ $c->email }"
+                                        data-address="{ $c->address }">
+                                        { $c->name } ({ $c->company ?: 'Client' })
                                     </option>
                                 @endforeach
                             </optgroup>
@@ -59,13 +59,13 @@
                         @if(isset($leads) && $leads->count())
                             <optgroup label="Prospect Leads">
                                 @foreach($leads as $l)
-                                    <option value="lead_{{ $l->id }}"
-                                        data-name="{{ $l->name }}"
-                                        data-company="{{ $l->company }}"
-                                        data-phone="{{ $l->phone }}"
-                                        data-email="{{ $l->email }}"
-                                        data-address="{{ $l->address }}">
-                                        {{ $l->name }} ({{ $l->company ?: 'Prospect' }})
+                                    <option value="lead_{ $l->id }"
+                                        data-name="{ $l->name }"
+                                        data-company="{ $l->company }"
+                                        data-phone="{ $l->phone }"
+                                        data-email="{ $l->email }"
+                                        data-address="{ $l->address }">
+                                        { $l->name } ({ $l->company ?: 'Prospect' })
                                     </option>
                                 @endforeach
                             </optgroup>
@@ -115,7 +115,7 @@
                 <input type="text" id="builder-address" value="" placeholder="Billing Address" oninput="updateQuotationPreview()" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 font-medium text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
             </div>
 
-            <!-- Quotation Meta: Vertical Stack on Left (matching Image 1) -->
+            <!-- Quotation Meta: Vertical Stack on Left -->
             <div class="space-y-3 max-w-sm mb-6">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-600 mb-1">Quotation No.</label>
@@ -177,32 +177,48 @@
                 </div>
             </div>
 
-            <!-- Checkboxes Row -->
+            <!-- Checkboxes Row (matching reference image) -->
             <div class="flex items-center gap-6 flex-wrap mb-4 py-2">
                 <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-medium text-slate-700">
-                    <input type="checkbox" id="builder-apply-gst" checked onchange="updateQuotationPreview()" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                    <input type="checkbox" id="builder-apply-gst" checked onchange="updateQuotationPreview()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
                     <span>Apply GST (18%)</span>
                 </label>
                 <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-medium text-slate-700">
-                    <input type="checkbox" id="builder-inclusive-gst" onchange="updateQuotationPreview()" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                    <input type="checkbox" id="builder-inclusive-gst" onchange="updateQuotationPreview()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
                     <span>Inclusive GST</span>
                 </label>
                 <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-medium text-slate-700">
-                    <input type="checkbox" id="builder-is-igst" checked onchange="updateQuotationPreview()" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                    <input type="checkbox" id="builder-is-igst" checked onchange="updateQuotationPreview()" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer">
                     <span>Is IGST?</span>
                 </label>
             </div>
 
-            <!-- Notes Row -->
+            <!-- Notes Row (exact content matching reference image) -->
             <div class="mb-5">
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Notes (Bottom left)</label>
-                <textarea id="builder-notes" rows="2" oninput="updateQuotationPreview()" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 font-medium text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">HisabMittra: Business karne ka ek naya andaaz</textarea>
+                <textarea id="builder-notes" rows="5" oninput="updateQuotationPreview()" class="w-full text-xs p-3 rounded-xl border border-indigo-200 font-mono text-slate-700 leading-relaxed focus:ring-2 focus:ring-indigo-500 focus:outline-none">License: Valid for 1 year; for internal business use only
+Support: Available during business hours only.
+Restrictions: Resale, redistribution, or modification of the software is strictly prohibited.
+Refund Policy: No refund policy is there.
+Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</textarea>
+            </div>
+
+            <!-- Bottom Action Buttons: Reset & Print / Save PDF (matching reference image) -->
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" onclick="resetQuotationForm()" class="px-5 py-2.5 rounded-xl bg-[#e2e8f0] hover:bg-[#cbd5e1] text-slate-700 font-bold text-xs transition shadow-xs flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                    <span>Reset</span>
+                </button>
+                <button type="button" onclick="printQuotationDoc()" class="px-5 py-2.5 rounded-xl bg-[#0e6f66] hover:bg-[#0b5a53] text-white font-bold text-xs transition shadow-sm flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-print text-xs"></i>
+                    <span>Print / Save PDF</span>
+                </button>
             </div>
 
         </form>
     </div>
 
-    <!-- 2. OFFICIAL LIVE QUOTATION PREVIEW DOCUMENT (Exact Recreation of Image 2) -->
+    <!-- 2. OFFICIAL LIVE QUOTATION PREVIEW DOCUMENT (Exact Recreation of Image) -->
     <div id="quotation-print-container" class="bg-white border border-slate-300 shadow-xl rounded-xl p-8 sm:p-12 max-w-[850px] mx-auto text-slate-900 font-sans print:shadow-none print:border-none print:p-0 print:m-0 print:max-w-none">
 
         <!-- Top Header: Quotation Title, Company Details & Logo -->
@@ -324,81 +340,46 @@
             </table>
         </div>
 
-        <!-- Footer: Bank Details, QR & Signature -->
-        <div class="border-t-2 border-[#1e3a8a] pt-4 mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-end text-xs">
-            <!-- QR Code -->
+        <!-- Footer: Bank Details, EXACT QR Code, EXACT Seal & Signature (matching user uploaded reference) -->
+        <div class="border-t-2 border-[#1e3a8a] pt-4 mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 items-end text-xs">
+            <!-- 1. QR Code Block -->
             <div class="flex flex-col items-center sm:items-start">
-                <div class="p-2 border border-slate-200 rounded-lg bg-white shadow-xs inline-block text-center">
-                    <div class="text-[10px] font-black text-slate-800 tracking-wider mb-0.5">HISABMITTRA</div>
-                    <div class="text-[8px] text-slate-400">UPI / QR Payment</div>
-                    <svg class="w-20 h-20 my-1 mx-auto" viewBox="0 0 100 100">
-                        <rect x="0" y="0" width="100" height="100" fill="#ffffff" />
-                        <rect x="8" y="8" width="26" height="26" fill="#0f172a" rx="2" />
-                        <rect x="13" y="13" width="16" height="16" fill="#ffffff" rx="1" />
-                        <rect x="17" y="17" width="8" height="8" fill="#0f172a" rx="1" />
-                        <rect x="66" y="8" width="26" height="26" fill="#0f172a" rx="2" />
-                        <rect x="71" y="13" width="16" height="16" fill="#ffffff" rx="1" />
-                        <rect x="75" y="17" width="8" height="8" fill="#0f172a" rx="1" />
-                        <rect x="8" y="66" width="26" height="26" fill="#0f172a" rx="2" />
-                        <rect x="13" y="71" width="16" height="16" fill="#ffffff" rx="1" />
-                        <rect x="17" y="75" width="8" height="8" fill="#0f172a" rx="1" />
-                        <rect x="42" y="10" width="6" height="6" fill="#0f172a" />
-                        <rect x="52" y="14" width="6" height="6" fill="#0f172a" />
-                        <rect x="44" y="24" width="8" height="6" fill="#0f172a" />
-                        <rect x="14" y="42" width="6" height="8" fill="#0f172a" />
-                        <rect x="24" y="44" width="8" height="6" fill="#0f172a" />
-                        <rect x="40" y="40" width="20" height="20" fill="#059669" rx="3" />
-                        <text x="50" y="54" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">HM</text>
-                        <rect x="68" y="42" width="8" height="6" fill="#0f172a" />
-                        <rect x="80" y="44" width="8" height="8" fill="#0f172a" />
-                        <rect x="42" y="68" width="8" height="6" fill="#0f172a" />
-                        <rect x="54" y="74" width="6" height="8" fill="#0f172a" />
-                        <rect x="68" y="70" width="8" height="6" fill="#0f172a" />
-                        <rect x="80" y="78" width="8" height="8" fill="#0f172a" />
-                    </svg>
-                    <div class="text-[9px] font-bold text-slate-700">Scan & Pay via UPI</div>
+                <img src="/crm/images/hisab-mittra-qr.png" alt="HisabMittra QR" class="w-28 sm:w-32 h-auto object-contain">
+            </div>
+
+            <!-- 2. Bank Details -->
+            <div class="text-[11px] text-slate-800 leading-relaxed font-medium">
+                <div class="font-black text-slate-900 text-xs mb-1">Bank Details:</div>
+                <div class="space-y-0.5">
+                    <div>Company: <strong class="text-slate-900">HISABMITTRA</strong></div>
+                    <div>Bank: <strong class="text-slate-900">IDFC FIRST Bank</strong></div>
+                    <div>Account #: <strong class="text-slate-900 font-mono">10298073180</strong></div>
+                    <div>IFSC Code: <strong class="text-slate-900 font-mono">IDFB0043413</strong></div>
+                    <div>SWIFT Code: <strong class="text-slate-900 font-mono">IDFBINBBMUM</strong></div>
+                    <div>Branch: <strong class="text-slate-900">JAIPUR - PRATAP NAGAR BRANCH</strong></div>
                 </div>
             </div>
 
-            <!-- Bank Details -->
-            <div class="text-[11px] text-slate-800 leading-relaxed">
-                <div class="font-black text-slate-900 text-xs mb-1">Bank Details:</div>
-                <div>Company: <strong class="text-slate-900">HISABMITTRA</strong></div>
-                <div>Bank: <strong class="text-slate-900">IDFC FIRST Bank</strong></div>
-                <div>Account #: <strong class="text-slate-900 font-mono">10298073180</strong></div>
-                <div>IFSC Code: <strong class="text-slate-900 font-mono">IDFB0043413</strong></div>
-                <div>SWIFT Code: <strong class="text-slate-900 font-mono">IDFBINBBMUM</strong></div>
-                <div>Branch: <strong class="text-slate-900">JAIPUR - PRATAP NAGAR BRANCH</strong></div>
-            </div>
-
-            <!-- Stamp & Signature -->
+            <!-- 3. Stamp & Signature Block -->
             <div class="text-center sm:text-right flex flex-col items-center sm:items-end">
                 <div class="font-bold text-slate-900 text-xs mb-1">For HISABMITTRA</div>
-                <div class="flex items-center gap-2 justify-end my-1">
-                    <!-- Blue Round Seal Stamp -->
-                    <svg class="w-16 h-16 opacity-85" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="46" fill="none" stroke="#2563eb" stroke-width="2.5" />
-                        <circle cx="50" cy="50" r="41" fill="none" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="3,2" />
-                        <path id="stamp-curve" d="M 18,50 A 32,32 0 1,1 82,50" fill="none" />
-                        <text font-size="8.5" font-weight="900" fill="#2563eb" letter-spacing="2">
-                            <textPath href="#stamp-curve" startOffset="50%" text-anchor="middle">HISABMITTRA</textPath>
-                        </text>
-                        <text x="50" y="52" font-size="7" font-weight="bold" fill="#2563eb" text-anchor="middle">JAIPUR</text>
-                        <text x="50" y="62" font-size="6" font-weight="bold" fill="#2563eb" text-anchor="middle">★ VERIFIED ★</text>
-                    </svg>
-                    <!-- Signature Image -->
-                    <img src="/crm/images/sign.png" alt="Signature" class="h-10 object-contain">
+                <div class="my-1">
+                    <img src="/crm/images/hisab-mittra-seal-sign.png" alt="Authorized Seal & Signature" class="h-16 w-auto object-contain inline-block">
                 </div>
-                <div class="text-[11px] font-bold text-slate-800 border-t border-slate-300 pt-1 mt-1 inline-block">
+                <div class="text-[11px] font-bold text-slate-800 pt-0.5">
                     Authorized Signatory
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Notes -->
-        <div class="mt-6 pt-3 border-t border-slate-200 text-xs text-slate-600">
-            <strong class="text-slate-900 block mb-0.5">Notes:</strong>
-            <p id="preview-notes" class="text-slate-700 italic">HisabMittra: Business karne ka ek naya andaaz</p>
+        <!-- Bottom Notes (exact recreation of Image 1) -->
+        <div class="mt-6 pt-3 border-t border-slate-200 text-[11px] text-slate-800 leading-relaxed">
+            <strong class="text-slate-900 block mb-1 text-xs">Notes:</strong>
+            <div id="preview-notes" class="whitespace-pre-line text-slate-800 font-medium">License: Valid for 1 year; for internal business use only.
+Support: Available during business hours only.
+Restrictions: Resale, redistribution, or modification of the software is strictly prohibited.
+Refund Policy: No refund policy is there.
+Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</div>
         </div>
 
     </div>
@@ -421,7 +402,7 @@
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
-        padding: 24px !important;
+        padding: 20px !important;
         box-shadow: none !important;
         border: none !important;
     }
@@ -433,7 +414,13 @@
 
 <!-- JAVASCRIPT: Dynamic Quotation Controller & Calculations -->
 <script>
-// Initial line items data matching user reference Image 1
+const DEFAULT_NOTES_TEXT = `License: Valid for 1 year; for internal business use only
+Support: Available during business hours only.
+Restrictions: Resale, redistribution, or modification of the software is strictly prohibited.
+Refund Policy: No refund policy is there.
+Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com`;
+
+// Initial line items data matching user reference
 let lineItemsData = [
     {
         description: "Basic Unlimited Plan for 1 Year",
@@ -553,6 +540,46 @@ function onLeadSelected(selectEl) {
     updateQuotationPreview();
 }
 
+// Reset Form Function matching reference Image 2
+function resetQuotationForm() {
+    document.getElementById('quotationBuilderForm').reset();
+    document.getElementById('builder-customer-name').value = '';
+    document.getElementById('builder-company').value = '';
+    document.getElementById('builder-gstin').value = '';
+    document.getElementById('builder-phone').value = '';
+    document.getElementById('builder-email').value = '';
+    document.getElementById('builder-address').value = '';
+    document.getElementById('builder-pos').value = '08-RAJASTHAN';
+    document.getElementById('builder-quote-no').value = 'MHSB/26-27/001';
+    document.getElementById('builder-quote-date').value = '08 Oct 2026';
+    document.getElementById('builder-validity').value = '23 Oct 2026';
+    document.getElementById('builder-doc-type').value = 'Quotation';
+    document.getElementById('builder-notes').value = DEFAULT_NOTES_TEXT;
+    document.getElementById('builder-apply-gst').checked = true;
+    document.getElementById('builder-inclusive-gst').checked = false;
+    document.getElementById('builder-is-igst').checked = true;
+
+    lineItemsData = [
+        {
+            description: "Basic Unlimited Plan for 1 Year",
+            sac: "998314",
+            rate: 7150,
+            discount: 17,
+            qty: 1
+        },
+        {
+            description: "Professional Attendance and Payroll System",
+            sac: "998314",
+            rate: 2033.9,
+            discount: 25,
+            qty: 4
+        }
+    ];
+
+    renderBuilderItems();
+    updateQuotationPreview();
+}
+
 // Master Function: Recalculate everything and update the preview document below
 function updateQuotationPreview() {
     // 1. Sync Text Fields
@@ -582,7 +609,7 @@ function updateQuotationPreview() {
     document.getElementById('preview-phone').textContent = phone;
     document.getElementById('preview-pos').textContent = pos || '08-RAJASTHAN';
     document.getElementById('preview-address').textContent = address;
-    document.getElementById('preview-notes').textContent = notes || 'HisabMittra: Business karne ka ek naya andaaz';
+    document.getElementById('preview-notes').textContent = notes || DEFAULT_NOTES_TEXT;
 
     // 2. Line Items Calculations
     const previewItemsTbody = document.getElementById('preview-items-body');
