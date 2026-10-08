@@ -208,6 +208,18 @@ class CrmLeadController extends Controller
         return redirect()->route('crm.admin.leads.index')->with('success', "Lead {$name} deleted successfully.");
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $leadIds = $request->input('lead_ids', []);
+        if (empty($leadIds)) {
+            return redirect()->back()->with('error', 'No leads selected for deletion.');
+        }
+
+        $count = CrmLead::whereIn('id', $leadIds)->delete();
+
+        return redirect()->route('crm.admin.leads.index')->with('success', "{$count} lead(s) deleted successfully.");
+    }
+
     public function assign(Request $request, $id)
     {
         $lead = CrmLead::findOrFail($id);

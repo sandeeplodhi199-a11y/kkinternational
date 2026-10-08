@@ -60,6 +60,8 @@ Route::prefix('crm/admin')->middleware(['crm_auth:admin'])->name('crm.admin.')->
     Route::get('leads/{id}', [CrmLeadController::class, 'show'])->name('leads.show');
     Route::match(['put', 'post'], 'leads/{id}', [CrmLeadController::class, 'update'])->name('leads.update');
     Route::delete('leads/{id}', [CrmLeadController::class, 'destroy'])->name('leads.destroy');
+    Route::post('leads/bulk-delete', [CrmLeadController::class, 'bulkDelete'])->name('leads.bulk-delete');
+    Route::delete('leads/bulk-delete', [CrmLeadController::class, 'bulkDelete'])->name('leads.bulk-delete.delete');
     Route::post('leads/{id}/status', [CrmLeadController::class, 'updateStatus'])->name('leads.update-status');
     Route::post('leads/{id}/assign', [CrmLeadController::class, 'assign'])->name('leads.assign');
     Route::get('leads-export', [CrmLeadController::class, 'export'])->name('leads.export');

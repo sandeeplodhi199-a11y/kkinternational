@@ -712,6 +712,38 @@ if ($action === 'update_status') {
 }
 
 // ==========================================
+// 14b. ACTION: DELETE LEAD
+// ==========================================
+if ($action === 'delete_lead' || $action === 'delete_record') {
+    $leadId = (int)($input['lead_id'] ?? $input['id'] ?? 0);
+    $leadCode = $input['lead_code'] ?? '';
+
+    $cond = $leadId > 0 ? "`id` = {$leadId}" : "`lead_code` = '" . addslashes($leadCode) . "'";
+    $sql = "UPDATE `crm_leads` SET `deleted_at` = '{$now}', `updated_at` = '{$now}' WHERE {$cond}";
+    appendToSqlDump($sql);
+
+    if ($pdo) {
+        try {
+            if ($leadId > 0) {
+                $stmt = $pdo->prepare("UPDATE crm_leads SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?");
+                $stmt->execute([$leadId]);
+            } else if (!empty($leadCode)) {
+                $stmt = $pdo->prepare("UPDATE crm_leads SET deleted_at = NOW(), updated_at = NOW() WHERE lead_code = ?");
+                $stmt->execute([$leadCode]);
+            }
+            logActivity($pdo, 'Leads', 'Delete Lead', "Deleted lead ID: {$leadId} / {$leadCode}");
+        } catch (Exception $e) {}
+    }
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Lead successfully deleted in SQL & MySQL database!',
+        'sql' => $sql
+    ]);
+    exit;
+}
+
+// ==========================================
 // 15. ACTION: UPDATE DEMO STATUS
 // ==========================================
 if ($action === 'update_demo_status' || (strpos($action, 'demo') !== false && isset($input['status']))) {

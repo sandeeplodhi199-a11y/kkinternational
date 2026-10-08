@@ -169,6 +169,17 @@
         const tbody = document.querySelector('#all-leads-table tbody');
         if (!tbody) return;
 
+        // Filter out any deleted leads from HTML static table
+        const deletedIds = getList('hm_crm_deleted_lead_ids');
+        if (deletedIds && deletedIds.length) {
+            tbody.querySelectorAll('tr').forEach(tr => {
+                const chk = tr.querySelector('input[name="lead_ids[]"]');
+                if (chk && deletedIds.includes(String(chk.value))) {
+                    tr.remove();
+                }
+            });
+        }
+
         const storedLeads = getList(STORAGE_KEYS.leads);
         if (!storedLeads.length) return;
 
@@ -176,7 +187,8 @@
 
         const totalHeader = document.querySelector('h1 span.rounded-full');
         if (totalHeader) {
-            totalHeader.textContent = `${2 + storedLeads.length} total`;
+            const currentRows = tbody.querySelectorAll('tr').length;
+            totalHeader.textContent = `${currentRows + storedLeads.length} total`;
         }
 
         const statusBadges = {
@@ -189,6 +201,9 @@
         };
 
         storedLeads.slice().reverse().forEach(lead => {
+            if (deletedIds && (deletedIds.includes(String(lead.id)) || deletedIds.includes(String(lead.lead_code)))) {
+                return;
+            }
             const tr = document.createElement('tr');
             tr.className = 'custom-injected-lead hover:bg-emerald-50/60 transition bg-emerald-50/20';
 
@@ -199,6 +214,7 @@
             const agentStr = (lead.agent && lead.agent !== '-') ? lead.agent : '-';
             const callbackStr = lead.follow_up_date || lead.callback || '-';
             const leadDataSafe = JSON.stringify(lead).replace(/"/g, '&quot;');
+            const safeName = (lead.name || lead.lead_code || 'Lead').replace(/'/g, "\\'");
 
             tr.innerHTML = `
                 <td class="py-2.5 px-3 text-center">
@@ -228,11 +244,14 @@
                 <td class="py-2.5 px-3 text-slate-500 max-w-xs truncate text-[11px]">${lead.notes || '-'}</td>
                 <td class="py-2.5 px-3 text-center">
                     <div class="inline-flex items-center justify-center gap-1">
-                        <button type="button" onclick="if(window.viewLeadModal) { viewLeadModal(${leadDataSafe}); } else { alert('Lead Details:\\nName: ${lead.name}\\nPhone: ${lead.phone}\\nStatus: ${lead.status}'); }" title="View" class="w-6 h-6 rounded bg-[#4f46e5] hover:bg-[#4338ca] text-white flex items-center justify-center text-[10px] transition shadow-xs">
+                        <button type="button" onclick="if(window.viewLeadModal) { viewLeadModal(${leadDataSafe}); } else { alert('Lead Details:\\nName: ${lead.name}\\nPhone: ${lead.phone}\\nStatus: ${lead.status}'); }" title="View" class="w-6 h-6 rounded bg-[#4f46e5] hover:bg-[#4338ca] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
                             <i class="fa-solid fa-eye"></i>
                         </button>
-                        <button type="button" onclick="if(window.editLeadModal) { editLeadModal(${leadDataSafe}); } else { alert('Editing ${lead.name}'); }" title="Edit" class="w-6 h-6 rounded bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center text-[10px] transition shadow-xs">
+                        <button type="button" onclick="if(window.editLeadModal) { editLeadModal(${leadDataSafe}); } else { alert('Editing ${lead.name}'); }" title="Edit" class="w-6 h-6 rounded bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
                             <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button type="button" onclick="window.deleteLeadConfirm ? deleteLeadConfirm('${lead.id}', '${safeName}') : null" title="Delete Lead" class="w-6 h-6 rounded bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
+                            <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
                 </td>
@@ -241,6 +260,89 @@
             tbody.insertBefore(tr, tbody.firstChild);
         });
     }
+
+    function deleteLeadConfirm(id, name) {
+        if (!confirm('Are you sure you want to delete lead "' + (name || 'this lead') + '"?')) {
+            return;
+        }
+
+        // 1. Mark as deleted in storage
+        try {
+            const delKey = 'hm_crm_deleted_lead_ids';
+            let deletedIds = [];
+            try {
+                const rawDel = localStorage.getItem(delKey);
+                deletedIds = rawDel ? JSON.parse(rawDel) : [];
+            } catch(e) {}
+            if (!deletedIds.includes(String(id))) {
+                deletedIds.push(String(id));
+                localStorage.setItem(delKey, JSON.stringify(deletedIds));
+            }
+
+            const raw = localStorage.getItem('hm_crm_leads_data');
+            if (raw) {
+                let list = JSON.parse(raw);
+                list = list.filter(item => String(item.id) !== String(id) && String(item.lead_code) !== String(id));
+                localStorage.setItem('hm_crm_leads_data', JSON.stringify(list));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // 2. Sync to Backend sync.php if available
+        try {
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete_lead', lead_id: id })
+            }).catch(() => {});
+        } catch (e) {}
+
+        // 3. Remove corresponding row immediately from DOM
+        const rows = document.querySelectorAll('#all-leads-table tbody tr, table tbody tr');
+        rows.forEach(tr => {
+            const chk = tr.querySelector('input[type="checkbox"][name="lead_ids[]"]');
+            if (chk && (String(chk.value) === String(id))) {
+                tr.remove();
+            }
+        });
+
+        // 4. Update count header if present
+        const totalHeader = document.querySelector('h1 span.rounded-full');
+        if (totalHeader) {
+            const currentRows = document.querySelectorAll('#all-leads-table tbody tr').length;
+            totalHeader.textContent = `${currentRows} total`;
+        }
+
+        // 5. Toast notification
+        showToast(`🗑️ Lead "${name || 'Selected'}" deleted successfully!`, 'info');
+
+        // 6. If Laravel form exists
+        const delForm = document.getElementById('deleteLeadForm');
+        if (delForm && typeof window.__IS_LARAVEL__ !== 'undefined' && window.__IS_LARAVEL__) {
+            delForm.action = '/crm/admin/leads/' + id;
+            delForm.submit();
+        }
+    }
+    window.deleteLeadConfirm = deleteLeadConfirm;
+
+    function executeDeleteSelected() {
+        const checked = document.querySelectorAll('.lead-checkbox:checked');
+        if (!checked.length) {
+            showToast('Please select at least one lead to delete.', 'error');
+            return;
+        }
+        if (!confirm(`Are you sure you want to delete ${checked.length} selected lead(s)?`)) {
+            return;
+        }
+        checked.forEach(chk => {
+            const id = chk.value;
+            deleteLeadConfirm(id, 'Lead ' + id);
+        });
+        showToast(`🗑️ ${checked.length} lead(s) deleted successfully!`, 'info');
+        if (typeof updateSelectedCount === 'function') updateSelectedCount();
+    }
+    window.executeDeleteSelected = executeDeleteSelected;
 
     function renderEmployeeLeadsTable() {
         if (!window.location.pathname.includes('/employee/leads')) return;
@@ -1553,6 +1655,8 @@
         renderBranchesTable,
         renderDemosTable,
         updateDemoStatus,
+        deleteLeadConfirm,
+        executeDeleteSelected,
         toggleAutoRefresh,
         toggleAutoRefreshState,
         triggerLiveRefresh

@@ -115,6 +115,12 @@
                 <span id="selected-count-badge" class="bg-white/25 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full">0</span>
             </button>
 
+            <!-- Delete Selected -->
+            <button type="button" onclick="executeDeleteSelected()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ef4444] hover:bg-[#dc2626] text-white text-xs font-bold shadow-sm transition active:scale-95">
+                <i class="fa-solid fa-trash text-xs"></i>
+                <span>Delete Selected</span>
+            </button>
+
             <!-- Assign All -->
             <button type="button" onclick="executeAssign('all')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f59e0b] hover:bg-[#d97706] text-white text-xs font-bold shadow-sm transition active:scale-95">
                 <i class="fa-solid fa-users text-xs"></i>
@@ -238,6 +244,10 @@
                                         <!-- Schedule (Cyan) -->
                                         <button type="button" onclick="scheduleLeadModal({{ json_encode($lead) }})" title="Schedule Demo" class="w-6 h-6 rounded bg-[#06b6d4] hover:bg-[#0891b2] text-white flex items-center justify-center text-[10px] transition shadow-xs">
                                             <i class="fa-solid fa-calendar-days"></i>
+                                        </button>
+                                        <!-- Delete (Red) -->
+                                        <button type="button" onclick="deleteLeadConfirm('{{ $lead->id }}', '{{ addslashes($lead->name) }}')" title="Delete Lead" class="w-6 h-6 rounded bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
+                                            <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -758,5 +768,45 @@ function exportTableToCSV(tableId, filename) {
     downloadLink.click();
     document.body.removeChild(downloadLink);
 }
+
+function deleteLeadConfirm(id, name) {
+    if (!confirm('Are you sure you want to delete lead "' + (name || id) + '"?')) {
+        return;
+    }
+    const form = document.getElementById('deleteLeadForm');
+    form.action = "/crm/admin/leads/" + id;
+    form.submit();
+}
+
+function executeDeleteSelected() {
+    const checked = document.querySelectorAll('.lead-checkbox:checked');
+    if (!checked.length) {
+        alert('Please select at least one lead from the table checkboxes.');
+        return;
+    }
+    if (!confirm('Are you sure you want to delete ' + checked.length + ' selected lead(s)?')) {
+        return;
+    }
+    const container = document.getElementById('bulk-delete-inputs');
+    container.innerHTML = '';
+    checked.forEach(chk => {
+        const inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = 'lead_ids[]';
+        inp.value = chk.value;
+        container.appendChild(inp);
+    });
+    document.getElementById('bulkDeleteForm').submit();
+}
 </script>
+
+<form id="deleteLeadForm" method="POST" class="hidden">
+    @csrf
+    @method('DELETE')
+</form>
+
+<form id="bulkDeleteForm" method="POST" action="{{ route('crm.admin.leads.bulk-delete') }}" class="hidden">
+    @csrf
+    <div id="bulk-delete-inputs"></div>
+</form>
 @endsection
