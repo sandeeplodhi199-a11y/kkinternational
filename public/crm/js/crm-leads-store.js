@@ -909,6 +909,8 @@
             role: data.role || 'Sales',
             designation: (data.designation || 'Representative').trim(),
             target_amount: data.target_amount ? Number(data.target_amount) : 0,
+            remarks: (data.remarks || data.remark || '').trim(),
+            demos_count: data.demos_count ? Number(data.demos_count) : (data.demo ? Number(data.demo) : 0),
             status: 'Active',
             created_at: getFormattedDate()
         };
@@ -932,19 +934,31 @@
             const tr = document.createElement('tr');
             tr.className = 'custom-injected-team hover:bg-emerald-50/60 transition bg-emerald-50/20';
             tr.innerHTML = `
-                <td class="py-3 px-4 font-bold text-slate-700">${10 + idx}</td>
-                <td class="py-3 px-4 font-black text-slate-900 flex items-center gap-1.5">
+                <td class="py-3.5 px-4 font-bold text-slate-400 text-xs">${10 + idx}</td>
+                <td class="py-3.5 px-4 font-bold text-slate-800 text-xs whitespace-nowrap">
                     <span>${m.name}</span>
-                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                    <span class="ml-1 px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
                 </td>
-                <td class="py-3 px-4 text-slate-600">${m.email}</td>
-                <td class="py-3 px-4 font-mono text-slate-700">${m.phone}</td>
-                <td class="py-3 px-4 font-bold text-slate-700">0</td>
-                <td class="py-3 px-4">
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${m.status}</span>
+                <td class="py-3.5 px-4 text-slate-600 text-xs whitespace-nowrap">${m.email}</td>
+                <td class="py-3.5 px-4 text-slate-600 text-xs whitespace-nowrap font-mono">${m.phone}</td>
+                <td class="py-3.5 px-4 font-bold text-slate-800 text-xs text-center whitespace-nowrap">0</td>
+                <td class="py-3.5 px-4 font-bold text-slate-800 text-xs text-center whitespace-nowrap">${m.demos_count || 0}</td>
+                <td class="py-3.5 px-4 text-slate-500 text-xs max-w-xs truncate">${m.remarks || '-'}</td>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-bold bg-[#e8f5e9] text-[#2e7d32] border border-[#a5d6a7]">${m.status}</span>
                 </td>
-                <td class="py-3 px-4 text-right">
-                    <span class="text-xs font-bold text-slate-500">${m.role}</span>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                    <div class="inline-flex items-center justify-center gap-1.5">
+                        <a href="/crm/admin/team/${m.id}/edit" class="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Edit Employee">
+                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                        </a>
+                        <a href="/crm/admin/demos?assigned_to=${m.id}" class="w-7 h-7 rounded-lg bg-[#06b6d4] hover:bg-[#0891b2] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Schedule / View Demo">
+                            <i class="fa-solid fa-calendar-days text-[11px]"></i>
+                        </a>
+                        <button type="button" onclick="confirmDelete('${m.id}', '${m.name}')" class="w-7 h-7 rounded-lg bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Delete">
+                            <i class="fa-solid fa-trash text-[11px]"></i>
+                        </button>
+                    </div>
                 </td>
             `;
             tbody.insertBefore(tr, tbody.firstChild);

@@ -77,8 +77,10 @@
                         <th class="py-3 px-4 text-slate-400">EMAIL</th>
                         <th class="py-3 px-4 text-slate-400">PHONE NO.</th>
                         <th class="py-3 px-4 text-slate-400 text-center">TOTAL LEADS</th>
+                        <th class="py-3 px-4 text-slate-400 text-center">TOTAL DEMOS</th>
+                        <th class="py-3 px-4 text-slate-400">REMARKS</th>
                         <th class="py-3 px-4 text-slate-400 text-center">STATUS</th>
-                        <th class="py-3 px-4 text-slate-400 text-center w-28">ACTIONS</th>
+                        <th class="py-3 px-4 text-slate-400 text-center w-32">ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-medium">
@@ -109,7 +111,17 @@
                                 {{ $emp->leads_count ?? 0 }}
                             </td>
 
-                            <!-- Col 6: Status -->
+                            <!-- Col 6: Total Demos -->
+                            <td class="py-3.5 px-4 font-bold text-slate-800 text-xs text-center whitespace-nowrap">
+                                {{ ($emp->demos_count ?? 0) ?: ($emp->demos ? $emp->demos->count() : 0) }}
+                            </td>
+
+                            <!-- Col 7: Remarks -->
+                            <td class="py-3.5 px-4 text-slate-500 text-xs max-w-xs truncate">
+                                {{ $emp->remarks ?: '-' }}
+                            </td>
+
+                            <!-- Col 8: Status -->
                             <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                 @if($emp->status === 'Active')
                                     <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-bold bg-[#e8f5e9] text-[#2e7d32] border border-[#a5d6a7]">
@@ -122,7 +134,7 @@
                                 @endif
                             </td>
 
-                            <!-- Col 7: Actions (Orange Edit, Red Delete) -->
+                            <!-- Col 9: Actions (Orange Edit, Cyan Demo, Red Delete) -->
                             <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                 <div class="inline-flex items-center justify-center gap-1.5">
                                     <!-- Orange Edit Button -->
@@ -130,6 +142,13 @@
                                        class="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center transition shadow-sm active:scale-95" 
                                        title="Edit Employee">
                                         <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                    </a>
+
+                                    <!-- Cyan Demo Button -->
+                                    <a href="{{ route('crm.admin.demos.index', ['assigned_to' => $emp->id]) }}" 
+                                       class="w-7 h-7 rounded-lg bg-[#06b6d4] hover:bg-[#0891b2] text-white flex items-center justify-center transition shadow-sm active:scale-95" 
+                                       title="Schedule / View Demos">
+                                        <i class="fa-solid fa-calendar-days text-[11px]"></i>
                                     </a>
 
                                     <!-- Red Trash Button -->
@@ -144,7 +163,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-10 text-slate-400 text-xs">
+                            <td colspan="9" class="text-center py-10 text-slate-400 text-xs">
                                 <i class="fa-solid fa-user-slash text-2xl text-slate-300 mb-2 block"></i>
                                 <span>No employees found.</span>
                             </td>

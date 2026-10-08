@@ -523,6 +523,8 @@ if ($action === 'save_team_member' || $action === 'save_employee') {
     $designation = !empty($data['designation']) ? $data['designation'] : 'Executive';
     $targetAmount = !empty($data['target_amount']) ? (float)$data['target_amount'] : 0.00;
     $joiningDate = !empty($data['joining_date']) ? $data['joining_date'] : date('Y-m-d');
+    $remarks = !empty($data['remarks']) ? trim($data['remarks']) : (!empty($data['remark']) ? trim($data['remark']) : null);
+    $demosCount = isset($data['demos_count']) ? (int)$data['demos_count'] : (isset($data['demo']) ? (int)$data['demo'] : 0);
     $empCode = 'EMP-' . rand(100, 999);
     $pwdHash = password_hash($data['password'] ?? '12345678', PASSWORD_DEFAULT);
 
@@ -543,8 +545,8 @@ if ($action === 'save_team_member' || $action === 'save_employee') {
             $stmt->execute([$name, $email, $pwdHash, $phone, $now, $now]);
             $insertedUserId = $pdo->lastInsertId();
 
-            $empStmt = $pdo->prepare("INSERT INTO crm_employees (user_id, employee_code, name, email, phone, designation, role, joining_date, target_amount, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', ?, ?)");
-            $empStmt->execute([$insertedUserId, $empCode, $name, $email, $phone, $designation, $role, $joiningDate, $targetAmount, $now, $now]);
+            $empStmt = $pdo->prepare("INSERT INTO crm_employees (user_id, employee_code, name, email, phone, designation, role, joining_date, target_amount, remarks, demos_count, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', ?, ?)");
+            $empStmt->execute([$insertedUserId, $empCode, $name, $email, $phone, $designation, $role, $joiningDate, $targetAmount, $remarks, $demosCount, $now, $now]);
             $insertedEmpId = $pdo->lastInsertId();
 
             logActivity($pdo, 'Team', 'Created', "Team member {$name} ({$empCode}) added and saved to SQL.");

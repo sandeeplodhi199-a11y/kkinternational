@@ -42,4 +42,9 @@ class CrmEmployee extends Model
     {
         return $this->hasMany(CrmFollowup::class, 'assigned_to');
     }
+
+    public function demos()
+    {
+        return $this->hasMany(CrmDemo::class, 'assigned_to');
+    }
 }

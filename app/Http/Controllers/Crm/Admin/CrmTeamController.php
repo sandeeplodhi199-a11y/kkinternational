@@ -18,7 +18,7 @@ class CrmTeamController extends Controller
 {
     public function index(Request $request)
     {
-        $query = CrmEmployee::with('department')->withCount('leads');
+        $query = CrmEmployee::with('department')->withCount(['leads', 'demos']);
 
         if ($request->filled('search')) {
             $search = $request->get('search');
@@ -77,6 +77,8 @@ class CrmTeamController extends Controller
             'role' => 'nullable|string',
             'target_amount' => 'nullable|numeric',
             'joining_date' => 'nullable|date',
+            'remarks' => 'nullable|string',
+            'demos_count' => 'nullable|integer',
             'password' => 'nullable|string|min:6',
         ]);
 
@@ -116,6 +118,8 @@ class CrmTeamController extends Controller
             'designation' => $data['designation'] ?? 'Sales Executive',
             'role' => $data['role'] ?? 'Sales',
             'target_amount' => $data['target_amount'] ?? 0,
+            'remarks' => $data['remarks'] ?? null,
+            'demos_count' => $data['demos_count'] ?? 0,
             'joining_date' => $data['joining_date'] ?? date('Y-m-d'),
             'status' => 'Active',
         ]);
@@ -144,6 +148,8 @@ class CrmTeamController extends Controller
             'role' => 'nullable|string',
             'target_amount' => 'nullable|numeric',
             'joining_date' => 'nullable|date',
+            'remarks' => 'nullable|string',
+            'demos_count' => 'nullable|integer',
             'status' => 'required|string',
             'password' => 'nullable|string|min:6',
         ]);
@@ -156,6 +162,8 @@ class CrmTeamController extends Controller
             'designation' => $data['designation'] ?? $emp->designation,
             'role' => $data['role'] ?? $emp->role,
             'target_amount' => $data['target_amount'] ?? $emp->target_amount,
+            'remarks' => $data['remarks'] ?? $emp->remarks,
+            'demos_count' => isset($data['demos_count']) ? (int)$data['demos_count'] : $emp->demos_count,
             'joining_date' => $data['joining_date'] ?? $emp->joining_date,
             'status' => $data['status'],
         ]);

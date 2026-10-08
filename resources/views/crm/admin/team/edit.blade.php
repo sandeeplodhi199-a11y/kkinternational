@@ -137,6 +137,28 @@
                 </div>
             </div>
 
+            <!-- Demo & Remarks -->
+            <div>
+                <div class="pb-3 mb-4 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-blue-600 text-xs"></i>
+                        <span>Demo & Remarks</span>
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Total Demos / Demo Allocation</label>
+                        <input type="number" name="demos_count" value="{{ old('demos_count', $employee->demos_count ?? 0) }}" placeholder="0" min="0" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-black text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Remarks / Operational Notes</label>
+                        <input type="text" name="remarks" value="{{ old('remarks', $employee->remarks) }}" placeholder="e.g. Specialized in software product demos" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+                </div>
+            </div>
+
             <!-- Action Buttons Footer -->
             <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
                 <a href="{{ route('crm.admin.team.index') }}" class="px-5 py-3 rounded-2xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-black transition cursor-pointer">
