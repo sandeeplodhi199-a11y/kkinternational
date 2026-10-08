@@ -11,17 +11,10 @@
             <p class="text-xs text-slate-500 font-medium">Drag and drop leads across stages to update conversion status</p>
         </div>
         <div class="flex items-center gap-3">
-            <!-- View Switcher Tabs -->
-            <div class="inline-flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-bold shadow-xs">
-                <a href="{{ route('crm.admin.leads.index') }}" class="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-list text-[11px] text-slate-400"></i>
-                    <span>Table View</span>
-                </a>
-                <span class="px-3 py-1 rounded-lg bg-white text-indigo-600 shadow-sm flex items-center gap-1.5 cursor-default">
-                    <i class="fa-solid fa-table-columns text-[11px]"></i>
-                    <span>Kanban View</span>
-                </span>
-            </div>
+            <a href="{{ route('crm.admin.leads.index') }}" class="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 text-xs font-bold shadow-xs transition flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-left text-[11px]"></i>
+                <span>Back to Leads</span>
+            </a>
 
             <a href="{{ route('crm.admin.leads.create') }}" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
                 <i class="fa-solid fa-plus text-[10px]"></i>
