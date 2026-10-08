@@ -104,11 +104,6 @@
                 <span id="selected-count-badge" class="bg-white/25 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full">0</span>
             </button>
 
-            <!-- Delete Selected -->
-            <button type="button" onclick="executeDeleteSelected()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ef4444] hover:bg-[#dc2626] text-white text-xs font-bold shadow-sm transition active:scale-95">
-                <i class="fa-solid fa-trash text-xs"></i>
-                <span>Delete Selected</span>
-            </button>
 
             <!-- Assign All -->
             <button type="button" onclick="executeAssign('all')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f59e0b] hover:bg-[#d97706] text-white text-xs font-bold shadow-sm transition active:scale-95">
