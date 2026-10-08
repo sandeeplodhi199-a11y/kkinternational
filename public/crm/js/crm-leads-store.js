@@ -783,30 +783,166 @@
         if (!tbody) return;
 
         const stored = getList(STORAGE_KEYS.payments);
-        if (!stored.length) return;
+        if (stored.length) {
+            tbody.querySelectorAll('.custom-injected-payment').forEach(el => el.remove());
 
-        tbody.querySelectorAll('.custom-injected-payment').forEach(el => el.remove());
+            stored.slice().reverse().forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = 'custom-injected-payment hover:bg-emerald-50/60 transition bg-emerald-50/20';
+                tr.setAttribute('data-payment-date', p.payment_date || '');
+                tr.setAttribute('data-amount', p.amount || 0);
+                tr.setAttribute('data-status', p.status || 'Paid');
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono font-bold text-emerald-700 flex items-center gap-1.5">
+                        <span>${p.payment_no}</span>
+                        <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                    </td>
+                    <td class="py-3 px-4 font-black text-slate-800">Account #${p.customer_id || '9'}</td>
+                    <td class="py-3 px-4 font-black text-emerald-800">₹${Number(p.amount).toLocaleString('en-IN')}</td>
+                    <td class="py-3 px-4 font-mono text-slate-700" data-payment-date="${p.payment_date}">${p.payment_date}</td>
+                    <td class="py-3 px-4 text-slate-700 font-semibold">${p.payment_method}</td>
+                    <td class="py-3 px-4 font-mono text-xs text-slate-500">${p.transaction_ref || '-'}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${p.status}</span>
+                    </td>
+                `;
+                tbody.insertBefore(tr, tbody.firstChild);
+            });
+        }
 
-        stored.slice().reverse().forEach(p => {
-            const tr = document.createElement('tr');
-            tr.className = 'custom-injected-payment hover:bg-emerald-50/60 transition bg-emerald-50/20';
-            tr.innerHTML = `
-                <td class="py-3 px-4 font-mono font-bold text-emerald-700 flex items-center gap-1.5">
-                    <span>${p.payment_no}</span>
-                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
-                </td>
-                <td class="py-3 px-4 font-black text-slate-800">Account #${p.customer_id || '9'}</td>
-                <td class="py-3 px-4 font-black text-emerald-800">₹${Number(p.amount).toLocaleString('en-IN')}</td>
-                <td class="py-3 px-4 font-mono text-slate-700">${p.payment_date}</td>
-                <td class="py-3 px-4 text-slate-700 font-semibold">${p.payment_method}</td>
-                <td class="py-3 px-4 font-mono text-xs text-slate-500">${p.transaction_ref || '-'}</td>
-                <td class="py-3 px-4">
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${p.status}</span>
-                </td>
-            `;
-            tbody.insertBefore(tr, tbody.firstChild);
-        });
+        // Apply period filter
+        filterPaymentsByPeriod();
     }
+
+    function filterPaymentsByPeriod() {
+        if (!window.location.pathname.includes('/payments')) return;
+        const yrSelect = document.getElementById('payment-filter-year');
+        const moSelect = document.getElementById('payment-filter-month');
+        if (!yrSelect || !moSelect) return;
+
+        // Sync with URL params on load if values not explicitly selected
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('year') && !yrSelect.value) {
+            yrSelect.value = urlParams.get('year');
+        }
+        if (urlParams.has('month') && !moSelect.value) {
+            moSelect.value = urlParams.get('month');
+        }
+
+        const selectedYr = yrSelect.value;
+        const selectedMo = moSelect.value;
+
+        // Update URL query string seamlessly
+        if (window.history && window.history.replaceState) {
+            const currentUrl = new URL(window.location.href);
+            if (selectedYr) currentUrl.searchParams.set('year', selectedYr);
+            else currentUrl.searchParams.delete('year');
+            if (selectedMo) currentUrl.searchParams.set('month', selectedMo);
+            else currentUrl.searchParams.delete('month');
+            window.history.replaceState({}, '', currentUrl);
+        }
+
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+
+        const rows = tbody.querySelectorAll('tr:not(.period-empty-placeholder)');
+        let visibleCount = 0;
+        let totalCleared = 0;
+        let totalPending = 0;
+
+        rows.forEach(tr => {
+            if (tr.querySelector('td[colspan]')) {
+                tr.style.display = 'none';
+                return;
+            }
+
+            const dateCell = tr.querySelector('[data-payment-date]') || tr.cells[3];
+            const amountCell = tr.querySelector('[data-amount]') || tr.cells[2];
+            const statusCell = tr.querySelector('[data-status]') || tr.cells[6];
+            if (!dateCell) return;
+
+            let dateStr = tr.getAttribute('data-payment-date') || dateCell.getAttribute('data-payment-date') || dateCell.textContent.trim();
+            let rowYear = null;
+            let rowMonth = null;
+
+            if (dateStr) {
+                const parts = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+                if (parts) {
+                    rowYear = parseInt(parts[1], 10);
+                    rowMonth = parseInt(parts[2], 10);
+                } else {
+                    const parsed = new Date(dateStr);
+                    if (!isNaN(parsed.getTime())) {
+                        rowYear = parsed.getFullYear();
+                        rowMonth = parsed.getMonth() + 1;
+                    }
+                }
+            }
+
+            let match = true;
+            if (selectedYr && rowYear && String(rowYear) !== String(selectedYr)) {
+                match = false;
+            }
+            if (selectedMo && rowMonth && String(rowMonth) !== String(selectedMo)) {
+                match = false;
+            }
+
+            if (match) {
+                tr.style.display = '';
+                visibleCount++;
+                let amt = 0;
+                if (tr.hasAttribute('data-amount')) {
+                    amt = parseFloat(tr.getAttribute('data-amount')) || 0;
+                } else if (amountCell) {
+                    amt = parseFloat(amountCell.textContent.replace(/[^\d.]/g, '')) || 0;
+                }
+                const st = (tr.getAttribute('data-status') || (statusCell ? statusCell.textContent : '')).trim().toLowerCase();
+                if (st.includes('paid')) {
+                    totalCleared += amt;
+                } else if (st.includes('pending')) {
+                    totalPending += amt;
+                }
+            } else {
+                tr.style.display = 'none';
+            }
+        });
+
+        // Update KPI cards
+        const clearedEl = document.getElementById('kpi-cleared-revenue');
+        const pendingEl = document.getElementById('kpi-outstanding-invoices');
+        if (clearedEl) {
+            clearedEl.textContent = '₹' + totalCleared.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        if (pendingEl) {
+            pendingEl.textContent = '₹' + totalPending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Empty state placeholder
+        let placeholder = tbody.querySelector('.period-empty-placeholder');
+        if (visibleCount === 0) {
+            if (!placeholder) {
+                placeholder = document.createElement('tr');
+                placeholder.className = 'period-empty-placeholder';
+                placeholder.innerHTML = '<td colspan="7" class="text-center py-8 text-slate-400 font-medium">No payment receipts found for selected period.</td>';
+                tbody.appendChild(placeholder);
+            } else {
+                placeholder.style.display = '';
+            }
+        } else if (placeholder) {
+            placeholder.style.display = 'none';
+        }
+    }
+
+    function resetPaymentPeriodFilter() {
+        const yrSelect = document.getElementById('payment-filter-year');
+        const moSelect = document.getElementById('payment-filter-month');
+        if (yrSelect) yrSelect.value = '';
+        if (moSelect) moSelect.value = '';
+        filterPaymentsByPeriod();
+    }
+
+    window.filterPaymentsByPeriod = filterPaymentsByPeriod;
+    window.resetPaymentPeriodFilter = resetPaymentPeriodFilter;
 
     // ==========================================
     // 8. QUOTATIONS CONTROLLER & RENDERER

@@ -9,22 +9,70 @@
             <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Payments & Collections</h2>
             <p class="text-xs text-slate-500 font-medium">Record incoming wire transfers, UPI payments and track pending balances</p>
         </div>
-        <a href="{{ route('crm.admin.payments.create') }}" class="px-5 py-2 rounded-full bg-[#1b4d3e] text-white text-xs font-bold hover:bg-[#2d6a4f] transition shadow-md flex items-center gap-2">
-            <i class="fa-solid fa-plus text-[10px]"></i>
-            <span>Record Payment</span>
-        </a>
+        <div class="flex items-center flex-wrap gap-3">
+            <!-- Year & Month Filter Dropdowns -->
+            <form id="payment-period-filter-form" method="GET" action="{{ route('crm.admin.payments.index') }}" class="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-2xl border border-slate-200/90 shadow-xs">
+                <i class="fa-solid fa-calendar-days text-emerald-600 text-xs"></i>
+                
+                <!-- Year Dropdown -->
+                <div class="flex items-center gap-1">
+                    <label for="payment-filter-year" class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Year:</label>
+                    <select name="year" id="payment-filter-year" onchange="document.getElementById('payment-period-filter-form').submit()" class="text-xs font-bold text-slate-700 bg-transparent border-none outline-none cursor-pointer focus:ring-0 py-0.5 pr-2">
+                        <option value="">All Years</option>
+                        @php
+                            $currentYear = (int)date('Y');
+                            $years = range($currentYear + 1, $currentYear - 3);
+                        @endphp
+                        @foreach($years as $yr)
+                            <option value="{{ $yr }}" {{ (string)($selectedYear ?? '') === (string)$yr ? 'selected' : '' }}>{{ $yr }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <span class="text-slate-300">|</span>
+
+                <!-- Month Dropdown -->
+                <div class="flex items-center gap-1">
+                    <label for="payment-filter-month" class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Month:</label>
+                    <select name="month" id="payment-filter-month" onchange="document.getElementById('payment-period-filter-form').submit()" class="text-xs font-bold text-slate-700 bg-transparent border-none outline-none cursor-pointer focus:ring-0 py-0.5 pr-2">
+                        <option value="">All Months</option>
+                        @php
+                            $months = [
+                                1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                                5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                                9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+                            ];
+                        @endphp
+                        @foreach($months as $mNum => $mName)
+                            <option value="{{ $mNum }}" {{ (string)($selectedMonth ?? '') === (string)$mNum ? 'selected' : '' }}>{{ $mName }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                @if(!empty($selectedYear) || !empty($selectedMonth))
+                    <a href="{{ route('crm.admin.payments.index') }}" title="Clear Filters" class="ml-1 text-slate-400 hover:text-rose-500 text-xs transition">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </a>
+                @endif
+            </form>
+
+            <a href="{{ route('crm.admin.payments.create') }}" class="px-5 py-2 rounded-full bg-[#1b4d3e] text-white text-xs font-bold hover:bg-[#2d6a4f] transition shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-plus text-[10px]"></i>
+                <span>Record Payment</span>
+            </a>
+        </div>
     </div>
 
     <!-- KPI Summary Row -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="crm-card p-5">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Total Cleared Revenue</span>
-            <div class="text-2xl font-black text-emerald-800">₹{{ number_format($totalReceived, 2) }}</div>
+            <div id="kpi-cleared-revenue" class="text-2xl font-black text-emerald-800">₹{{ number_format($totalReceived, 2) }}</div>
             <span class="text-[11px] text-slate-400 mt-1 block">Successfully reconciled</span>
         </div>
         <div class="crm-card p-5">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Outstanding Invoices</span>
-            <div class="text-2xl font-black text-rose-700">₹{{ number_format($totalPending, 2) }}</div>
+            <div id="kpi-outstanding-invoices" class="text-2xl font-black text-rose-700">₹{{ number_format($totalPending, 2) }}</div>
             <span class="text-[11px] text-slate-400 mt-1 block">Pending client transfer</span>
         </div>
     </div>
@@ -52,7 +100,7 @@
                                 {{ $p->customer ? $p->customer->name : 'Commercial Account' }}
                             </td>
                             <td class="py-3.5 px-4 font-extrabold text-[#1b4d3e]">₹{{ number_format($p->amount, 2) }}</td>
-                            <td class="py-3.5 px-4 text-slate-600">{{ \Carbon\Carbon::parse($p->payment_date)->format('d M, Y') }}</td>
+                            <td class="py-3.5 px-4 text-slate-600" data-payment-date="{{ $p->payment_date }}">{{ \Carbon\Carbon::parse($p->payment_date)->format('d M, Y') }}</td>
                             <td class="py-3.5 px-4 text-slate-700">{{ $p->payment_method }}</td>
                             <td class="py-3.5 px-4 text-slate-500 font-mono text-[11px]">{{ $p->transaction_ref ?: '—' }}</td>
                             <td class="py-3.5 px-4">

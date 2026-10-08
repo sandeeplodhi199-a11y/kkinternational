@@ -662,22 +662,67 @@
             <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Payments & Collections</h2>
             <p class="text-xs text-slate-500 font-medium">Record incoming wire transfers, UPI payments and track pending balances</p>
         </div>
-        <a href="/crm/admin/payments/create" class="px-5 py-2 rounded-full bg-[#1b4d3e] text-white text-xs font-bold hover:bg-[#2d6a4f] transition shadow-md flex items-center gap-2">
-            <i class="fa-solid fa-plus text-[10px]"></i>
-            <span>Record Payment</span>
-        </a>
+                <div class="flex items-center flex-wrap gap-3">
+            <!-- Year & Month Filter Dropdowns -->
+            <form id="payment-period-filter-form" method="GET" action="/crm/admin/payments" class="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-2xl border border-slate-200/90 shadow-xs">
+                <i class="fa-solid fa-calendar-days text-emerald-600 text-xs"></i>
+                
+                <!-- Year Dropdown -->
+                <div class="flex items-center gap-1">
+                    <label for="payment-filter-year" class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Year:</label>
+                    <select name="year" id="payment-filter-year" onchange="filterPaymentsByPeriod()" class="text-xs font-bold text-slate-700 bg-transparent border-none outline-none cursor-pointer focus:ring-0 py-0.5 pr-2">
+                        <option value="">All Years</option>
+                        <option value="2027">2027</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+
+                <span class="text-slate-300">|</span>
+
+                <!-- Month Dropdown -->
+                <div class="flex items-center gap-1">
+                    <label for="payment-filter-month" class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Month:</label>
+                    <select name="month" id="payment-filter-month" onchange="filterPaymentsByPeriod()" class="text-xs font-bold text-slate-700 bg-transparent border-none outline-none cursor-pointer focus:ring-0 py-0.5 pr-2">
+                        <option value="">All Months</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+
+                <button type="button" onclick="resetPaymentPeriodFilter()" title="Clear Filters" class="ml-1 text-slate-400 hover:text-rose-500 text-xs transition cursor-pointer">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </button>
+            </form>
+
+            <a href="/crm/admin/payments/create" class="px-5 py-2 rounded-full bg-[#1b4d3e] text-white text-xs font-bold hover:bg-[#2d6a4f] transition shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-plus text-[10px]"></i>
+                <span>Record Payment</span>
+            </a>
+        </div>
     </div>
 
     <!-- KPI Summary Row -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="crm-card p-5">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Total Cleared Revenue</span>
-            <div class="text-2xl font-black text-emerald-800">₹0.00</div>
+            <div id="kpi-cleared-revenue" class="text-2xl font-black text-emerald-800">₹0.00</div>
             <span class="text-[11px] text-slate-400 mt-1 block">Successfully reconciled</span>
         </div>
         <div class="crm-card p-5">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Outstanding Invoices</span>
-            <div class="text-2xl font-black text-rose-700">₹0.00</div>
+            <div id="kpi-outstanding-invoices" class="text-2xl font-black text-rose-700">₹0.00</div>
             <span class="text-[11px] text-slate-400 mt-1 block">Pending client transfer</span>
         </div>
     </div>

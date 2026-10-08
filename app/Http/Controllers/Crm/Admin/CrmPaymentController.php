@@ -13,13 +13,28 @@ class CrmPaymentController extends Controller
 {
     public function index(Request $request)
     {
-        $payments = CrmPayment::with(['customer', 'quotation'])->latest()->paginate(10);
-        $totalReceived = CrmPayment::where('status', 'Paid')->sum('amount');
-        $totalPending = CrmPayment::where('status', 'Pending')->sum('amount');
+        $selectedYear = $request->get('year');
+        $selectedMonth = $request->get('month');
+
+        $query = CrmPayment::with(['customer', 'quotation'])->latest();
+        $kpiQuery = CrmPayment::query();
+
+        if (!empty($selectedYear)) {
+            $query->whereYear('payment_date', $selectedYear);
+            $kpiQuery->whereYear('payment_date', $selectedYear);
+        }
+        if (!empty($selectedMonth)) {
+            $query->whereMonth('payment_date', $selectedMonth);
+            $kpiQuery->whereMonth('payment_date', $selectedMonth);
+        }
+
+        $payments = $query->paginate(10)->withQueryString();
+        $totalReceived = (clone $kpiQuery)->where('status', 'Paid')->sum('amount');
+        $totalPending = (clone $kpiQuery)->where('status', 'Pending')->sum('amount');
         $customers = CrmCustomer::all();
         $quotations = CrmQuotation::all();
 
-        return view('crm.admin.payments.index', compact('payments', 'totalReceived', 'totalPending', 'customers', 'quotations'));
+        return view('crm.admin.payments.index', compact('payments', 'totalReceived', 'totalPending', 'customers', 'quotations', 'selectedYear', 'selectedMonth'));
     }
 
     public function create()
