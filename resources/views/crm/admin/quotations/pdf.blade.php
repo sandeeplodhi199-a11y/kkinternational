@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -91,7 +91,7 @@
     <div style="clear: both; margin-top: 30px; border-top: 2px solid #1e3a8a; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; page-break-inside: avoid; break-inside: avoid;">
         <!-- 1. Left: EXACT QR Code Block -->
         <div style="width: 150px; text-align: center; flex: 0 0 150px;">
-            <img src="/crm/images/hisab-mittra-qr-col.png?v=2" alt="HisabMittra UPI QR" style="width: 145px; height: auto; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast;">
+            <img src="/crm/images/hisab-mittra-qr-col.png?v=3" alt="HisabMittra UPI QR" style="width: 145px; height: auto; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast;">
         </div>
 
         <!-- 2. Middle: Bank Details (Matching user uploaded reference) -->
@@ -115,3 +115,4 @@
 
 </body>
 </html>
+

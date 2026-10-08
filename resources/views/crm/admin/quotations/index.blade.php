@@ -1,4 +1,4 @@
-@extends('crm.layouts.master')
+﻿@extends('crm.layouts.master')
 
 @section('title', 'Quotation Builder')
 
@@ -164,7 +164,7 @@
                             <tr>
                                 <th class="py-2.5 px-3 min-w-[280px]">Description</th>
                                 <th class="py-2.5 px-3 w-28">SAC/HSN</th>
-                                <th class="py-2.5 px-3 w-32">Base Rate (₹)</th>
+                                <th class="py-2.5 px-3 w-32">Base Rate (â‚¹)</th>
                                 <th class="py-2.5 px-3 w-28">Discount (%)</th>
                                 <th class="py-2.5 px-3 w-20 text-center">Qty</th>
                                 <th class="py-2.5 px-3 w-16 text-center">Action</th>
@@ -284,11 +284,11 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</textare
             <div class="w-72 space-y-1 text-xs">
                 <div class="flex justify-between text-slate-800">
                     <span class="font-bold">Taxable Amount</span>
-                    <span class="font-bold" id="preview-taxable-amount">₹ 12,036.20</span>
+                    <span class="font-bold" id="preview-taxable-amount">â‚¹ 12,036.20</span>
                 </div>
                 <div class="flex justify-between text-slate-800" id="preview-tax-breakdown-row">
                     <span class="font-bold" id="preview-tax-label">IGST 18.0%</span>
-                    <span class="font-bold" id="preview-tax-amount">₹ 2,166.52</span>
+                    <span class="font-bold" id="preview-tax-amount">â‚¹ 2,166.52</span>
                 </div>
                 <div class="flex justify-between text-slate-800">
                     <span class="font-bold">Round Off</span>
@@ -296,11 +296,11 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</textare
                 </div>
                 <div class="border-y border-[#e88d00] py-1 flex justify-between items-center text-base font-black text-[#1e3a8a]">
                     <span>Total &nbsp;-</span>
-                    <span id="preview-grand-total">₹ 14,203.00</span>
+                    <span id="preview-grand-total">â‚¹ 14,203.00</span>
                 </div>
                 <div class="flex justify-between text-slate-700 text-xs pt-0.5">
                     <span class="font-bold">Total Discount</span>
-                    <span class="font-bold" id="preview-total-discount">₹ 3,249.40</span>
+                    <span class="font-bold" id="preview-total-discount">â‚¹ 3,249.40</span>
                 </div>
             </div>
         </div>
@@ -332,7 +332,7 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</textare
         <div class="quotation-footer-container border-t-2 border-[#1e3a8a] pt-3 mt-4" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; width: 100%; gap: 14px;">
             <!-- 1. Left: EXACT QR Code Block (Matching user uploaded Image) -->
             <div class="quotation-qr-col" style="flex: 0 0 160px; width: 160px; text-align: center;">
-                <img src="/crm/images/hisab-mittra-qr-col.png?v=2" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 155px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+                <img src="/crm/images/hisab-mittra-qr-col.png?v=3" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 155px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
             </div>
 
             <!-- 2. Middle: Bank Details (Matching user uploaded reference) -->
@@ -738,7 +738,7 @@ function updateQuotationPreview() {
             <td class="py-2.5 px-2 text-center font-bold text-slate-800">${qty}</td>
             <td class="py-2.5 px-2 text-right font-bold text-slate-900">${lineTaxable.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             <td class="py-2.5 px-2 text-right text-slate-700 font-medium">
-                ${applyGst ? `${lineTax.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (18%)` : '₹0.00 (0%)'}
+                ${applyGst ? `${lineTax.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (18%)` : 'â‚¹0.00 (0%)'}
             </td>
             <td class="py-2.5 px-2 text-right font-extrabold text-slate-900">${lineTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
         `;
@@ -751,15 +751,15 @@ function updateQuotationPreview() {
     const roundOff = +(roundedGrandTotal - unroundedTotal).toFixed(2);
 
     document.getElementById('preview-total-items-qty').textContent = `${lineItemsData.length} / ${totalQty}`;
-    document.getElementById('preview-taxable-amount').textContent = `₹ ${totalTaxable.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('preview-taxable-amount').textContent = `â‚¹ ${totalTaxable.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     
     const taxLabel = isIgst ? 'IGST 18.0%' : 'CGST 9% + SGST 9%';
     document.getElementById('preview-tax-label').textContent = applyGst ? taxLabel : 'Tax (0%)';
-    document.getElementById('preview-tax-amount').textContent = `₹ ${totalTaxAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('preview-tax-amount').textContent = `â‚¹ ${totalTaxAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     document.getElementById('preview-roundoff').textContent = roundOff >= 0 ? `${roundOff.toFixed(2)}` : `${roundOff.toFixed(2)}`;
-    document.getElementById('preview-grand-total').textContent = `₹ ${roundedGrandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    document.getElementById('preview-total-discount').textContent = `₹ ${totalDiscountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('preview-grand-total').textContent = `â‚¹ ${roundedGrandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('preview-total-discount').textContent = `â‚¹ ${totalDiscountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     // In Words
     document.getElementById('preview-amount-words').textContent = inWords(roundedGrandTotal);
@@ -836,3 +836,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+

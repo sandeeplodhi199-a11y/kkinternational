@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -54,8 +54,8 @@
                 <tr>
                     <td><strong>{{ $item->item_name }}</strong></td>
                     <td style="text-align: center;">{{ $item->quantity }}</td>
-                    <td style="text-align: right;">₹{{ number_format($item->unit_price, 2) }}</td>
-                    <td style="text-align: right;"><strong>₹{{ number_format($item->total, 2) }}</strong></td>
+                    <td style="text-align: right;">â‚¹{{ number_format($item->unit_price, 2) }}</td>
+                    <td style="text-align: right;"><strong>â‚¹{{ number_format($item->total, 2) }}</strong></td>
                 </tr>
             @endforeach
         </tbody>
@@ -64,21 +64,21 @@
     <div class="totals">
         <div class="totals-row">
             <span>Subtotal:</span>
-            <span>₹{{ number_format($quotation->subtotal, 2) }}</span>
+            <span>â‚¹{{ number_format($quotation->subtotal, 2) }}</span>
         </div>
         @if($quotation->discount_amount > 0)
             <div class="totals-row" style="color: #dc2626;">
                 <span>Discount:</span>
-                <span>- ₹{{ number_format($quotation->discount_amount, 2) }}</span>
+                <span>- â‚¹{{ number_format($quotation->discount_amount, 2) }}</span>
             </div>
         @endif
         <div class="totals-row">
             <span>GST (18%):</span>
-            <span>₹{{ number_format($quotation->tax_amount, 2) }}</span>
+            <span>â‚¹{{ number_format($quotation->tax_amount, 2) }}</span>
         </div>
         <div class="totals-row grand-total">
             <span>Grand Total:</span>
-            <span>₹{{ number_format($quotation->grand_total, 2) }}</span>
+            <span>â‚¹{{ number_format($quotation->grand_total, 2) }}</span>
         </div>
     </div>
 
@@ -91,7 +91,7 @@
     <div style="clear: both; margin-top: 30px; border-top: 2px solid #1e3a8a; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; page-break-inside: avoid; break-inside: avoid;">
         <!-- 1. Left: EXACT QR Code Block -->
         <div style="width: 150px; text-align: center; flex: 0 0 150px;">
-            <img src="/crm/images/hisab-mittra-qr-col.png?v=2" alt="HisabMittra UPI QR" style="width: 145px; height: auto; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast;">
+            <img src="/crm/images/hisab-mittra-qr-col.png?v=3" alt="HisabMittra UPI QR" style="width: 145px; height: auto; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast;">
         </div>
 
         <!-- 2. Middle: Bank Details (Matching user uploaded reference) -->
@@ -115,3 +115,4 @@
 
 </body>
 </html>
+
