@@ -3,4 +3,4 @@ vendor
 .git
 storage/logs
 database/sql
-public/videos
+

@@ -16,6 +16,16 @@
     { "source": "/crm/logout/", "destination": "/crm/login", "permanent": false },
     { "source": "/login", "destination": "/crm/login", "permanent": false }
   ],
+  "headers": [
+    {
+      "source": "/videos/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "video/mp4" },
+        { "key": "Accept-Ranges", "value": "bytes" },
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ],
   "routes": [
     {
       "handle": "filesystem"

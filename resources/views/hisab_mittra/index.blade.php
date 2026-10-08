@@ -273,13 +273,14 @@
             <div class="max-w-5xl mx-auto">
 
                 <!-- Video Card Frame -->
-                <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-slate-200/80 bg-white aspect-[16/10] sm:aspect-[16/9]">
+                <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-slate-200/80 bg-slate-900 aspect-[16/10] sm:aspect-[16/9]">
 
                     <!-- Video (Full clean screen visibility) -->
                     <video id="showcase-video"
                         class="w-full h-full object-cover block"
-                        autoplay loop muted playsinline>
-                        <source src="/videos/demo-video.mp4?v=2" type="video/mp4">
+                        autoplay loop muted playsinline preload="auto">
+                        <source src="/videos/demo-video.mp4" type="video/mp4">
+                        <source src="/videos/demo-video-backup.mp4" type="video/mp4">
                     </video>
 
                     <!-- Audio toggle floating at bottom right -->
@@ -303,6 +304,27 @@
                 }
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const v = document.getElementById('showcase-video');
+            if (v) {
+                v.muted = true;
+                const tryPlay = function() {
+                    const p = v.play();
+                    if (p !== undefined) {
+                        p.catch(function() {
+                            v.muted = true;
+                            v.play().catch(function() {});
+                        });
+                    }
+                };
+                tryPlay();
+                v.parentElement.addEventListener('click', function(e) {
+                    if (e.target.closest('button')) return;
+                    if (v.paused) v.play();
+                });
+            }
+        });
     </script>
 
     <!-- 4. HRM & ATTENDANCE SPLIT SPOTLIGHT -->
