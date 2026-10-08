@@ -1331,8 +1331,37 @@
             // Ignore search forms or non-POST actions
             if (method !== 'POST') return;
 
-            // Ignore authentication forms
-            if (action.includes('/login') || action.includes('/logout')) return;
+            // Handle Logout cleanly across both static (Vercel) and dynamic (Laravel/XAMPP) environments
+            if (action.includes('/logout')) {
+                e.preventDefault();
+                try {
+                    sessionStorage.clear();
+                    localStorage.removeItem('hm_crm_user');
+                    localStorage.removeItem('crm_auth_user');
+                    localStorage.removeItem('crm_logged_in');
+                } catch(err) {}
+
+                // Notify backend in background if available
+                try {
+                    const csrfToken = form.querySelector('input[name="_token"]')?.value || '';
+                    fetch('/crm/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: '_token=' + encodeURIComponent(csrfToken)
+                    }).catch(() => {});
+                } catch(e) {}
+
+                // Immediate clean client-side redirect to login page
+                window.location.replace('/crm/login');
+                return;
+            }
+
+            // Ignore login forms to allow native submission
+            if (action.includes('/login')) return;
 
             // 1. PREVENT BROWSER DEFAULT POST TO STOP "Confirm Form Resubmission"
             e.preventDefault();

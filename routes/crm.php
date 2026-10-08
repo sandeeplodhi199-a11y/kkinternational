@@ -33,7 +33,7 @@ Route::prefix('crm')->group(function () {
     Route::post('check-user-role', [CrmAuthController::class, 'checkUserRole'])->name('crm.check-user-role');
     Route::get('forgot-password', [CrmAuthController::class, 'forgotPasswordForm'])->name('crm.forgot-password');
     Route::post('forgot-password', [CrmAuthController::class, 'resetPassword'])->name('crm.forgot-password.post');
-    Route::post('logout', [CrmAuthController::class, 'logout'])->name('crm.logout');
+    Route::match(['get', 'post'], 'logout', [CrmAuthController::class, 'logout'])->name('crm.logout');
     Route::get('global-search', [CrmAdminDashboardController::class, 'globalSearch'])->name('crm.global-search');
     Route::get('leave-impersonate', [CrmSuperAdminController::class, 'leaveImpersonate'])->name('crm.leave-impersonate');
     Route::post('api/leads/webhook', [CrmSuperAdminController::class, 'handleLeadWebhook'])->name('crm.api.leads.webhook');
