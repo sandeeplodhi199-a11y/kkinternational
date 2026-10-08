@@ -729,9 +729,13 @@
 
                 <!-- Right: Primary Actions (Export & Add Lead) -->
         <div class="flex items-center gap-2">
-            <button type="button" onclick="exportTableToCSV('all-leads-table', 'all_leads.csv')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer">
+                        <button type="button" onclick="exportTableToCSV('all-leads-table', 'all_leads.csv')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer">
                 <i class="fa-solid fa-file-excel text-emerald-600 text-xs"></i>
                 <span>Export CSV</span>
+            </button>
+            <button type="button" onclick="openImportLeadsModal()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-file-import text-indigo-600 text-xs"></i>
+                <span>Import CSV</span>
             </button>
             <a href="/crm/admin/leads/create" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold shadow-sm transition active:scale-95 cursor-pointer">
                 <i class="fa-solid fa-plus text-xs"></i>
@@ -1088,6 +1092,70 @@
 </div>
 
 <!-- MODAL: VIEW LEAD -->
+
+<!-- Import Leads Modal -->
+<div id="import-leads-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs hidden p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100 transform transition-all">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm font-bold border border-indigo-100">
+                    <i class="fa-solid fa-file-import"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Import Leads from CSV</h3>
+                    <p class="text-[11px] text-slate-500">Bulk add new leads via CSV sheet</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeImportLeadsModal()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <p class="text-xs text-slate-600 mb-3.5 leading-relaxed">
+                Upload a CSV file containing your leads. Recognized headers include <strong class="text-slate-800">Firm Name, Contact Person, Phone, Email, City, Source, Priority, Expected Value, Remarks</strong>.
+            </p>
+
+            <!-- Sample Template Download -->
+            <div class="mb-4 p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs text-indigo-900 font-semibold">
+                    <i class="fa-solid fa-circle-info text-indigo-500"></i>
+                    <span>Need sample format?</span>
+                </div>
+                <button type="button" onclick="downloadLeadsSampleCSV()" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold underline cursor-pointer flex items-center gap-1">
+                    <i class="fa-solid fa-download text-[10px]"></i>
+                    <span>Download Sample CSV</span>
+                </button>
+            </div>
+
+            <!-- Drag & Drop / File Input Box -->
+            <div id="csv-drop-area" onclick="document.getElementById('csv-file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-xl p-6 text-center cursor-pointer transition bg-slate-50/50 hover:bg-indigo-50/20 group">
+                <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="handleCSVFileSelect(this)">
+                <div class="w-11 h-11 rounded-full bg-slate-100 text-slate-500 group-hover:bg-indigo-100 group-hover:text-indigo-600 flex items-center justify-center mx-auto mb-2 transition">
+                    <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+                </div>
+                <p class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 transition" id="csv-filename-label">
+                    Click to select CSV file or drag & drop here
+                </p>
+                <p class="text-[11px] text-slate-400 mt-1">Accepts standard .csv format</p>
+            </div>
+
+            <!-- Preview / Status -->
+            <div id="csv-preview-status" class="mt-3 text-xs hidden"></div>
+
+            <!-- Modal Action Buttons -->
+            <div class="mt-6 flex items-center justify-end gap-2.5">
+                <button type="button" onclick="closeImportLeadsModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold transition cursor-pointer">
+                    Cancel
+                </button>
+                <button type="button" id="start-import-btn" onclick="processLeadsCSVImport()" disabled class="px-5 py-2 rounded-xl bg-[#4f46e5] hover:bg-[#4338ca] disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-upload text-xs"></i>
+                    <span>Upload & Import</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="view-lead-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
@@ -1471,6 +1539,183 @@ function scheduleLeadModal(lead) {
     document.getElementById('sched-title').value = "Demo presentation for " + (lead.company || lead.name);
     document.getElementById('sched-assigned-to').value = lead.assigned_to || '';
     document.getElementById('schedule-lead-modal').classList.remove('hidden');
+}
+
+
+// ==========================================
+// CSV IMPORT MODAL & PROCESSOR
+// ==========================================
+let parsedLeadsData = [];
+
+function openImportLeadsModal() {
+    parsedLeadsData = [];
+    const modal = document.getElementById('import-leads-modal');
+    if (!modal) return;
+    const fileInput = document.getElementById('csv-file-input');
+    if (fileInput) fileInput.value = '';
+    const label = document.getElementById('csv-filename-label');
+    if (label) label.textContent = 'Click to select CSV file or drag & drop here';
+    const status = document.getElementById('csv-preview-status');
+    if (status) {
+        status.classList.add('hidden');
+        status.innerHTML = '';
+    }
+    const btn = document.getElementById('start-import-btn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-upload text-xs"></i><span>Upload & Import</span>`;
+    }
+    modal.classList.remove('hidden');
+}
+
+function closeImportLeadsModal() {
+    const modal = document.getElementById('import-leads-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function downloadLeadsSampleCSV() {
+    const headers = ["Firm Name", "Contact Person", "Phone", "Email", "City", "Source", "Status", "Priority", "Expected Value", "Remarks"];
+    const rows = [
+        ["Apex Technologies", "Rohan Verma", "+91 98765 43210", "rohan@apex.com", "Jaipur", "Website", "New", "High", "25000", "Interested in ERP package"],
+        ["Sharma Logistics", "Anita Sharma", "+91 91234 56789", "anita@sharma.in", "Delhi", "Referral", "Contacted", "Medium", "15000", "Follow up next Tuesday"]
+    ];
+    let csvContent = headers.join(",") + "\n";
+    rows.forEach(r => {
+        csvContent += r.map(field => `"${field.replace(/"/g, '""')}"`).join(",") + "\n";
+    });
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "sample_leads_template.csv";
+    link.click();
+}
+
+function handleCSVFileSelect(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const label = document.getElementById('csv-filename-label');
+    if (label) label.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result;
+        parsedLeadsData = parseCSVToLeads(text);
+        const status = document.getElementById('csv-preview-status');
+        const btn = document.getElementById('start-import-btn');
+        if (parsedLeadsData.length > 0) {
+            if (status) {
+                status.classList.remove('hidden');
+                status.className = 'mt-3 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl font-medium flex items-center gap-2';
+                status.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span>Found <strong>${parsedLeadsData.length}</strong> valid lead(s) ready to import.</span>`;
+            }
+            if (btn) btn.disabled = false;
+        } else {
+            if (status) {
+                status.classList.remove('hidden');
+                status.className = 'mt-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 p-2.5 rounded-xl font-medium flex items-center gap-2';
+                status.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600"></i><span>No valid rows found in CSV. Please verify column headers.</span>`;
+            }
+            if (btn) btn.disabled = true;
+        }
+    };
+    reader.readAsText(file);
+}
+
+function parseCSVToLeads(csvText) {
+    const lines = csvText.split(/\r\n|\n/).filter(line => line.trim().length > 0);
+    if (lines.length < 2) return [];
+
+    function parseCSVLine(line) {
+        const values = [];
+        let curr = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"') {
+                if (inQuotes && line[i+1] === '"') {
+                    curr += '"';
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+            } else if (char === ',' && !inQuotes) {
+                values.push(curr.trim());
+                curr = '';
+            } else {
+                curr += char;
+            }
+        }
+        values.push(curr.trim());
+        return values;
+    }
+
+    const rawHeaders = parseCSVLine(lines[0]).map(h => h.toLowerCase().replace(/[^a-z0-9]/g, ''));
+    const results = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        const row = parseCSVLine(lines[i]);
+        if (row.length === 0 || row.every(val => val === '')) continue;
+
+        let leadObj = {};
+        rawHeaders.forEach((header, idx) => {
+            const val = row[idx] || '';
+            if (header.includes('firm') || header.includes('company')) leadObj.company = val;
+            else if (header.includes('contact') || header.includes('name') || header.includes('person')) {
+                if (!leadObj.name) leadObj.name = val;
+            }
+            else if (header.includes('phone') || header.includes('mobile') || header.includes('contactno')) leadObj.phone = val;
+            else if (header.includes('email')) leadObj.email = val;
+            else if (header.includes('city') || header.includes('location')) leadObj.city = val;
+            else if (header.includes('source')) leadObj.source = val;
+            else if (header.includes('status')) leadObj.status = val;
+            else if (header.includes('priority')) leadObj.priority = val;
+            else if (header.includes('value') || header.includes('pro') || header.includes('basic') || header.includes('amount')) leadObj.expected_value = val;
+            else if (header.includes('remark') || header.includes('note')) leadObj.notes = val;
+        });
+
+        if (leadObj.name || leadObj.company || leadObj.phone) {
+            results.push(leadObj);
+        }
+    }
+    return results;
+}
+
+function processLeadsCSVImport() {
+    if (!parsedLeadsData || parsedLeadsData.length === 0) return;
+    const btn = document.getElementById('start-import-btn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i><span>Importing...</span>`;
+    }
+
+    let addedCount = 0;
+    parsedLeadsData.forEach(lead => {
+        if (window.HMCrmStore && window.HMCrmStore.saveLead) {
+            window.HMCrmStore.saveLead(lead);
+            addedCount++;
+        } else {
+            let stored = JSON.parse(localStorage.getItem('crm_leads') || '[]');
+            lead.id = Date.now() + Math.floor(Math.random() * 1000);
+            lead.lead_code = 'LEAD-' + Math.floor(1000 + Math.random() * 9000);
+            stored.unshift(lead);
+            localStorage.setItem('crm_leads', JSON.stringify(stored));
+            addedCount++;
+        }
+    });
+
+    closeImportLeadsModal();
+
+    if (window.HMCrmStore && window.HMCrmStore.renderAdminLeadsTable) {
+        window.HMCrmStore.renderAdminLeadsTable();
+    } else {
+        window.location.reload();
+    }
+
+    if (window.HMCrmStore && window.HMCrmStore.showToast) {
+        window.HMCrmStore.showToast(`🎉 Successfully imported ${addedCount} lead(s)!`, 'success');
+    } else {
+        alert(`🎉 Successfully imported ${addedCount} lead(s)!`);
+    }
 }
 
 function exportTableToCSV(tableId, filename) {
