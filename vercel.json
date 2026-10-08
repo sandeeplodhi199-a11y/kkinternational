@@ -14,7 +14,8 @@
     { "source": "/crm/employee/", "destination": "/crm/employee/dashboard", "permanent": false },
     { "source": "/crm/logout", "destination": "/crm/login", "permanent": false },
     { "source": "/crm/logout/", "destination": "/crm/login", "permanent": false },
-    { "source": "/login", "destination": "/crm/login", "permanent": false }
+    { "source": "/login", "destination": "/crm/login", "permanent": false },
+    { "source": "/crm/admin/team/:id(\\d+)", "destination": "/crm/admin/team", "permanent": false }
   ],
   "headers": [
     {

@@ -283,8 +283,26 @@
     }
 
     function confirmDelete(id, name) {
-        if (confirm('Are you sure you want to delete employee "' + name + '"?')) {
-            const form = document.getElementById('deleteEmpForm');
+        if (!confirm('Are you sure you want to delete employee "' + (name || 'this employee') + '"?')) {
+            return;
+        }
+
+        // Remove row with transition
+        const rows = document.querySelectorAll('table tbody tr');
+        rows.forEach(tr => {
+            const btn = tr.querySelector(`button[onclick*="confirmDelete('${id}'"]`) || 
+                        tr.querySelector(`button[onclick*="confirmDelete(\"${id}\""]`);
+            if (btn) {
+                tr.style.transition = 'all 0.3s ease';
+                tr.style.opacity = '0';
+                tr.style.transform = 'scale(0.95)';
+                setTimeout(() => tr.remove(), 300);
+            }
+        });
+
+        // Submit form in Laravel environment
+        const form = document.getElementById('deleteEmpForm');
+        if (form) {
             form.action = '/crm/admin/team/' + id;
             form.submit();
         }

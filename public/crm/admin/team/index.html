@@ -1156,12 +1156,85 @@
     }
 
     function confirmDelete(id, name) {
-        if (confirm('Are you sure you want to delete employee "' + name + '"?')) {
+        if (!confirm('Are you sure you want to delete employee "' + (name || 'this employee') + '"?')) {
+            return;
+        }
+
+        // 1. Mark as deleted in localStorage
+        try {
+            const delKey = 'hm_crm_deleted_team_ids';
+            let deletedIds = [];
+            try {
+                const rawDel = localStorage.getItem(delKey);
+                deletedIds = rawDel ? JSON.parse(rawDel) : [];
+            } catch(e) {}
+            if (!deletedIds.includes(String(id))) {
+                deletedIds.push(String(id));
+                localStorage.setItem(delKey, JSON.stringify(deletedIds));
+            }
+
+            const raw = localStorage.getItem('hm_crm_team_data');
+            if (raw) {
+                let list = JSON.parse(raw);
+                list = list.filter(item => String(item.id) !== String(id));
+                localStorage.setItem('hm_crm_team_data', JSON.stringify(list));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // 2. Remove row from table DOM with fade effect
+        const rows = document.querySelectorAll('table tbody tr');
+        rows.forEach(tr => {
+            const btn = tr.querySelector(`button[onclick*="confirmDelete('${id}'"]`) || 
+                        tr.querySelector(`button[onclick*="confirmDelete(\"${id}\""]`);
+            if (btn) {
+                tr.style.transition = 'all 0.3s ease';
+                tr.style.opacity = '0';
+                tr.style.transform = 'scale(0.95)';
+                setTimeout(() => tr.remove(), 300);
+            }
+        });
+
+        // 3. Show notification
+        if (typeof showToast === 'function') {
+            showToast(`Employee "${name || 'Selected'}" deleted successfully!`, 'info');
+        } else if (window.hmCrm && typeof window.hmCrm.showToast === 'function') {
+            window.hmCrm.showToast(`Employee "${name || 'Selected'}" deleted successfully!`, 'info');
+        } else {
+            alert(`Employee "${name}" deleted successfully!`);
+        }
+
+        // 4. If Laravel backend environment
+        const isLaravel = (typeof window.__IS_LARAVEL__ !== 'undefined' && window.__IS_LARAVEL__) || 
+                          (window.location.port === '8000');
+        if (isLaravel) {
             const form = document.getElementById('deleteEmpForm');
-            form.action = '/crm/admin/team/' + id;
-            form.submit();
+            if (form) {
+                form.action = '/crm/admin/team/' + id;
+                form.submit();
+            }
         }
     }
+
+    // Auto-remove previously deleted employees on load
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const delKey = 'hm_crm_deleted_team_ids';
+            const rawDel = localStorage.getItem(delKey);
+            const deletedIds = rawDel ? JSON.parse(rawDel) : [];
+            if (deletedIds.length > 0) {
+                const rows = document.querySelectorAll('table tbody tr');
+                rows.forEach(tr => {
+                    deletedIds.forEach(id => {
+                        const btn = tr.querySelector(`button[onclick*="confirmDelete('${id}'"]`) || 
+                                    tr.querySelector(`button[onclick*="confirmDelete(\"${id}\""]`);
+                        if (btn) tr.remove();
+                    });
+                });
+            }
+        } catch(e) {}
+    });
 </script>
         </main>
     </div>
