@@ -617,35 +617,268 @@
         return deal;
     }
 
+    // ==========================================
+    // 4. DEALS CONTROLLER & KANBAN DRAG-AND-DROP
+    // ==========================================
+    window.draggedDealId = null;
+    window.draggedCardEl = null;
+
+    window.dragDeal = function(ev, dealId) {
+        window.draggedDealId = String(dealId);
+        window.draggedCardEl = ev.target.closest('[draggable="true"]') || ev.target;
+        if (ev.dataTransfer) {
+            ev.dataTransfer.setData("text/plain", String(dealId));
+            ev.dataTransfer.effectAllowed = "move";
+        }
+        if (window.draggedCardEl) {
+            window.draggedCardEl.style.opacity = '0.4';
+            window.draggedCardEl.classList.add('ring-2', 'ring-emerald-400');
+        }
+    };
+
+    window.dragDealEnd = function(ev) {
+        if (window.draggedCardEl) {
+            window.draggedCardEl.style.opacity = '1';
+            window.draggedCardEl.classList.remove('ring-2', 'ring-emerald-400');
+        }
+        document.querySelectorAll('.stage-column-box, div[ondrop]').forEach(c => {
+            c.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        });
+        window.draggedDealId = null;
+        window.draggedCardEl = null;
+    };
+
+    window.allowDealDrop = function(ev, stage) {
+        ev.preventDefault();
+        if (ev.dataTransfer) {
+            ev.dataTransfer.dropEffect = "move";
+        }
+        const col = ev.currentTarget.closest('.stage-column-box') || ev.currentTarget;
+        if (col && !col.classList.contains('ring-emerald-500')) {
+            col.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        }
+    };
+
+    window.leaveDealDrop = function(ev, stage) {
+        const col = ev.currentTarget.closest('.stage-column-box') || ev.currentTarget;
+        if (col && (!ev.relatedTarget || !col.contains(ev.relatedTarget))) {
+            col.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        }
+    };
+
+    window.updateColumnEmptyStatesAndCounts = function() {
+        const board = document.getElementById('kanban-scroll-wrapper');
+        if (!board) return;
+
+        let totalPipeline = 0;
+        let wonTotal = 0;
+
+        const columns = board.querySelectorAll('.stage-column-box, div[ondrop]');
+        columns.forEach(col => {
+            const list = col.querySelector('.column-cards-list');
+            if (!list) return;
+
+            const cards = list.querySelectorAll('.crm-card[draggable="true"], .custom-injected-deal');
+            const placeholder = list.querySelector('.empty-stage-placeholder, div.border-dashed');
+
+            if (cards.length > 0) {
+                if (placeholder) placeholder.style.display = 'none';
+            } else {
+                if (placeholder) placeholder.style.display = 'block';
+            }
+
+            // Update badge count
+            const countBadge = col.querySelector('.stage-count-badge, span.rounded-full.border');
+            if (countBadge) {
+                countBadge.textContent = cards.length;
+            }
+
+            // Calculate total value for this stage
+            let stageTotal = 0;
+            cards.forEach(card => {
+                const valAttr = card.getAttribute('data-deal-value');
+                if (valAttr) {
+                    stageTotal += Number(valAttr) || 0;
+                } else {
+                    const priceSpan = card.querySelector('.font-mono, span.font-extrabold, .text-slate-800');
+                    if (priceSpan) {
+                        const num = parseFloat(priceSpan.textContent.replace(/[^0-9.]/g, '')) || 0;
+                        stageTotal += num;
+                    }
+                }
+            });
+
+            const totalEl = col.querySelector('.stage-total-val, div.text-\\[10px\\].font-bold, div[class*="text-slate-400 mb-3"]');
+            if (totalEl) {
+                totalEl.textContent = '₹' + Math.round(stageTotal).toLocaleString('en-IN');
+            }
+
+            totalPipeline += stageTotal;
+            const stageName = (col.getAttribute('data-stage') || '').toLowerCase();
+            if (stageName === 'won') {
+                wonTotal += stageTotal;
+            }
+        });
+
+        // Top Header pipeline value
+        const activePipelines = document.querySelectorAll('.active-pipeline-value-display');
+        activePipelines.forEach(el => {
+            el.textContent = '₹' + Math.round(totalPipeline).toLocaleString('en-IN');
+        });
+        const wonDisplays = document.querySelectorAll('.won-deals-value-display');
+        wonDisplays.forEach(el => {
+            el.textContent = '₹' + Math.round(wonTotal).toLocaleString('en-IN');
+        });
+    };
+
+    window.dropDeal = function(ev, newStage) {
+        ev.preventDefault();
+        const col = ev.currentTarget.closest('.stage-column-box') || ev.currentTarget;
+        if (col) {
+            col.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        }
+
+        const dealId = window.draggedDealId || (ev.dataTransfer ? ev.dataTransfer.getData("text/plain") : null);
+        if (!dealId) return;
+
+        // 1. Locate the card element
+        const card = document.getElementById('deal-card-' + dealId) || 
+                     document.querySelector(`[data-deal-id="${dealId}"]`) ||
+                     window.draggedCardEl;
+        if (!card) return;
+
+        // 2. Locate target column
+        const board = document.getElementById('kanban-scroll-wrapper');
+        if (!board) return;
+
+        let targetCol = board.querySelector(`.stage-column-box[data-stage="${newStage}"]`);
+        if (!targetCol) {
+            targetCol = Array.from(board.querySelectorAll('.stage-column-box, div[ondrop]')).find(c => {
+                const st = c.getAttribute('data-stage') || '';
+                const ondropStr = c.getAttribute('ondrop') || '';
+                return st.toLowerCase() === newStage.toLowerCase() || ondropStr.toLowerCase().includes(newStage.toLowerCase());
+            });
+        }
+        if (!targetCol) return;
+
+        const targetList = targetCol.querySelector('.column-cards-list');
+        if (!targetList) return;
+
+        // 3. Move Card in DOM immediately
+        targetList.insertBefore(card, targetList.firstChild);
+
+        // 4. Update empty state placeholders and count totals
+        window.updateColumnEmptyStatesAndCounts();
+
+        // 5. Update stage in localStorage
+        try {
+            const raw = localStorage.getItem('hm_crm_deals_data');
+            if (raw) {
+                const stored = JSON.parse(raw);
+                let changed = false;
+                stored.forEach(d => {
+                    if (String(d.id) === String(dealId)) {
+                        d.stage = newStage;
+                        if (newStage === 'Won') d.probability = 100;
+                        if (newStage === 'Lost') d.probability = 0;
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    localStorage.setItem('hm_crm_deals_data', JSON.stringify(stored));
+                }
+            }
+        } catch(e) { console.error('LocalStorage update error', e); }
+
+        // 6. Backend Sync (Non-blocking)
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (csrf && !isNaN(dealId)) {
+            fetch(`/crm/admin/deals/${dealId}/stage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf
+                },
+                body: JSON.stringify({ stage: newStage })
+            }).catch(e => console.log('Laravel sync ignored'));
+        }
+
+        if (typeof syncToDatabase === 'function') {
+            syncToDatabase({ action: 'update_deal_stage', id: dealId, stage: newStage });
+        }
+
+        if (typeof showToast === 'function') {
+            showToast(`✅ Deal moved to ${newStage}!`, 'success');
+        }
+
+        window.dragDealEnd(ev);
+    };
+
     function renderDealsTable() {
         if (!window.location.pathname.includes('/deals')) return;
 
         const stored = getList(STORAGE_KEYS.deals);
-        if (!stored.length) return;
 
         // Admin Deals (Kanban)
         const wrapper = document.getElementById('kanban-scroll-wrapper');
         if (wrapper) {
             wrapper.querySelectorAll('.custom-injected-deal').forEach(el => el.remove());
-            stored.slice().reverse().forEach(deal => {
-                const card = document.createElement('div');
-                card.className = 'custom-injected-deal crm-card p-4 border border-emerald-300 bg-emerald-50/30 rounded-2xl shadow-sm space-y-2.5';
-                card.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">NEW DEAL</span>
-                        <span class="text-xs font-black text-slate-800 font-mono">₹${Number(deal.value).toLocaleString('en-IN')}</span>
-                    </div>
-                    <h4 class="text-xs font-black text-slate-900">${deal.title}</h4>
-                    <div class="text-[11px] text-slate-500 font-semibold flex items-center justify-between">
-                        <span>${deal.assigned_name}</span>
-                        <span>${deal.probability}% Prob.</span>
-                    </div>
-                `;
-                const firstColumn = wrapper.querySelector('.column-cards-list');
-                if (firstColumn) {
-                    firstColumn.insertBefore(card, firstColumn.firstChild);
-                }
-            });
+            if (stored.length) {
+                stored.slice().reverse().forEach(deal => {
+                    const targetStage = (deal.stage || 'New').trim();
+
+                    // Find corresponding column by data-stage or ondrop text
+                    let targetCol = wrapper.querySelector(`.stage-column-box[data-stage="${targetStage}"]`);
+                    if (!targetCol) {
+                        targetCol = Array.from(wrapper.querySelectorAll('.stage-column-box, div[ondrop]')).find(c => {
+                            const st = c.getAttribute('data-stage') || '';
+                            const ondropStr = c.getAttribute('ondrop') || '';
+                            return st.toLowerCase() === targetStage.toLowerCase() || ondropStr.toLowerCase().includes(targetStage.toLowerCase());
+                        });
+                    }
+                    if (!targetCol) {
+                        targetCol = wrapper.querySelector('.stage-column-box, div[ondrop]') || wrapper.firstElementChild;
+                    }
+
+                    if (targetCol) {
+                        const targetList = targetCol.querySelector('.column-cards-list');
+                        if (targetList) {
+                            const card = document.createElement('div');
+                            card.id = `deal-card-${deal.id}`;
+                            card.setAttribute('data-deal-id', deal.id);
+                            card.setAttribute('data-deal-value', deal.value || 0);
+                            card.setAttribute('draggable', 'true');
+                            card.setAttribute('ondragstart', `dragDeal(event, '${deal.id}')`);
+                            card.setAttribute('ondragend', `dragDealEnd(event)`);
+                            card.className = 'custom-injected-deal crm-card p-4 border border-emerald-300 bg-emerald-50/30 rounded-2xl shadow-sm space-y-2.5 cursor-grab active:cursor-grabbing hover:border-emerald-400 transition select-none';
+                            card.innerHTML = `
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">NEW DEAL</span>
+                                    <span class="text-xs font-black text-slate-800 font-mono">₹${Number(deal.value).toLocaleString('en-IN')}</span>
+                                </div>
+                                <h4 class="text-xs font-black text-slate-900">${deal.title}</h4>
+                                <div class="text-[11px] text-slate-500 font-semibold flex items-center justify-between">
+                                    <span>${deal.assigned_name || 'Admin'}</span>
+                                    <span>${deal.probability || 50}% Prob.</span>
+                                </div>
+                            `;
+
+                            // Direct listeners
+                            card.addEventListener('dragstart', (e) => {
+                                window.dragDeal(e, deal.id);
+                            });
+                            card.addEventListener('dragend', (e) => {
+                                window.dragDealEnd(e);
+                            });
+
+                            targetList.insertBefore(card, targetList.firstChild);
+                        }
+                    }
+                });
+            }
+
+            // Always update empty states, counts and totals
+            window.updateColumnEmptyStatesAndCounts();
         }
 
         // Employee Deals (Grid)

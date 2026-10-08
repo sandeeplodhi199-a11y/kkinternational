@@ -169,6 +169,17 @@
         const tbody = document.querySelector('#all-leads-table tbody');
         if (!tbody) return;
 
+        // Filter out any deleted leads from HTML static table
+        const deletedIds = getList('hm_crm_deleted_lead_ids');
+        if (deletedIds && deletedIds.length) {
+            tbody.querySelectorAll('tr').forEach(tr => {
+                const chk = tr.querySelector('input[name="lead_ids[]"]');
+                if (chk && deletedIds.includes(String(chk.value))) {
+                    tr.remove();
+                }
+            });
+        }
+
         const storedLeads = getList(STORAGE_KEYS.leads);
         if (!storedLeads.length) return;
 
@@ -176,7 +187,8 @@
 
         const totalHeader = document.querySelector('h1 span.rounded-full');
         if (totalHeader) {
-            totalHeader.textContent = `${2 + storedLeads.length} total`;
+            const currentRows = tbody.querySelectorAll('tr').length;
+            totalHeader.textContent = `${currentRows + storedLeads.length} total`;
         }
 
         const statusBadges = {
@@ -189,6 +201,9 @@
         };
 
         storedLeads.slice().reverse().forEach(lead => {
+            if (deletedIds && (deletedIds.includes(String(lead.id)) || deletedIds.includes(String(lead.lead_code)))) {
+                return;
+            }
             const tr = document.createElement('tr');
             tr.className = 'custom-injected-lead hover:bg-emerald-50/60 transition bg-emerald-50/20';
 
@@ -199,6 +214,7 @@
             const agentStr = (lead.agent && lead.agent !== '-') ? lead.agent : '-';
             const callbackStr = lead.follow_up_date || lead.callback || '-';
             const leadDataSafe = JSON.stringify(lead).replace(/"/g, '&quot;');
+            const safeName = (lead.name || lead.lead_code || 'Lead').replace(/'/g, "\\'");
 
             tr.innerHTML = `
                 <td class="py-2.5 px-3 text-center">
@@ -228,11 +244,14 @@
                 <td class="py-2.5 px-3 text-slate-500 max-w-xs truncate text-[11px]">${lead.notes || '-'}</td>
                 <td class="py-2.5 px-3 text-center">
                     <div class="inline-flex items-center justify-center gap-1">
-                        <button type="button" onclick="if(window.viewLeadModal) { viewLeadModal(${leadDataSafe}); } else { alert('Lead Details:\\nName: ${lead.name}\\nPhone: ${lead.phone}\\nStatus: ${lead.status}'); }" title="View" class="w-6 h-6 rounded bg-[#4f46e5] hover:bg-[#4338ca] text-white flex items-center justify-center text-[10px] transition shadow-xs">
+                        <button type="button" onclick="if(window.viewLeadModal) { viewLeadModal(${leadDataSafe}); } else { alert('Lead Details:\\nName: ${lead.name}\\nPhone: ${lead.phone}\\nStatus: ${lead.status}'); }" title="View" class="w-6 h-6 rounded bg-[#4f46e5] hover:bg-[#4338ca] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
                             <i class="fa-solid fa-eye"></i>
                         </button>
-                        <button type="button" onclick="if(window.editLeadModal) { editLeadModal(${leadDataSafe}); } else { alert('Editing ${lead.name}'); }" title="Edit" class="w-6 h-6 rounded bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center text-[10px] transition shadow-xs">
+                        <button type="button" onclick="if(window.editLeadModal) { editLeadModal(${leadDataSafe}); } else { alert('Editing ${lead.name}'); }" title="Edit" class="w-6 h-6 rounded bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
                             <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button type="button" onclick="window.deleteLeadConfirm ? deleteLeadConfirm('${lead.id}', '${safeName}') : null" title="Delete Lead" class="w-6 h-6 rounded bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
+                            <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
                 </td>
@@ -241,6 +260,89 @@
             tbody.insertBefore(tr, tbody.firstChild);
         });
     }
+
+    function deleteLeadConfirm(id, name) {
+        if (!confirm('Are you sure you want to delete lead "' + (name || 'this lead') + '"?')) {
+            return;
+        }
+
+        // 1. Mark as deleted in storage
+        try {
+            const delKey = 'hm_crm_deleted_lead_ids';
+            let deletedIds = [];
+            try {
+                const rawDel = localStorage.getItem(delKey);
+                deletedIds = rawDel ? JSON.parse(rawDel) : [];
+            } catch(e) {}
+            if (!deletedIds.includes(String(id))) {
+                deletedIds.push(String(id));
+                localStorage.setItem(delKey, JSON.stringify(deletedIds));
+            }
+
+            const raw = localStorage.getItem('hm_crm_leads_data');
+            if (raw) {
+                let list = JSON.parse(raw);
+                list = list.filter(item => String(item.id) !== String(id) && String(item.lead_code) !== String(id));
+                localStorage.setItem('hm_crm_leads_data', JSON.stringify(list));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // 2. Sync to Backend sync.php if available
+        try {
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete_lead', lead_id: id })
+            }).catch(() => {});
+        } catch (e) {}
+
+        // 3. Remove corresponding row immediately from DOM
+        const rows = document.querySelectorAll('#all-leads-table tbody tr, table tbody tr');
+        rows.forEach(tr => {
+            const chk = tr.querySelector('input[type="checkbox"][name="lead_ids[]"]');
+            if (chk && (String(chk.value) === String(id))) {
+                tr.remove();
+            }
+        });
+
+        // 4. Update count header if present
+        const totalHeader = document.querySelector('h1 span.rounded-full');
+        if (totalHeader) {
+            const currentRows = document.querySelectorAll('#all-leads-table tbody tr').length;
+            totalHeader.textContent = `${currentRows} total`;
+        }
+
+        // 5. Toast notification
+        showToast(`🗑️ Lead "${name || 'Selected'}" deleted successfully!`, 'info');
+
+        // 6. If Laravel form exists
+        const delForm = document.getElementById('deleteLeadForm');
+        if (delForm && typeof window.__IS_LARAVEL__ !== 'undefined' && window.__IS_LARAVEL__) {
+            delForm.action = '/crm/admin/leads/' + id;
+            delForm.submit();
+        }
+    }
+    window.deleteLeadConfirm = deleteLeadConfirm;
+
+    function executeDeleteSelected() {
+        const checked = document.querySelectorAll('.lead-checkbox:checked');
+        if (!checked.length) {
+            showToast('Please select at least one lead to delete.', 'error');
+            return;
+        }
+        if (!confirm(`Are you sure you want to delete ${checked.length} selected lead(s)?`)) {
+            return;
+        }
+        checked.forEach(chk => {
+            const id = chk.value;
+            deleteLeadConfirm(id, 'Lead ' + id);
+        });
+        showToast(`🗑️ ${checked.length} lead(s) deleted successfully!`, 'info');
+        if (typeof updateSelectedCount === 'function') updateSelectedCount();
+    }
+    window.executeDeleteSelected = executeDeleteSelected;
 
     function renderEmployeeLeadsTable() {
         if (!window.location.pathname.includes('/employee/leads')) return;
@@ -515,35 +617,268 @@
         return deal;
     }
 
+    // ==========================================
+    // 4. DEALS CONTROLLER & KANBAN DRAG-AND-DROP
+    // ==========================================
+    window.draggedDealId = null;
+    window.draggedCardEl = null;
+
+    window.dragDeal = function(ev, dealId) {
+        window.draggedDealId = String(dealId);
+        window.draggedCardEl = ev.target.closest('[draggable="true"]') || ev.target;
+        if (ev.dataTransfer) {
+            ev.dataTransfer.setData("text/plain", String(dealId));
+            ev.dataTransfer.effectAllowed = "move";
+        }
+        if (window.draggedCardEl) {
+            window.draggedCardEl.style.opacity = '0.4';
+            window.draggedCardEl.classList.add('ring-2', 'ring-emerald-400');
+        }
+    };
+
+    window.dragDealEnd = function(ev) {
+        if (window.draggedCardEl) {
+            window.draggedCardEl.style.opacity = '1';
+            window.draggedCardEl.classList.remove('ring-2', 'ring-emerald-400');
+        }
+        document.querySelectorAll('.stage-column-box, div[ondrop]').forEach(c => {
+            c.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        });
+        window.draggedDealId = null;
+        window.draggedCardEl = null;
+    };
+
+    window.allowDealDrop = function(ev, stage) {
+        ev.preventDefault();
+        if (ev.dataTransfer) {
+            ev.dataTransfer.dropEffect = "move";
+        }
+        const col = ev.currentTarget.closest('.stage-column-box') || ev.currentTarget;
+        if (col && !col.classList.contains('ring-emerald-500')) {
+            col.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        }
+    };
+
+    window.leaveDealDrop = function(ev, stage) {
+        const col = ev.currentTarget.closest('.stage-column-box') || ev.currentTarget;
+        if (col && (!ev.relatedTarget || !col.contains(ev.relatedTarget))) {
+            col.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        }
+    };
+
+    window.updateColumnEmptyStatesAndCounts = function() {
+        const board = document.getElementById('kanban-scroll-wrapper');
+        if (!board) return;
+
+        let totalPipeline = 0;
+        let wonTotal = 0;
+
+        const columns = board.querySelectorAll('.stage-column-box, div[ondrop]');
+        columns.forEach(col => {
+            const list = col.querySelector('.column-cards-list');
+            if (!list) return;
+
+            const cards = list.querySelectorAll('.crm-card[draggable="true"], .custom-injected-deal');
+            const placeholder = list.querySelector('.empty-stage-placeholder, div.border-dashed');
+
+            if (cards.length > 0) {
+                if (placeholder) placeholder.style.display = 'none';
+            } else {
+                if (placeholder) placeholder.style.display = 'block';
+            }
+
+            // Update badge count
+            const countBadge = col.querySelector('.stage-count-badge, span.rounded-full.border');
+            if (countBadge) {
+                countBadge.textContent = cards.length;
+            }
+
+            // Calculate total value for this stage
+            let stageTotal = 0;
+            cards.forEach(card => {
+                const valAttr = card.getAttribute('data-deal-value');
+                if (valAttr) {
+                    stageTotal += Number(valAttr) || 0;
+                } else {
+                    const priceSpan = card.querySelector('.font-mono, span.font-extrabold, .text-slate-800');
+                    if (priceSpan) {
+                        const num = parseFloat(priceSpan.textContent.replace(/[^0-9.]/g, '')) || 0;
+                        stageTotal += num;
+                    }
+                }
+            });
+
+            const totalEl = col.querySelector('.stage-total-val, div.text-\\[10px\\].font-bold, div[class*="text-slate-400 mb-3"]');
+            if (totalEl) {
+                totalEl.textContent = '₹' + Math.round(stageTotal).toLocaleString('en-IN');
+            }
+
+            totalPipeline += stageTotal;
+            const stageName = (col.getAttribute('data-stage') || '').toLowerCase();
+            if (stageName === 'won') {
+                wonTotal += stageTotal;
+            }
+        });
+
+        // Top Header pipeline value
+        const activePipelines = document.querySelectorAll('.active-pipeline-value-display');
+        activePipelines.forEach(el => {
+            el.textContent = '₹' + Math.round(totalPipeline).toLocaleString('en-IN');
+        });
+        const wonDisplays = document.querySelectorAll('.won-deals-value-display');
+        wonDisplays.forEach(el => {
+            el.textContent = '₹' + Math.round(wonTotal).toLocaleString('en-IN');
+        });
+    };
+
+    window.dropDeal = function(ev, newStage) {
+        ev.preventDefault();
+        const col = ev.currentTarget.closest('.stage-column-box') || ev.currentTarget;
+        if (col) {
+            col.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50/60');
+        }
+
+        const dealId = window.draggedDealId || (ev.dataTransfer ? ev.dataTransfer.getData("text/plain") : null);
+        if (!dealId) return;
+
+        // 1. Locate the card element
+        const card = document.getElementById('deal-card-' + dealId) || 
+                     document.querySelector(`[data-deal-id="${dealId}"]`) ||
+                     window.draggedCardEl;
+        if (!card) return;
+
+        // 2. Locate target column
+        const board = document.getElementById('kanban-scroll-wrapper');
+        if (!board) return;
+
+        let targetCol = board.querySelector(`.stage-column-box[data-stage="${newStage}"]`);
+        if (!targetCol) {
+            targetCol = Array.from(board.querySelectorAll('.stage-column-box, div[ondrop]')).find(c => {
+                const st = c.getAttribute('data-stage') || '';
+                const ondropStr = c.getAttribute('ondrop') || '';
+                return st.toLowerCase() === newStage.toLowerCase() || ondropStr.toLowerCase().includes(newStage.toLowerCase());
+            });
+        }
+        if (!targetCol) return;
+
+        const targetList = targetCol.querySelector('.column-cards-list');
+        if (!targetList) return;
+
+        // 3. Move Card in DOM immediately
+        targetList.insertBefore(card, targetList.firstChild);
+
+        // 4. Update empty state placeholders and count totals
+        window.updateColumnEmptyStatesAndCounts();
+
+        // 5. Update stage in localStorage
+        try {
+            const raw = localStorage.getItem('hm_crm_deals_data');
+            if (raw) {
+                const stored = JSON.parse(raw);
+                let changed = false;
+                stored.forEach(d => {
+                    if (String(d.id) === String(dealId)) {
+                        d.stage = newStage;
+                        if (newStage === 'Won') d.probability = 100;
+                        if (newStage === 'Lost') d.probability = 0;
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    localStorage.setItem('hm_crm_deals_data', JSON.stringify(stored));
+                }
+            }
+        } catch(e) { console.error('LocalStorage update error', e); }
+
+        // 6. Backend Sync (Non-blocking)
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (csrf && !isNaN(dealId)) {
+            fetch(`/crm/admin/deals/${dealId}/stage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf
+                },
+                body: JSON.stringify({ stage: newStage })
+            }).catch(e => console.log('Laravel sync ignored'));
+        }
+
+        if (typeof syncToDatabase === 'function') {
+            syncToDatabase({ action: 'update_deal_stage', id: dealId, stage: newStage });
+        }
+
+        if (typeof showToast === 'function') {
+            showToast(`✅ Deal moved to ${newStage}!`, 'success');
+        }
+
+        window.dragDealEnd(ev);
+    };
+
     function renderDealsTable() {
         if (!window.location.pathname.includes('/deals')) return;
 
         const stored = getList(STORAGE_KEYS.deals);
-        if (!stored.length) return;
 
         // Admin Deals (Kanban)
         const wrapper = document.getElementById('kanban-scroll-wrapper');
         if (wrapper) {
             wrapper.querySelectorAll('.custom-injected-deal').forEach(el => el.remove());
-            stored.slice().reverse().forEach(deal => {
-                const card = document.createElement('div');
-                card.className = 'custom-injected-deal crm-card p-4 border border-emerald-300 bg-emerald-50/30 rounded-2xl shadow-sm space-y-2.5';
-                card.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">NEW DEAL</span>
-                        <span class="text-xs font-black text-slate-800 font-mono">₹${Number(deal.value).toLocaleString('en-IN')}</span>
-                    </div>
-                    <h4 class="text-xs font-black text-slate-900">${deal.title}</h4>
-                    <div class="text-[11px] text-slate-500 font-semibold flex items-center justify-between">
-                        <span>${deal.assigned_name}</span>
-                        <span>${deal.probability}% Prob.</span>
-                    </div>
-                `;
-                const firstColumn = wrapper.querySelector('.column-cards-list');
-                if (firstColumn) {
-                    firstColumn.insertBefore(card, firstColumn.firstChild);
-                }
-            });
+            if (stored.length) {
+                stored.slice().reverse().forEach(deal => {
+                    const targetStage = (deal.stage || 'New').trim();
+
+                    // Find corresponding column by data-stage or ondrop text
+                    let targetCol = wrapper.querySelector(`.stage-column-box[data-stage="${targetStage}"]`);
+                    if (!targetCol) {
+                        targetCol = Array.from(wrapper.querySelectorAll('.stage-column-box, div[ondrop]')).find(c => {
+                            const st = c.getAttribute('data-stage') || '';
+                            const ondropStr = c.getAttribute('ondrop') || '';
+                            return st.toLowerCase() === targetStage.toLowerCase() || ondropStr.toLowerCase().includes(targetStage.toLowerCase());
+                        });
+                    }
+                    if (!targetCol) {
+                        targetCol = wrapper.querySelector('.stage-column-box, div[ondrop]') || wrapper.firstElementChild;
+                    }
+
+                    if (targetCol) {
+                        const targetList = targetCol.querySelector('.column-cards-list');
+                        if (targetList) {
+                            const card = document.createElement('div');
+                            card.id = `deal-card-${deal.id}`;
+                            card.setAttribute('data-deal-id', deal.id);
+                            card.setAttribute('data-deal-value', deal.value || 0);
+                            card.setAttribute('draggable', 'true');
+                            card.setAttribute('ondragstart', `dragDeal(event, '${deal.id}')`);
+                            card.setAttribute('ondragend', `dragDealEnd(event)`);
+                            card.className = 'custom-injected-deal crm-card p-4 border border-emerald-300 bg-emerald-50/30 rounded-2xl shadow-sm space-y-2.5 cursor-grab active:cursor-grabbing hover:border-emerald-400 transition select-none';
+                            card.innerHTML = `
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">NEW DEAL</span>
+                                    <span class="text-xs font-black text-slate-800 font-mono">₹${Number(deal.value).toLocaleString('en-IN')}</span>
+                                </div>
+                                <h4 class="text-xs font-black text-slate-900">${deal.title}</h4>
+                                <div class="text-[11px] text-slate-500 font-semibold flex items-center justify-between">
+                                    <span>${deal.assigned_name || 'Admin'}</span>
+                                    <span>${deal.probability || 50}% Prob.</span>
+                                </div>
+                            `;
+
+                            // Direct listeners
+                            card.addEventListener('dragstart', (e) => {
+                                window.dragDeal(e, deal.id);
+                            });
+                            card.addEventListener('dragend', (e) => {
+                                window.dragDealEnd(e);
+                            });
+
+                            targetList.insertBefore(card, targetList.firstChild);
+                        }
+                    }
+                });
+            }
+
+            // Always update empty states, counts and totals
+            window.updateColumnEmptyStatesAndCounts();
         }
 
         // Employee Deals (Grid)
@@ -681,30 +1016,166 @@
         if (!tbody) return;
 
         const stored = getList(STORAGE_KEYS.payments);
-        if (!stored.length) return;
+        if (stored.length) {
+            tbody.querySelectorAll('.custom-injected-payment').forEach(el => el.remove());
 
-        tbody.querySelectorAll('.custom-injected-payment').forEach(el => el.remove());
+            stored.slice().reverse().forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = 'custom-injected-payment hover:bg-emerald-50/60 transition bg-emerald-50/20';
+                tr.setAttribute('data-payment-date', p.payment_date || '');
+                tr.setAttribute('data-amount', p.amount || 0);
+                tr.setAttribute('data-status', p.status || 'Paid');
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono font-bold text-emerald-700 flex items-center gap-1.5">
+                        <span>${p.payment_no}</span>
+                        <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                    </td>
+                    <td class="py-3 px-4 font-black text-slate-800">Account #${p.customer_id || '9'}</td>
+                    <td class="py-3 px-4 font-black text-emerald-800">₹${Number(p.amount).toLocaleString('en-IN')}</td>
+                    <td class="py-3 px-4 font-mono text-slate-700" data-payment-date="${p.payment_date}">${p.payment_date}</td>
+                    <td class="py-3 px-4 text-slate-700 font-semibold">${p.payment_method}</td>
+                    <td class="py-3 px-4 font-mono text-xs text-slate-500">${p.transaction_ref || '-'}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${p.status}</span>
+                    </td>
+                `;
+                tbody.insertBefore(tr, tbody.firstChild);
+            });
+        }
 
-        stored.slice().reverse().forEach(p => {
-            const tr = document.createElement('tr');
-            tr.className = 'custom-injected-payment hover:bg-emerald-50/60 transition bg-emerald-50/20';
-            tr.innerHTML = `
-                <td class="py-3 px-4 font-mono font-bold text-emerald-700 flex items-center gap-1.5">
-                    <span>${p.payment_no}</span>
-                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
-                </td>
-                <td class="py-3 px-4 font-black text-slate-800">Account #${p.customer_id || '9'}</td>
-                <td class="py-3 px-4 font-black text-emerald-800">₹${Number(p.amount).toLocaleString('en-IN')}</td>
-                <td class="py-3 px-4 font-mono text-slate-700">${p.payment_date}</td>
-                <td class="py-3 px-4 text-slate-700 font-semibold">${p.payment_method}</td>
-                <td class="py-3 px-4 font-mono text-xs text-slate-500">${p.transaction_ref || '-'}</td>
-                <td class="py-3 px-4">
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${p.status}</span>
-                </td>
-            `;
-            tbody.insertBefore(tr, tbody.firstChild);
-        });
+        // Apply period filter
+        filterPaymentsByPeriod();
     }
+
+    function filterPaymentsByPeriod() {
+        if (!window.location.pathname.includes('/payments')) return;
+        const yrSelect = document.getElementById('payment-filter-year');
+        const moSelect = document.getElementById('payment-filter-month');
+        if (!yrSelect || !moSelect) return;
+
+        // Sync with URL params on load if values not explicitly selected
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('year') && !yrSelect.value) {
+            yrSelect.value = urlParams.get('year');
+        }
+        if (urlParams.has('month') && !moSelect.value) {
+            moSelect.value = urlParams.get('month');
+        }
+
+        const selectedYr = yrSelect.value;
+        const selectedMo = moSelect.value;
+
+        // Update URL query string seamlessly
+        if (window.history && window.history.replaceState) {
+            const currentUrl = new URL(window.location.href);
+            if (selectedYr) currentUrl.searchParams.set('year', selectedYr);
+            else currentUrl.searchParams.delete('year');
+            if (selectedMo) currentUrl.searchParams.set('month', selectedMo);
+            else currentUrl.searchParams.delete('month');
+            window.history.replaceState({}, '', currentUrl);
+        }
+
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+
+        const rows = tbody.querySelectorAll('tr:not(.period-empty-placeholder)');
+        let visibleCount = 0;
+        let totalCleared = 0;
+        let totalPending = 0;
+
+        rows.forEach(tr => {
+            if (tr.querySelector('td[colspan]')) {
+                tr.style.display = 'none';
+                return;
+            }
+
+            const dateCell = tr.querySelector('[data-payment-date]') || tr.cells[3];
+            const amountCell = tr.querySelector('[data-amount]') || tr.cells[2];
+            const statusCell = tr.querySelector('[data-status]') || tr.cells[6];
+            if (!dateCell) return;
+
+            let dateStr = tr.getAttribute('data-payment-date') || dateCell.getAttribute('data-payment-date') || dateCell.textContent.trim();
+            let rowYear = null;
+            let rowMonth = null;
+
+            if (dateStr) {
+                const parts = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+                if (parts) {
+                    rowYear = parseInt(parts[1], 10);
+                    rowMonth = parseInt(parts[2], 10);
+                } else {
+                    const parsed = new Date(dateStr);
+                    if (!isNaN(parsed.getTime())) {
+                        rowYear = parsed.getFullYear();
+                        rowMonth = parsed.getMonth() + 1;
+                    }
+                }
+            }
+
+            let match = true;
+            if (selectedYr && rowYear && String(rowYear) !== String(selectedYr)) {
+                match = false;
+            }
+            if (selectedMo && rowMonth && String(rowMonth) !== String(selectedMo)) {
+                match = false;
+            }
+
+            if (match) {
+                tr.style.display = '';
+                visibleCount++;
+                let amt = 0;
+                if (tr.hasAttribute('data-amount')) {
+                    amt = parseFloat(tr.getAttribute('data-amount')) || 0;
+                } else if (amountCell) {
+                    amt = parseFloat(amountCell.textContent.replace(/[^\d.]/g, '')) || 0;
+                }
+                const st = (tr.getAttribute('data-status') || (statusCell ? statusCell.textContent : '')).trim().toLowerCase();
+                if (st.includes('paid')) {
+                    totalCleared += amt;
+                } else if (st.includes('pending')) {
+                    totalPending += amt;
+                }
+            } else {
+                tr.style.display = 'none';
+            }
+        });
+
+        // Update KPI cards
+        const clearedEl = document.getElementById('kpi-cleared-revenue');
+        const pendingEl = document.getElementById('kpi-outstanding-invoices');
+        if (clearedEl) {
+            clearedEl.textContent = '₹' + totalCleared.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        if (pendingEl) {
+            pendingEl.textContent = '₹' + totalPending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Empty state placeholder
+        let placeholder = tbody.querySelector('.period-empty-placeholder');
+        if (visibleCount === 0) {
+            if (!placeholder) {
+                placeholder = document.createElement('tr');
+                placeholder.className = 'period-empty-placeholder';
+                placeholder.innerHTML = '<td colspan="7" class="text-center py-8 text-slate-400 font-medium">No payment receipts found for selected period.</td>';
+                tbody.appendChild(placeholder);
+            } else {
+                placeholder.style.display = '';
+            }
+        } else if (placeholder) {
+            placeholder.style.display = 'none';
+        }
+    }
+
+    function resetPaymentPeriodFilter() {
+        const yrSelect = document.getElementById('payment-filter-year');
+        const moSelect = document.getElementById('payment-filter-month');
+        if (yrSelect) yrSelect.value = '';
+        if (moSelect) moSelect.value = '';
+        filterPaymentsByPeriod();
+    }
+
+    window.filterPaymentsByPeriod = filterPaymentsByPeriod;
+    window.resetPaymentPeriodFilter = resetPaymentPeriodFilter;
 
     // ==========================================
     // 8. QUOTATIONS CONTROLLER & RENDERER
@@ -807,6 +1278,8 @@
             role: data.role || 'Sales',
             designation: (data.designation || 'Representative').trim(),
             target_amount: data.target_amount ? Number(data.target_amount) : 0,
+            remarks: (data.remarks || data.remark || '').trim(),
+            demos_count: data.demos_count ? Number(data.demos_count) : (data.demo ? Number(data.demo) : 0),
             status: 'Active',
             created_at: getFormattedDate()
         };
@@ -830,19 +1303,31 @@
             const tr = document.createElement('tr');
             tr.className = 'custom-injected-team hover:bg-emerald-50/60 transition bg-emerald-50/20';
             tr.innerHTML = `
-                <td class="py-3 px-4 font-bold text-slate-700">${10 + idx}</td>
-                <td class="py-3 px-4 font-black text-slate-900 flex items-center gap-1.5">
+                <td class="py-3.5 px-4 font-bold text-slate-400 text-xs">${10 + idx}</td>
+                <td class="py-3.5 px-4 font-bold text-slate-800 text-xs whitespace-nowrap">
                     <span>${m.name}</span>
-                    <span class="px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
+                    <span class="ml-1 px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
                 </td>
-                <td class="py-3 px-4 text-slate-600">${m.email}</td>
-                <td class="py-3 px-4 font-mono text-slate-700">${m.phone}</td>
-                <td class="py-3 px-4 font-bold text-slate-700">0</td>
-                <td class="py-3 px-4">
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">${m.status}</span>
+                <td class="py-3.5 px-4 text-slate-600 text-xs whitespace-nowrap">${m.email}</td>
+                <td class="py-3.5 px-4 text-slate-600 text-xs whitespace-nowrap font-mono">${m.phone}</td>
+                <td class="py-3.5 px-4 font-bold text-slate-800 text-xs text-center whitespace-nowrap">0</td>
+                <td class="py-3.5 px-4 font-bold text-slate-800 text-xs text-center whitespace-nowrap">${m.demos_count || 0}</td>
+                <td class="py-3.5 px-4 text-slate-500 text-xs max-w-xs truncate">${m.remarks || '-'}</td>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[11px] font-bold bg-[#e8f5e9] text-[#2e7d32] border border-[#a5d6a7]">${m.status}</span>
                 </td>
-                <td class="py-3 px-4 text-right">
-                    <span class="text-xs font-bold text-slate-500">${m.role}</span>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                    <div class="inline-flex items-center justify-center gap-1.5">
+                        <a href="/crm/admin/team/${m.id}/edit" class="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Edit Employee">
+                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                        </a>
+                        <a href="/crm/admin/demos?assigned_to=${m.id}" class="w-7 h-7 rounded-lg bg-[#06b6d4] hover:bg-[#0891b2] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Schedule / View Demo">
+                            <i class="fa-solid fa-calendar-days text-[11px]"></i>
+                        </a>
+                        <button type="button" onclick="confirmDelete('${m.id}', '${m.name}')" class="w-7 h-7 rounded-lg bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Delete">
+                            <i class="fa-solid fa-trash text-[11px]"></i>
+                        </button>
+                    </div>
                 </td>
             `;
             tbody.insertBefore(tr, tbody.firstChild);
@@ -1079,8 +1564,37 @@
             // Ignore search forms or non-POST actions
             if (method !== 'POST') return;
 
-            // Ignore authentication forms
-            if (action.includes('/login') || action.includes('/logout')) return;
+            // Handle Logout cleanly across both static (Vercel) and dynamic (Laravel/XAMPP) environments
+            if (action.includes('/logout')) {
+                e.preventDefault();
+                try {
+                    sessionStorage.clear();
+                    localStorage.removeItem('hm_crm_user');
+                    localStorage.removeItem('crm_auth_user');
+                    localStorage.removeItem('crm_logged_in');
+                } catch(err) {}
+
+                // Notify backend in background if available
+                try {
+                    const csrfToken = form.querySelector('input[name="_token"]')?.value || '';
+                    fetch('/crm/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: '_token=' + encodeURIComponent(csrfToken)
+                    }).catch(() => {});
+                } catch(e) {}
+
+                // Immediate clean client-side redirect to login page
+                window.location.replace('/crm/login');
+                return;
+            }
+
+            // Ignore login forms to allow native submission
+            if (action.includes('/login')) return;
 
             // 1. PREVENT BROWSER DEFAULT POST TO STOP "Confirm Form Resubmission"
             e.preventDefault();
@@ -1254,11 +1768,256 @@
         }, true);
     }
 
+
+    // ==========================================
+    // AUTO-REFRESH & LIVE DATABASE SYNC ENGINE
+    // ==========================================
+    const AUTO_REFRESH_CONFIG = {
+        intervalSeconds: 10,
+        storageKey: 'hm_crm_auto_refresh_enabled'
+    };
+
+    let autoRefreshState = {
+        enabled: localStorage.getItem(AUTO_REFRESH_CONFIG.storageKey) !== 'false',
+        countdown: AUTO_REFRESH_CONFIG.intervalSeconds,
+        timerId: null,
+        isRefreshing: false
+    };
+
+    function createAutoRefreshWidgetHtml() {
+        return `
+            <div class="inline-flex items-center gap-1.5 p-0.5 bg-white border border-slate-200/90 rounded-full shadow-xs crm-auto-refresh-widget transition hover:border-emerald-400">
+                <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefresh ? window.HMCrmStore.toggleAutoRefresh(event) : null" title="Click to Refresh Immediately" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full hover:bg-slate-50 text-slate-700 text-xs font-bold transition active:scale-95 cursor-pointer">
+                    <span class="relative flex h-2 w-2">
+                        <span class="auto-refresh-ping animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <i class="auto-refresh-icon fa-solid fa-arrows-rotate text-[11px] text-slate-400 transition-transform"></i>
+                    <span class="auto-refresh-label text-[11px] font-bold">Auto Refresh: <strong class="text-emerald-700 font-black">ON</strong></span>
+                    <span class="auto-refresh-timer px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-black">${autoRefreshState.countdown}s</span>
+                </button>
+                <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefreshState ? window.HMCrmStore.toggleAutoRefreshState(event) : null" title="Toggle Auto Refresh ON/OFF" class="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center text-[10px] transition cursor-pointer">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function injectAutoRefreshButton() {
+        // Remove any misplaced widget in topbar header (e.g. next to Back/Website)
+        document.querySelectorAll('header .crm-auto-refresh-widget').forEach(el => el.remove());
+
+        if (document.querySelector('.crm-auto-refresh-widget')) {
+            updateAutoRefreshUI();
+            return;
+        }
+
+        // 1. Dashboard Greeting Card (Hello Admin!) - only on Dashboard greeting banner
+        const dashboardBanner = document.querySelector('main .bg-slate-200');
+        if (dashboardBanner && !dashboardBanner.querySelector('.crm-auto-refresh-widget')) {
+            let actionDiv = dashboardBanner.querySelector('.crm-greeting-actions');
+            if (!actionDiv) {
+                actionDiv = document.createElement('div');
+                actionDiv.className = 'crm-greeting-actions flex items-center gap-2.5 mt-2 sm:mt-0';
+                dashboardBanner.appendChild(actionDiv);
+            }
+            actionDiv.innerHTML = createAutoRefreshWidgetHtml();
+            updateAutoRefreshUI();
+            return;
+        }
+
+        // 2. Main Page Header Actions (Only inside main, beside primary create/add buttons)
+        const primaryActionBtn = document.querySelector('main a[href*="create"], main a[href*="add"], main button[onclick*="modal"], main button[data-action="add"]');
+        if (primaryActionBtn && primaryActionBtn.parentElement) {
+            const parent = primaryActionBtn.parentElement;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'inline-block';
+            wrapper.innerHTML = createAutoRefreshWidgetHtml();
+            
+            if (parent.classList.contains('flex') && parent.classList.contains('items-center')) {
+                parent.insertBefore(wrapper.firstElementChild, primaryActionBtn);
+            } else {
+                const actionGroup = document.createElement('div');
+                actionGroup.className = 'flex items-center gap-2.5';
+                parent.insertBefore(actionGroup, primaryActionBtn);
+                actionGroup.appendChild(wrapper.firstElementChild);
+                actionGroup.appendChild(primaryActionBtn);
+            }
+            updateAutoRefreshUI();
+            return;
+        }
+
+        updateAutoRefreshUI();
+    }
+
+    function updateAutoRefreshUI() {
+        const widgets = document.querySelectorAll('.crm-auto-refresh-widget');
+        widgets.forEach(widget => {
+            const ping = widget.querySelector('.auto-refresh-ping');
+            const dot = widget.querySelector('.auto-refresh-dot');
+            const label = widget.querySelector('.auto-refresh-label');
+            const timer = widget.querySelector('.auto-refresh-timer');
+
+            if (autoRefreshState.enabled) {
+                if (ping) ping.classList.remove('hidden');
+                if (dot) {
+                    dot.className = 'auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-emerald-500';
+                }
+                if (label) {
+                    label.innerHTML = 'Auto Refresh: <strong class="text-emerald-700 font-black">ON</strong>';
+                }
+                if (timer) {
+                    timer.className = 'auto-refresh-timer px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-black';
+                    timer.textContent = `${autoRefreshState.countdown}s`;
+                }
+            } else {
+                if (ping) ping.classList.add('hidden');
+                if (dot) {
+                    dot.className = 'auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-slate-400';
+                }
+                if (label) {
+                    label.innerHTML = 'Auto Refresh: <strong class="text-slate-500 font-black">PAUSED</strong>';
+                }
+                if (timer) {
+                    timer.className = 'auto-refresh-timer px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-500 font-mono text-[10px] font-black';
+                    timer.textContent = 'PAUSED';
+                }
+            }
+        });
+    }
+
+    function triggerLiveRefresh(isManual = false) {
+        if (autoRefreshState.isRefreshing) return;
+        autoRefreshState.isRefreshing = true;
+
+        const icons = document.querySelectorAll('.auto-refresh-icon');
+        icons.forEach(ic => ic.classList.add('fa-spin'));
+
+        const path = window.location.pathname.toLowerCase();
+        let tableName = 'leads';
+        if (path.includes('followups')) tableName = 'followups';
+        else if (path.includes('customers')) tableName = 'customers';
+        else if (path.includes('deals')) tableName = 'deals';
+        else if (path.includes('tasks')) tableName = 'tasks';
+        else if (path.includes('demos')) tableName = 'demos';
+        else if (path.includes('payments')) tableName = 'payments';
+        else if (path.includes('quotations')) tableName = 'quotations';
+        else if (path.includes('products')) tableName = 'products';
+        else if (path.includes('team') || path.includes('employees')) tableName = 'team';
+        else if (path.includes('reservations')) tableName = 'reservations';
+        else if (path.includes('branches')) tableName = 'branches';
+
+        const apiUrl = `/crm/api/sync.php?action=get_records&table=${tableName}&_t=${Date.now()}`;
+
+        fetch(apiUrl)
+            .then(res => {
+                if (!res.ok) throw new Error('Network response not ok');
+                return res.text();
+            })
+            .then(text => {
+                if (!text.trim().startsWith('<?php')) {
+                    try {
+                        const data = JSON.parse(text);
+                        if (data && data.success && Array.isArray(data.records) && data.records.length > 0) {
+                            const storageKey = STORAGE_KEYS[tableName] || STORAGE_KEYS.leads;
+                            const localItems = getList(storageKey);
+                            const localMap = new Map();
+                            localItems.forEach(it => {
+                                const k = it.id || it.lead_code || it.email || it.phone || JSON.stringify(it);
+                                localMap.set(k, it);
+                            });
+
+                            let updated = false;
+                            data.records.forEach(rec => {
+                                const rk = rec.id || rec.lead_code || rec.email || rec.phone;
+                                if (rk && !localMap.has(rk)) {
+                                    localItems.push(rec);
+                                    updated = true;
+                                }
+                            });
+
+                            if (updated) {
+                                localStorage.setItem(storageKey, JSON.stringify(localItems));
+                            }
+                        }
+                    } catch (e) {}
+                }
+                reRenderAllTables();
+            })
+            .catch(() => {
+                reRenderAllTables();
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    icons.forEach(ic => ic.classList.remove('fa-spin'));
+                    autoRefreshState.isRefreshing = false;
+                    if (isManual) {
+                        showToast('🔄 Real-time data refreshed!', 'info');
+                    }
+                }, 400);
+            });
+    }
+
+    function reRenderAllTables() {
+        renderAdminLeadsTable();
+        renderEmployeeLeadsTable();
+        renderFollowupsTable();
+        renderCustomersTable();
+        renderDealsTable();
+        renderTasksTable();
+        renderPaymentsTable();
+        renderProductsTable();
+        renderTeamTable();
+        renderReservationsTable();
+        renderBranchesTable();
+        renderDemosTable();
+    }
+
+    function toggleAutoRefresh(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        autoRefreshState.countdown = AUTO_REFRESH_CONFIG.intervalSeconds;
+        updateAutoRefreshUI();
+        triggerLiveRefresh(true);
+    }
+
+    function toggleAutoRefreshState(e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        if (e && e.preventDefault) e.preventDefault();
+        autoRefreshState.enabled = !autoRefreshState.enabled;
+        localStorage.setItem(AUTO_REFRESH_CONFIG.storageKey, autoRefreshState.enabled ? 'true' : 'false');
+        if (autoRefreshState.enabled) {
+            autoRefreshState.countdown = AUTO_REFRESH_CONFIG.intervalSeconds;
+            showToast('✅ Auto Refresh activated (10s live sync)', 'info');
+        } else {
+            showToast('⏸️ Auto Refresh paused', 'info');
+        }
+        updateAutoRefreshUI();
+    }
+
+    function startAutoRefreshTimer() {
+        if (autoRefreshState.timerId) clearInterval(autoRefreshState.timerId);
+        autoRefreshState.timerId = setInterval(() => {
+            if (!autoRefreshState.enabled) {
+                updateAutoRefreshUI();
+                return;
+            }
+
+            autoRefreshState.countdown--;
+            if (autoRefreshState.countdown <= 0) {
+                autoRefreshState.countdown = AUTO_REFRESH_CONFIG.intervalSeconds;
+                triggerLiveRefresh(false);
+            }
+            updateAutoRefreshUI();
+        }, 1000);
+    }
+
     // ==========================================
     // INITIALIZATION & DYNAMIC HYDRATION
     // ==========================================
     function initialize() {
         attachGlobalFormInterceptor();
+        injectAutoRefreshButton();
+        startAutoRefreshTimer();
         renderAdminLeadsTable();
         renderEmployeeLeadsTable();
         renderFollowupsTable();
@@ -1307,7 +2066,12 @@
         renderReservationsTable,
         renderBranchesTable,
         renderDemosTable,
-        updateDemoStatus
+        updateDemoStatus,
+        deleteLeadConfirm,
+        executeDeleteSelected,
+        toggleAutoRefresh,
+        toggleAutoRefreshState,
+        triggerLiveRefresh
     };
     window.handleDemoStatus = updateDemoStatus;
     window.updateDemoStatus = updateDemoStatus;
