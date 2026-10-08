@@ -17,6 +17,33 @@ $dbConfig = [
     'pass' => ''
 ];
 
+// Dynamically check and parse .env if present
+$envCandidates = [
+    __DIR__ . '/../../.env',
+    __DIR__ . '/../../../.env',
+    dirname(__DIR__, 2) . '/.env'
+];
+foreach ($envCandidates as $envPath) {
+    if (file_exists($envPath)) {
+        $envLines = @file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($envLines) {
+            foreach ($envLines as $line) {
+                $line = trim($line);
+                if (empty($line) || str_starts_with($line, '#') || !str_contains($line, '=')) continue;
+                list($key, $val) = explode('=', $line, 2);
+                $key = trim($key);
+                $val = trim($val, " \t\n\r\0\x0B\"'");
+                if ($key === 'DB_HOST' && !empty($val)) $dbConfig['host'] = $val;
+                if ($key === 'DB_PORT' && !empty($val)) $dbConfig['port'] = $val;
+                if ($key === 'DB_DATABASE' && !empty($val)) $dbConfig['dbname'] = $val;
+                if ($key === 'DB_USERNAME' && !empty($val)) $dbConfig['user'] = $val;
+                if ($key === 'DB_PASSWORD') $dbConfig['pass'] = $val;
+            }
+        }
+        break;
+    }
+}
+
 $pdo = null;
 try {
     $dsn = "mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['dbname']};charset=utf8mb4";
@@ -36,6 +63,8 @@ $now = date('Y-m-d H:i:s');
 // Helper: Append SQL statement to database.sql files
 function appendToSqlDump($sqlStatement) {
     $sqlFiles = [
+        dirname(__DIR__, 2) . '/database.sql',
+        dirname(__DIR__, 2) . '/hisabmittra_crm.sql',
         'C:/Users/WINDOWS 11/Downloads/hisabmittra/database.sql',
         'C:/Users/WINDOWS 11/Downloads/hisabmittra/hisabmittra_crm.sql',
         'C:/Users/WINDOWS 11/Downloads/kkinternational/kkinternational/app/database.sql',
