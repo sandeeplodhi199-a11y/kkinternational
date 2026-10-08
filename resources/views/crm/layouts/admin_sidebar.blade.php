@@ -165,12 +165,6 @@
             <span>Reports & Analytics</span>
         </a>
 
-        <!-- Export Leads -->
-        <a href="{{ route('crm.admin.leads.export') }}" 
-           class="sidebar-dark-item hover:text-blue-600">
-            <i class="fa-solid fa-file-excel"></i>
-            <span>Export Leads (.xlsx)</span>
-        </a>
 
         <!-- Activity Logs -->
         <a href="{{ route('crm.admin.system.activity-logs') }}" 
