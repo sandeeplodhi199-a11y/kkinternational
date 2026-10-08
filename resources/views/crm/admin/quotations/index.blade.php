@@ -203,18 +203,6 @@ Refund Policy: No refund policy is there.
 Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</textarea>
             </div>
 
-            <!-- Bottom Action Buttons: Reset & Print / Save PDF (matching reference image) -->
-            <div class="flex items-center justify-end gap-3 pt-2">
-                <button type="button" onclick="resetQuotationForm()" class="px-5 py-2.5 rounded-xl bg-[#e2e8f0] hover:bg-[#cbd5e1] text-slate-700 font-bold text-xs transition shadow-xs flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-rotate-left text-xs"></i>
-                    <span>Reset</span>
-                </button>
-                <button type="button" onclick="downloadQuotationPdf()" class="px-5 py-2.5 rounded-xl bg-[#0e6f66] hover:bg-[#0b5a53] text-white font-bold text-xs transition shadow-sm flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-print text-xs"></i>
-                    <span>Print / Save PDF</span>
-                </button>
-            </div>
-
         </form>
     </div>
 
@@ -345,37 +333,6 @@ Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</textare
             <!-- 1. Left: EXACT QR Code Block (Matching user uploaded Image 2 Left) -->
             <div class="quotation-qr-col" style="flex: 0 0 160px; width: 160px; text-align: center;">
                 <img src="/crm/images/hisab-mittra-qr-col.png?v=2" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 155px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
-            </div>
-
-            <!-- 2. Middle: Bank Details (Matching user uploaded Image 2 Right) -->
-            <div class="quotation-bank-col" style="flex: 1 1 auto; padding: 0 10px; font-size: 11px; line-height: 1.5; color: #1e293b;">
-                <div style="font-weight: 800; font-size: 12px; color: #0f172a; margin-bottom: 4px;">Bank Details:</div>
-                <table style="border-collapse: collapse; width: 100%; font-size: 11px; line-height: 1.5;">
-                    <tr>
-                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; width: 75px; font-weight: 500;">Company:</td>
-                        <td style="padding: 1.5px 0; font-weight: 700; color: #0f172a;">HISABMITTRA</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">Bank:</td>
-                        <td style="padding: 1.5px 0; font-weight: 700; color: #0f172a;">IDFC FIRST Bank</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">Account #:</td>
-                        <td style="padding: 1.5px 0; font-weight: 800; font-family: monospace; color: #0f172a; letter-spacing: 0.5px;">10296073180</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">IFSC Code:</td>
-                        <td style="padding: 1.5px 0; font-weight: 800; font-family: monospace; color: #0f172a;">IDFB0043413</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">SWIFT Code:</td>
-                        <td style="padding: 1.5px 0; font-weight: 800; font-family: monospace; color: #0f172a;">IDFBINBBMUM</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1.5px 8px 1.5px 0; color: #475569; font-weight: 500;">Branch:</td>
-                        <td style="padding: 1.5px 0; font-weight: 700; color: #0f172a;">JAIPUR - PRATAP NAGAR BRANCH</td>
-                    </tr>
-                </table>
             </div>
 
             <!-- 3. Right: EXACT Official Seal Stamp & Signature Block (Matching user uploaded Image 3) -->

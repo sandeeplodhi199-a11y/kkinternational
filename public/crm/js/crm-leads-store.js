@@ -1321,9 +1321,6 @@
                         <a href="/crm/admin/team/${m.id}/edit" class="w-7 h-7 rounded-lg bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Edit Employee">
                             <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                         </a>
-                        <a href="/crm/admin/demos?assigned_to=${m.id}" class="w-7 h-7 rounded-lg bg-[#06b6d4] hover:bg-[#0891b2] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Schedule / View Demo">
-                            <i class="fa-solid fa-calendar-days text-[11px]"></i>
-                        </a>
                         <button type="button" onclick="confirmDelete('${m.id}', '${m.name}')" class="w-7 h-7 rounded-lg bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center transition shadow-sm active:scale-95" title="Delete">
                             <i class="fa-solid fa-trash text-[11px]"></i>
                         </button>

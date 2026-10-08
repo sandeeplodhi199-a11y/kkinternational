@@ -225,10 +225,6 @@
                                         <button type="button" onclick="editLeadModal({{ json_encode($lead) }})" title="Edit" class="w-6 h-6 rounded bg-[#f59e0b] hover:bg-[#d97706] text-white flex items-center justify-center text-[10px] transition shadow-xs">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
-                                        <!-- Schedule (Cyan) -->
-                                        <button type="button" onclick="scheduleLeadModal({{ json_encode($lead) }})" title="Schedule Demo" class="w-6 h-6 rounded bg-[#06b6d4] hover:bg-[#0891b2] text-white flex items-center justify-center text-[10px] transition shadow-xs">
-                                            <i class="fa-solid fa-calendar-days"></i>
-                                        </button>
                                         <!-- Delete (Red) -->
                                         <button type="button" onclick="deleteLeadConfirm('{{ $lead->id }}', '{{ addslashes($lead->name) }}')" title="Delete Lead" class="w-6 h-6 rounded bg-[#ef4444] hover:bg-[#dc2626] text-white flex items-center justify-center text-[10px] transition shadow-xs cursor-pointer">
                                             <i class="fa-solid fa-trash"></i>

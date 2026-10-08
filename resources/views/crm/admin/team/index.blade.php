@@ -128,13 +128,6 @@
                                         <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                     </a>
 
-                                    <!-- Cyan Demo Button -->
-                                    <a href="{{ route('crm.admin.demos.index', ['assigned_to' => $emp->id]) }}" 
-                                       class="w-7 h-7 rounded-lg bg-[#06b6d4] hover:bg-[#0891b2] text-white flex items-center justify-center transition shadow-sm active:scale-95" 
-                                       title="Schedule / View Demos">
-                                        <i class="fa-solid fa-calendar-days text-[11px]"></i>
-                                    </a>
-
                                     <!-- Red Trash Button -->
                                     <button type="button" 
                                             onclick="confirmDelete('{{ $emp->id }}', '{{ addslashes($emp->name) }}')" 
