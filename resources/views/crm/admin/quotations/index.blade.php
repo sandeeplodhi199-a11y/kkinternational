@@ -331,8 +331,8 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</textare
                 <!-- Footer: Bank Details, EXACT QR Code, EXACT Seal & Signature (matching user uploaded reference) -->
         <div class="quotation-footer-container border-t-2 border-[#1e3a8a] pt-3 mt-4" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; width: 100%; gap: 14px;">
             <!-- 1. Left: EXACT QR Code Block (Matching user uploaded Image) -->
-            <div class="quotation-qr-col" style="flex: 0 0 160px; width: 160px; text-align: center;">
-                <img src="/crm/images/hisab-mittra-qr-col.png?v=3" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 155px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+            <div class="quotation-qr-col" style="flex: 0 0 170px; width: 170px; text-align: center;">
+                <img src="/crm/images/hisab-mittra-qr-col.png?v=4" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 165px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
             </div>
 
             <!-- 2. Middle: Bank Details (Matching user uploaded reference) -->
@@ -451,8 +451,8 @@ Contact: support@hisabmittra.com | +91 9783055170 | www.hisabmittra.com</div>
     }
     .quotation-qr-col img, .quotation-qr-img {
         display: block !important;
-        width: 145px !important;
-        max-width: 145px !important;
+        width: 160px !important;
+        max-width: 160px !important;
         height: auto !important;
         margin: 0 auto !important;
         image-rendering: -webkit-optimize-contrast !important;
@@ -836,4 +836,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
 
