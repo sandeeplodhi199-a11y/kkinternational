@@ -143,7 +143,7 @@
                         </li>
                         <li class="flex items-center gap-2.5 text-slate-400">
                             <i class="fa-solid fa-circle-xmark text-slate-300 text-sm"></i>
-                            <span>Sales CRM & Lead Pipeline</span>
+                            <span>Sales CRM & Lead Kanban</span>
                         </li>
                         <li class="flex items-center gap-2.5 text-slate-400">
                             <i class="fa-solid fa-circle-xmark text-slate-300 text-sm"></i>
@@ -214,7 +214,7 @@
                         </li>
                         <li class="flex items-center gap-2.5">
                             <i class="fa-solid fa-circle-check text-blue-600 text-sm"></i>
-                            <span class="font-semibold text-slate-900">Sales CRM with Kanban Pipelines</span>
+                            <span class="font-semibold text-slate-900">Sales CRM with Kanban Deals</span>
                         </li>
                         <li class="flex items-center gap-2.5">
                             <i class="fa-solid fa-circle-check text-blue-600 text-sm"></i>
@@ -617,11 +617,11 @@
                         <tr class="bg-slate-100/60 font-black text-black text-xs uppercase tracking-wider">
                             <td colspan="5" class="py-3 px-5 flex items-center gap-2">
                                 <i class="fa-brands fa-whatsapp text-emerald-500"></i>
-                                <span>Sales Pipeline & WhatsApp Cloud API</span>
+                                <span>Sales Deals & WhatsApp Cloud API</span>
                             </td>
                         </tr>
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-4 font-semibold text-black">Visual Kanban Deal Pipeline CRM</td>
+                            <td class="p-4 font-semibold text-black">Visual Kanban Deal Board CRM</td>
                             <td class="p-4 text-center text-slate-300"><i class="fa-solid fa-minus"></i></td>
                             <td class="p-4 text-center bg-blue-50/30 border-x border-blue-100"><i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i></td>
                             <td class="p-4 text-center"><i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i></td>

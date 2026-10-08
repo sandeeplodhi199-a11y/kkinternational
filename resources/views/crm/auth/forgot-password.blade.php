@@ -62,7 +62,7 @@
 
                     <!-- Description Text -->
                     <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mt-4">
-                        Instant credential recovery. Reset your account credentials securely to regain access to your CRM pipeline and workspace.
+                        Instant credential recovery. Reset your account credentials securely to regain access to your CRM workspace and workspace.
                     </p>
                 </div>
             </div>

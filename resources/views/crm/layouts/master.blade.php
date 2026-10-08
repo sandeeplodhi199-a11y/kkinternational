@@ -446,7 +446,7 @@
                                 <a href="${d.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200 transition group mb-1">
                                     <div class="truncate pr-2">
                                         <div class="font-black text-slate-900 group-hover:text-amber-950 text-xs">${d.title}</div>
-                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'Pipeline'}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'In Progress'}</div>
                                     </div>
                                     <span class="text-xs font-black text-slate-900 shrink-0">₹${d.value}</span>
                                 </a>

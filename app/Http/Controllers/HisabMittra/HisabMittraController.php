@@ -43,7 +43,7 @@ class HisabMittraController extends Controller
     }
 
     /**
-     * Dedicated CRM & Sales Pipeline landing page.
+     * Dedicated CRM & Sales Management landing page.
      */
     public function crm()
     {
@@ -212,7 +212,7 @@ class HisabMittraController extends Controller
                 'category' => 'Sales Strategy',
                 'read_time' => '5 min read',
                 'date' => 'September 28, 2026',
-                'excerpt' => 'Discover how integrating WhatsApp directly with your sales pipeline eliminates follow-up delays, automates quotation dispatch, and speeds up deal closures.',
+                'excerpt' => 'Discover how integrating WhatsApp directly with your sales workflow eliminates follow-up delays, automates quotation dispatch, and speeds up deal closures.',
                 'author' => 'Priya Sen, Lead Growth Strategist'
             ],
             [

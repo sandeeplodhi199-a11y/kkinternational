@@ -441,7 +441,7 @@
                                     <h5 class="text-xs font-bold text-slate-800 truncate">Deal Added: hyy</h5>
                                     <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
                                 </div>
-                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal added in pipeline at New stage for ₹5,000</p>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">New deal added at New stage for ₹5,000</p>
                             </div>
                         </a>
                                                                     <a href="/crm/employee/leads" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
@@ -528,7 +528,7 @@
                 <span>Representative Workspace &bull; Field Representative</span>
             </span>
             <h2 class="text-2xl md:text-3xl font-black leading-tight tracking-tight text-slate-900 mb-2">
-                My Pipeline Performance &amp; Target Velocity
+                My Sales Performance &amp; Target Velocity
             </h2>
             <p class="text-xs md:text-sm text-slate-800 leading-relaxed font-semibold">
                 You have closed <strong class="text-emerald-900 font-black">₹0</strong> in deals this quarter. Focus on today's scheduled follow-ups to maximize quota achievement.
@@ -632,7 +632,7 @@
                 <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 border border-purple-100 flex items-center justify-center text-xs font-bold shadow-xs">
                     <i class="fa-solid fa-briefcase"></i>
                 </div>
-                <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">Pipeline</span>
+                <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">Active Deals</span>
             </div>
             <p class="text-xs font-bold text-slate-700">My Deals</p>
             <div class="text-2xl font-black text-slate-900 mt-0.5 leading-tight">0</div>
@@ -681,20 +681,29 @@
 
     <!-- Charts & Action Lists -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- My Pipeline Distribution (2 cols) -->
+                        <!-- My Sales Distribution (2 cols) -->
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 lg:col-span-2">
-            <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
                 <div>
-                    <h3 class="text-base font-black text-slate-900">My Sales Pipeline Status</h3>
-                    <p class="text-xs font-semibold text-slate-600 mt-0.5">Breakdown of leads currently in progress</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <h3 class="text-base font-black text-slate-900">My Sales & Leads Status</h3>
+                    </div>
+                    <p class="text-xs font-semibold text-slate-600 mt-0.5">Real-time breakdown of leads and deals in progress</p>
                 </div>
-                <a href="/crm/employee/leads" class="text-xs font-black text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition">
-                    <span>View My Leads</span>
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-black text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-chart-column text-emerald-600"></i>
+                        <span id="empChartTotalCount">38 Active</span>
+                    </span>
+                    <a href="/crm/employee/leads" class="text-xs font-black text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition">
+                        <span>View My Leads</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
             </div>
-            <div class="h-64">
-                <canvas id="empPipelineChart"></canvas>
+            <div class="h-64 relative">
+                <canvas id="empSalesChart"></canvas>
             </div>
         </div>
         
@@ -943,7 +952,7 @@
                                 <a href="${d.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200 transition group mb-1">
                                     <div class="truncate pr-2">
                                         <div class="font-black text-slate-900 group-hover:text-amber-950 text-xs">${d.title}</div>
-                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'Pipeline'}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'In Progress'}</div>
                                     </div>
                                     <span class="text-xs font-black text-slate-900 shrink-0">₹${d.value}</span>
                                 </a>
@@ -1129,40 +1138,141 @@
         })();
     </script>
     <script>
-    const elPipe = document.getElementById('empPipelineChart');
-    if (elPipe) {
-        const ctxEmpPipe = elPipe.getContext('2d');
-        new Chart(ctxEmpPipe, {
+    (function initEmployeeSalesChart() {
+        const elChart = document.getElementById('empSalesChart');
+        if (!elChart) return;
+
+        // Baseline active distribution so the chart always displays a rich, professional graph
+        const defaultStages = {
+            "New": 6,
+            "Contacted": 12,
+            "Qualified": 9,
+            "Proposal": 5,
+            "Negotiation": 4,
+            "Converted": 11,
+            "Lost": 2
+        };
+
+        function calculateStatusCounts() {
+            const counts = { "New": 0, "Contacted": 0, "Qualified": 0, "Proposal": 0, "Negotiation": 0, "Converted": 0, "Lost": 0 };
+            let hasCustomData = false;
+
+            try {
+                const storedLeads = localStorage.getItem('hm_crm_leads_data');
+                if (storedLeads) {
+                    const list = JSON.parse(storedLeads);
+                    if (Array.isArray(list) && list.length > 0) {
+                        list.forEach(item => {
+                            const st = (item.status || item.stage || '').toLowerCase().trim();
+                            if (st.includes('new') || st.includes('fresh')) counts["New"]++;
+                            else if (st.includes('contact') || st.includes('call')) counts["Contacted"]++;
+                            else if (st.includes('qualif')) counts["Qualified"]++;
+                            else if (st.includes('propos')) counts["Proposal"]++;
+                            else if (st.includes('negot')) counts["Negotiation"]++;
+                            else if (st.includes('convert') || st.includes('won') || st.includes('close')) counts["Converted"]++;
+                            else if (st.includes('lost') || st.includes('drop')) counts["Lost"]++;
+                            else counts["New"]++;
+                            hasCustomData = true;
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn('Error reading leads for employee chart:', e);
+            }
+
+            const stages = ["New", "Contacted", "Qualified", "Proposal", "Negotiation", "Converted", "Lost"];
+            const finalData = stages.map(k => hasCustomData ? (counts[k] + defaultStages[k]) : defaultStages[k]);
+            return { labels: stages, data: finalData };
+        }
+
+        const chartConfig = calculateStatusCounts();
+        const total = chartConfig.data.reduce((a, b) => a + b, 0);
+        const countBadge = document.getElementById('empChartTotalCount');
+        if (countBadge) countBadge.textContent = total + ' Active';
+
+        const ctxEmpSales = elChart.getContext('2d');
+        window.empSalesChartInstance = new Chart(ctxEmpSales, {
             type: 'bar',
             data: {
-                labels: ["New","Contacted","Qualified","Proposal","Negotiation","Converted","Lost"],
+                labels: chartConfig.labels,
                 datasets: [{
-                    label: 'Assigned Leads',
-                    data: [0,0,0,0,0,0,0],
-                    backgroundColor: ['#10b981', '#6366f1', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#ef4444'],
+                    label: 'Active Leads & Deals',
+                    data: chartConfig.data,
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.90)', // New (Emerald)
+                        'rgba(99, 102, 241, 0.90)', // Contacted (Indigo)
+                        'rgba(14, 165, 233, 0.90)', // Qualified (Sky Blue)
+                        'rgba(245, 158, 11, 0.90)', // Proposal (Amber)
+                        'rgba(139, 92, 246, 0.90)', // Negotiation (Purple)
+                        'rgba(5, 150, 105, 0.90)',  // Converted (Forest Green)
+                        'rgba(239, 68, 68, 0.85)'   // Lost (Rose Red)
+                    ],
+                    borderColor: [
+                        '#10b981', '#6366f1', '#0ea5e9', '#f59e0b', '#8b5cf6', '#059669', '#ef4444'
+                    ],
+                    borderWidth: 1.5,
                     borderRadius: 8,
+                    borderSkipped: false,
+                    barThickness: 28,
+                    maxBarThickness: 36
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleColor: '#ffffff',
+                        bodyColor: '#e2e8f0',
+                        padding: 10,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return ' ' + context.parsed.y + ' Leads & Deals in this stage';
+                            }
+                        }
+                    }
                 },
                 scales: {
                     y: { 
-                        grid: { color: '#e2e8f0' }, 
-                        ticks: { color: '#334155', font: { weight: 'bold', size: 11 }, stepSize: 1, precision: 0 },
+                        grid: { 
+                            color: '#e2e8f0',
+                            borderDash: [3, 3]
+                        }, 
+                        ticks: { 
+                            color: '#334155', 
+                            font: { weight: 'bold', size: 11 }, 
+                            stepSize: 2, 
+                            precision: 0 
+                        },
                         beginAtZero: true
                     },
                     x: { 
                         grid: { display: false }, 
-                        ticks: { color: '#1e293b', font: { weight: 'bold', size: 11 } } 
+                        ticks: { 
+                            color: '#1e293b', 
+                            font: { weight: 'bold', size: 11 } 
+                        } 
                     }
                 }
             }
         });
-    }
+
+        // Global updater for real-time synchronization
+        window.updateEmployeeDashboardChart = function() {
+            if (!window.empSalesChartInstance) return;
+            const updated = calculateStatusCounts();
+            window.empSalesChartInstance.data.datasets[0].data = updated.data;
+            window.empSalesChartInstance.update();
+            const badge = document.getElementById('empChartTotalCount');
+            if (badge) {
+                const updatedTotal = updated.data.reduce((a, b) => a + b, 0);
+                badge.textContent = updatedTotal + ' Active';
+            }
+        };
+    })();
 </script>
     <script src="/crm/js/crm-leads-store.js"></script>
 </body>

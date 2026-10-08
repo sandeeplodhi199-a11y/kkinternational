@@ -118,7 +118,7 @@ class CrmSystemController extends Controller
             if ($roles->isEmpty()) {
                 $roles = collect([
                     (object) ['id' => 1, 'name' => 'CRM Super Administrator', 'slug' => 'super_admin', 'description' => 'Complete system-wide unrestricted access across all leads, deals, payments, targets, settings, and user administration.'],
-                    (object) ['id' => 2, 'name' => 'Sales Manager', 'slug' => 'sales_manager', 'description' => 'Team-level pipeline tracking, deal approvals, lead reassignments, quotation validation, and performance KPI monitoring.'],
+                    (object) ['id' => 2, 'name' => 'Sales Manager', 'slug' => 'sales_manager', 'description' => 'Team-level deals tracking, deal approvals, lead reassignments, quotation validation, and performance KPI monitoring.'],
                     (object) ['id' => 3, 'name' => 'Sales Executive', 'slug' => 'sales_executive', 'description' => 'Direct lead progression, followup reminders, deal stage transitions, client communication, and personal target reporting.'],
                     (object) ['id' => 4, 'name' => 'Operations & Field Agent', 'slug' => 'operations_agent', 'description' => 'Live route tracking, on-site demo reservations, customer onboarding, visit notes, and verified field check-ins.']
                 ]);
@@ -126,7 +126,7 @@ class CrmSystemController extends Controller
         } catch (\Throwable $e) {
             $roles = collect([
                 (object) ['id' => 1, 'name' => 'CRM Super Administrator', 'slug' => 'super_admin', 'description' => 'Complete system-wide unrestricted access across all leads, deals, payments, targets, settings, and user administration.'],
-                (object) ['id' => 2, 'name' => 'Sales Manager', 'slug' => 'sales_manager', 'description' => 'Team-level pipeline tracking, deal approvals, lead reassignments, quotation validation, and performance KPI monitoring.'],
+                (object) ['id' => 2, 'name' => 'Sales Manager', 'slug' => 'sales_manager', 'description' => 'Team-level deals tracking, deal approvals, lead reassignments, quotation validation, and performance KPI monitoring.'],
                 (object) ['id' => 3, 'name' => 'Sales Executive', 'slug' => 'sales_executive', 'description' => 'Direct lead progression, followup reminders, deal stage transitions, client communication, and personal target reporting.'],
                 (object) ['id' => 4, 'name' => 'Operations & Field Agent', 'slug' => 'operations_agent', 'description' => 'Live route tracking, on-site demo reservations, customer onboarding, visit notes, and verified field check-ins.']
             ]);

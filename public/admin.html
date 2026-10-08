@@ -239,9 +239,9 @@
             <span>Dashboard</span>
         </a>
 
-        <!-- 2. SECTION: CRM & PIPELINE -->
+        <!-- 2. SECTION: CRM & DEALS -->
         <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
-            CRM & Pipeline
+            CRM & Deals
         </div>
 
         <!-- All Leads -->
@@ -255,7 +255,7 @@
         <a href="/crm/admin/deals" 
            class="sidebar-dark-item ">
             <i class="fa-solid fa-handshake"></i>
-            <span>Deals & Pipeline</span>
+            <span>Deals & Sales</span>
         </a>
 
         <!-- Customers -->
@@ -590,7 +590,7 @@
                                     <h5 class="text-xs font-bold text-slate-800 truncate">Deal Added: hyy</h5>
                                     <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
                                 </div>
-                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal added in pipeline at New stage for ₹5,000</p>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">New deal added at New stage for ₹5,000</p>
                             </div>
                         </a>
                                                                     <a href="/crm/admin/leads/37" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
@@ -1003,7 +1003,7 @@
         <!-- Right Semi-Circle Radial Satisfaction Gauge (~35% width) -->
         <div class="lg:col-span-4 crm-card p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="text-sm font-black text-slate-900">Pipeline & Lead Conversion</h3>
+                <h3 class="text-sm font-black text-slate-900">Sales & Lead Conversion</h3>
                 <button type="button" title="Print/Export" onclick="window.print()" class="w-8 h-8 rounded-xl border border-slate-300 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center shadow-xs transition cursor-pointer">
                     <i class="fa-solid fa-arrow-down-to-bracket text-xs"></i>
                 </button>
@@ -1064,7 +1064,7 @@
                 <!-- Bar 1: Won Deals (Coral Orange) -->
                 <div>
                     <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
-                        <span>Converted Pipeline</span>
+                        <span>Converted Deals</span>
                         <span class="text-slate-900 font-black">65%</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -1072,10 +1072,10 @@
                     </div>
                 </div>
 
-                <!-- Bar 2: Active Pipeline (Cyan Blue) -->
+                <!-- Bar 2: Active Deals (Cyan Blue) -->
                 <div>
                     <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
-                        <span>Active Pipeline Volume</span>
+                        <span>Active Deals Volume</span>
                         <span class="text-slate-900 font-black">84%</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -2109,7 +2109,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <a href="${d.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200 transition group mb-1">
                                     <div class="truncate pr-2">
                                         <div class="font-black text-slate-900 group-hover:text-amber-950 text-xs">${d.title}</div>
-                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'Pipeline'}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'In Progress'}</div>
                                     </div>
                                     <span class="text-xs font-black text-slate-900 shrink-0">₹${d.value}</span>
                                 </a>

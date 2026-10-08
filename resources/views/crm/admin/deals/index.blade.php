@@ -1,15 +1,15 @@
 @extends('crm.layouts.master')
 
-@section('title', 'Sales Pipeline')
+@section('title', 'Sales Deals')
 
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
-            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Sales Deals Pipeline</h2>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Sales Deals</h2>
             <p class="text-xs text-slate-500 font-medium">
-                Active Pipeline Value: <span class="active-pipeline-value-display font-bold text-slate-800">₹{{ number_format($totalPipelineValue) }}</span> &bull; Won Deals: <span class="won-deals-value-display font-bold text-emerald-800">₹{{ number_format($wonValue) }}</span>
+                Active Deals Value: <span class="active-deals-value-display font-bold text-slate-800">₹{{ number_format($totalDealsValValue) }}</span> &bull; Won Deals: <span class="won-deals-value-display font-bold text-emerald-800">₹{{ number_format($wonValue) }}</span>
             </p>
         </div>
         <a href="{{ route('crm.admin.deals.create') }}" class="px-5 py-2 rounded-full bg-[#1b4d3e] text-white text-xs font-bold hover:bg-[#2d6a4f] transition shadow-md shadow-emerald-900/10 flex items-center gap-2">
@@ -92,7 +92,7 @@
     <div id="add-deal-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                <h3 class="text-base font-bold text-slate-800">Add Sales Deal to Pipeline</h3>
+                <h3 class="text-base font-bold text-slate-800">Add Sales Deal</h3>
                 <button type="button" onclick="document.getElementById('add-deal-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">&times;</button>
             </div>
             <form action="{{ route('crm.admin.deals.store') }}" method="POST" class="space-y-4">
@@ -215,7 +215,7 @@
         const board = document.getElementById('kanban-scroll-wrapper');
         if (!board) return;
 
-        let totalPipeline = 0;
+        let totalDealsVal = 0;
         let wonTotal = 0;
 
         const columns = board.querySelectorAll('.stage-column-box, div[ondrop]');
@@ -258,17 +258,17 @@
                 totalEl.textContent = '₹' + Math.round(stageTotal).toLocaleString('en-IN');
             }
 
-            totalPipeline += stageTotal;
+            totalDealsVal += stageTotal;
             const stageName = (col.getAttribute('data-stage') || '').toLowerCase();
             if (stageName === 'won') {
                 wonTotal += stageTotal;
             }
         });
 
-        // Top Header pipeline value
-        const activePipelines = document.querySelectorAll('.active-pipeline-value-display');
-        activePipelines.forEach(el => {
-            el.textContent = '₹' + Math.round(totalPipeline).toLocaleString('en-IN');
+        // Top Header deals value
+        const activeDealDisplays = document.querySelectorAll('.active-deals-value-display');
+        activeDealDisplays.forEach(el => {
+            el.textContent = '₹' + Math.round(totalDealsVal).toLocaleString('en-IN');
         });
         const wonDisplays = document.querySelectorAll('.won-deals-value-display');
         wonDisplays.forEach(el => {

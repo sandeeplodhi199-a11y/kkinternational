@@ -138,7 +138,7 @@
                                                 </span>
                                             @elseif($p->slug === 'deals.view')
                                                 <span class="inline-block mt-1 text-[10px] font-bold text-slate-600">
-                                                    Required to access "My Deals" &amp; pipeline
+                                                    Required to access "My Deals"
                                                 </span>
                                             @elseif($p->slug === 'customers.view')
                                                 <span class="inline-block mt-1 text-[10px] font-bold text-slate-600">

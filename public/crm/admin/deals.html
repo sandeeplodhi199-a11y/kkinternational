@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE">
-    <title>Sales Pipeline | Hisab Mittra CRM</title>
+    <title>Sales Deals | Hisab Mittra CRM</title>
     <link rel="icon" type="image/png" href="/images/hisab-mittra-icon.png">
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -239,9 +239,9 @@
             <span>Dashboard</span>
         </a>
 
-        <!-- 2. SECTION: CRM & PIPELINE -->
+        <!-- 2. SECTION: CRM & DEALS -->
         <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
-            CRM & Pipeline
+            CRM & Deals
         </div>
 
         <!-- All Leads -->
@@ -583,7 +583,7 @@
                                     <h5 class="text-xs font-bold text-slate-800 truncate">Deal Added: hyy</h5>
                                     <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
                                 </div>
-                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal added in pipeline at New stage for ₹5,000</p>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">New deal added at New stage for ₹5,000</p>
                             </div>
                         </a>
                                                                     <a href="/crm/admin/leads/37" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
@@ -660,9 +660,9 @@
     <!-- Header -->
     <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
-            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Sales Deals Pipeline</h2>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Sales Deals</h2>
             <p class="text-xs text-slate-500 font-medium">
-                Active Pipeline Value: <span class="active-pipeline-value-display font-bold text-slate-800">₹5,000</span> &bull; Won Deals: <span class="won-deals-value-display font-bold text-emerald-800">₹5,000</span>
+                Active Deals Value: <span class="active-deals-value-display font-bold text-slate-800">₹5,000</span> &bull; Won Deals: <span class="won-deals-value-display font-bold text-emerald-800">₹5,000</span>
             </p>
         </div>
         <a href="/crm/admin/deals/create" class="px-5 py-2 rounded-full bg-[#1b4d3e] text-white text-xs font-bold hover:bg-[#2d6a4f] transition shadow-md shadow-emerald-900/10 flex items-center gap-2">
@@ -867,7 +867,7 @@
     <div id="add-deal-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
             <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                <h3 class="text-base font-bold text-slate-800">Add Sales Deal to Pipeline</h3>
+                <h3 class="text-base font-bold text-slate-800">Add Sales Deal</h3>
                 <button type="button" onclick="document.getElementById('add-deal-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">&times;</button>
             </div>
             <form action="/crm/admin/deals" method="POST" class="space-y-4">
@@ -1104,7 +1104,7 @@
                                 <a href="${d.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200 transition group mb-1">
                                     <div class="truncate pr-2">
                                         <div class="font-black text-slate-900 group-hover:text-amber-950 text-xs">${d.title}</div>
-                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'Pipeline'}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'In Progress'}</div>
                                     </div>
                                     <span class="text-xs font-black text-slate-900 shrink-0">₹${d.value}</span>
                                 </a>
@@ -1340,7 +1340,7 @@
         const board = document.getElementById('kanban-scroll-wrapper');
         if (!board) return;
 
-        let totalPipeline = 0;
+        let totalDealsVal = 0;
         let wonTotal = 0;
 
         const columns = board.querySelectorAll('.stage-column-box, div[ondrop]');
@@ -1383,17 +1383,17 @@
                 totalEl.textContent = '₹' + Math.round(stageTotal).toLocaleString('en-IN');
             }
 
-            totalPipeline += stageTotal;
+            totalDealsVal += stageTotal;
             const stageName = (col.getAttribute('data-stage') || '').toLowerCase();
             if (stageName === 'won') {
                 wonTotal += stageTotal;
             }
         });
 
-        // Top Header pipeline value
-        const activePipelines = document.querySelectorAll('.active-pipeline-value-display');
-        activePipelines.forEach(el => {
-            el.textContent = '₹' + Math.round(totalPipeline).toLocaleString('en-IN');
+        // Top Header deals value
+        const activeDealDisplays = document.querySelectorAll('.active-deals-value-display');
+        activeDealDisplays.forEach(el => {
+            el.textContent = '₹' + Math.round(totalDealsVal).toLocaleString('en-IN');
         });
         const wonDisplays = document.querySelectorAll('.won-deals-value-display');
         wonDisplays.forEach(el => {

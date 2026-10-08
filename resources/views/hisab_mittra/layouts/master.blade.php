@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Hisab Mittra — Premium All-in-One Business Management & SaaS Platform')</title>
-    <meta name="description" content="@yield('meta_description', 'Hisab Mittra is India’s premium enterprise business operating platform. Seamlessly manage HRM, Biometric Attendance, Payroll, CRM, Sales Pipeline, and Accounting.')">
+    <meta name="description" content="@yield('meta_description', 'Hisab Mittra is India’s premium enterprise business operating platform. Seamlessly manage HRM, Biometric Attendance, Payroll, CRM, Sales Deals, and Accounting.')">
     
     <!-- Premium Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -504,7 +504,7 @@
                         HRM & Attendance
                     </a>
                     <a href="{{ route('hisab.crm') }}" class="hover:text-aqua-dark transition-colors {{ Request::routeIs('hisab.crm') ? 'text-aqua-dark font-extrabold' : '' }}">
-                        CRM & Pipeline
+                        CRM & Deals
                     </a>
                     <a href="{{ route('hisab.pricing') }}" class="hover:text-aqua-dark transition-colors {{ Request::routeIs('hisab.pricing') ? 'text-aqua-dark font-extrabold' : '' }}">
                         Pricing
@@ -577,7 +577,7 @@
                 <a href="{{ route('hisab.home') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Home</a>
                 <a href="{{ route('hisab.features') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Features Overview</a>
                 <a href="{{ route('hisab.hrm') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">HRM & Biometric Attendance</a>
-                <a href="{{ route('hisab.crm') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">CRM & Sales Pipeline</a>
+                <a href="{{ route('hisab.crm') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">CRM & Sales Management</a>
                 <a href="{{ route('hisab.pricing') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Pricing & Plans</a>
                 <a href="{{ route('hisab.blog') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">Resources & Guides</a>
                 <a href="{{ route('hisab.about') }}" class="block px-3 py-2 rounded-xl hover:bg-aqua-soft hover:text-aqua-dark">About Hisab Mittra</a>
@@ -644,7 +644,7 @@
                         <li><a href="{{ route('hisab.hrm') }}" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> HR & Employee Management</a></li>
                         <li><a href="{{ route('hisab.hrm') }}" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> Biometric & Face Attendance</a></li>
                         <li><a href="{{ route('hisab.hrm') }}" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> PF / ESI / TDS Payroll</a></li>
-                        <li><a href="{{ route('hisab.crm') }}" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> Visual Deal Pipeline</a></li>
+                        <li><a href="{{ route('hisab.crm') }}" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> Visual Deal Board</a></li>
                         <li><a href="{{ route('hisab.crm') }}" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> WhatsApp & Email CRM</a></li>
                         <li><a href="{{ route('hisab.features') }}" class="hover:text-blue-700 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-xs text-blue-600"></i> Invoicing & Accounting</a></li>
                     </ul>

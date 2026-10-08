@@ -175,7 +175,7 @@ return new class extends Migration
             });
         }
 
-        // 7. Deals / Sales Pipeline
+        // 7. Deals / Sales Deals
         if (!Schema::hasTable('crm_deal_stages')) {
             Schema::create('crm_deal_stages', function (Blueprint $table) {
                 $table->id();

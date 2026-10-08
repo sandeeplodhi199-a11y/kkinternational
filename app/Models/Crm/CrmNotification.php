@@ -49,7 +49,7 @@ class CrmNotification extends Model
             'task' => 'Task Due',
             'demo' => 'Demo Scheduled',
             'payment' => 'Payment Received',
-            'deal' => 'Deal Pipeline',
+            'deal' => 'Deals',
             'customer' => 'Customer Alert',
             'quotation' => 'Quotation',
             'system' => 'System Update',
@@ -229,7 +229,7 @@ class CrmNotification extends Model
         if (Schema::hasTable('crm_deals')) {
             $deals = DB::table('crm_deals')->latest('id')->limit(10)->get();
             foreach ($deals as $deal) {
-                $title = "Deal Pipeline: " . $deal->title;
+                $title = "Deal: " . $deal->title;
                 if (!self::where('title', $title)->exists()) {
                     self::create([
                         'user_id' => $deal->assigned_to ?? null,

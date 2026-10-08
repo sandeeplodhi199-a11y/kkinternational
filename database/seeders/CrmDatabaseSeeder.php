@@ -42,7 +42,7 @@ class CrmDatabaseSeeder extends Seeder
         $roles = [
             ['name' => 'Super Admin', 'slug' => 'super_admin', 'description' => 'Full access to all system modules and configuration'],
             ['name' => 'Admin', 'slug' => 'admin', 'description' => 'Full management access to CRM, team, and reports'],
-            ['name' => 'Manager', 'slug' => 'manager', 'description' => 'Team-level management and pipeline oversight'],
+            ['name' => 'Manager', 'slug' => 'manager', 'description' => 'Team-level management and deals oversight'],
             ['name' => 'Employee', 'slug' => 'employee', 'description' => 'Standard sales rep access to assigned records'],
         ];
         foreach ($roles as $r) {
@@ -217,7 +217,7 @@ class CrmDatabaseSeeder extends Seeder
 
         // 8. Products & Services
         $products = [
-            ['name' => 'Enterprise Cloud CRM (Annual)', 'code' => 'PRD-CRM-ENT', 'category' => 'Software', 'price' => 120000.00, 'tax_rate' => 18.00, 'status' => 'Active', 'description' => 'Unlimited users, pipeline analytics, custom workflow automation.'],
+            ['name' => 'Enterprise Cloud CRM (Annual)', 'code' => 'PRD-CRM-ENT', 'category' => 'Software', 'price' => 120000.00, 'tax_rate' => 18.00, 'status' => 'Active', 'description' => 'Unlimited users, sales analytics, custom workflow automation.'],
             ['name' => 'WhatsApp & SMS Marketing Engine', 'code' => 'PRD-MKT-API', 'category' => 'Software', 'price' => 35000.00, 'tax_rate' => 18.00, 'status' => 'Active', 'description' => 'Official Meta API connector with pre-approved templates.'],
             ['name' => 'Dedicated Implementation & Onboarding', 'code' => 'SRV-ONB-PRO', 'category' => 'Service', 'price' => 50000.00, 'tax_rate' => 18.00, 'status' => 'Active', 'description' => '30 days hands-on team onboarding and workflow migration.'],
             ['name' => 'Custom ERP & Payment Gateway Integration', 'code' => 'SRV-INT-CUST', 'category' => 'Service', 'price' => 75000.00, 'tax_rate' => 18.00, 'status' => 'Active', 'description' => 'Seamless sync with Razorpay, Tally, and Zoho Books.'],
@@ -335,9 +335,9 @@ class CrmDatabaseSeeder extends Seeder
 
         // 13. Demos & Reservations
         DB::table('crm_demos')->updateOrInsert(
-            ['title' => 'Enterprise Pipeline Automation Demo'],
+            ['title' => 'Enterprise Sales Automation Demo'],
             [
-                'title' => 'Enterprise Pipeline Automation Demo',
+                'title' => 'Enterprise Sales Automation Demo',
                 'assigned_to' => $empId,
                 'date' => $now->copy()->addDays(1)->format('Y-m-d'),
                 'time' => '11:30:00',

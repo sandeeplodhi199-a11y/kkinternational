@@ -74,7 +74,7 @@ Route::prefix('crm/admin')->middleware(['crm_auth:admin'])->name('crm.admin.')->
     Route::match(['put', 'post'], 'customers/{id}', [CrmCustomerController::class, 'update'])->name('customers.update');
     Route::delete('customers/{id}', [CrmCustomerController::class, 'destroy'])->name('customers.destroy');
 
-    // Deals / Sales Pipeline
+    // Deals / Sales Deals
     Route::get('deals', [CrmDealController::class, 'index'])->name('deals.index');
     Route::get('deals/create', [CrmDealController::class, 'create'])->name('deals.create');
     Route::post('deals', [CrmDealController::class, 'store'])->name('deals.store');

@@ -73,7 +73,7 @@
 
                     <!-- Description Text -->
                     <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-md mt-4">
-                        Unified CRM & Enterprise Workspace. Representatives manage leads, deals, followups, and communications; Administrators oversee live pipeline performance.
+                        Unified CRM & Enterprise Workspace. Representatives manage leads, deals, followups, and communications; Administrators oversee live sales performance.
                     </p>
                 </div>
 

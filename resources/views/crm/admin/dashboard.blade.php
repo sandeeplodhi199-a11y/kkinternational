@@ -383,7 +383,7 @@
         <!-- Right Semi-Circle Radial Satisfaction Gauge (~35% width) -->
         <div class="lg:col-span-4 crm-card p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 class="text-sm font-black text-slate-900">Pipeline & Lead Conversion</h3>
+                <h3 class="text-sm font-black text-slate-900">Sales & Lead Conversion</h3>
                 <button type="button" title="Print/Export" onclick="window.print()" class="w-8 h-8 rounded-xl border border-slate-300 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-center shadow-xs transition cursor-pointer">
                     <i class="fa-solid fa-arrow-down-to-bracket text-xs"></i>
                 </button>
@@ -444,7 +444,7 @@
                 <!-- Bar 1: Won Deals (Coral Orange) -->
                 <div>
                     <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
-                        <span>Converted Pipeline</span>
+                        <span>Converted Deals</span>
                         <span class="text-slate-900 font-black">65%</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -452,10 +452,10 @@
                     </div>
                 </div>
 
-                <!-- Bar 2: Active Pipeline (Cyan Blue) -->
+                <!-- Bar 2: Active Deals (Cyan Blue) -->
                 <div>
                     <div class="flex justify-between text-xs font-black text-slate-800 mb-1.5">
-                        <span>Active Pipeline Volume</span>
+                        <span>Active Deals Volume</span>
                         <span class="text-slate-900 font-black">84%</span>
                     </div>
                     <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">

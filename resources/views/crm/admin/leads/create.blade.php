@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <!-- Pipeline & Classification -->
+            <!-- Deals & Classification -->
             <div>
                 <div class="pb-3 mb-4 border-b border-slate-100 flex items-center justify-between">
                     <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">

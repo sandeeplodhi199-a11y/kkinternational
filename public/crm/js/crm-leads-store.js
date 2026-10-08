@@ -670,7 +670,7 @@
         const board = document.getElementById('kanban-scroll-wrapper');
         if (!board) return;
 
-        let totalPipeline = 0;
+        let totalDealsVal = 0;
         let wonTotal = 0;
 
         const columns = board.querySelectorAll('.stage-column-box, div[ondrop]');
@@ -713,17 +713,17 @@
                 totalEl.textContent = '₹' + Math.round(stageTotal).toLocaleString('en-IN');
             }
 
-            totalPipeline += stageTotal;
+            totalDealsVal += stageTotal;
             const stageName = (col.getAttribute('data-stage') || '').toLowerCase();
             if (stageName === 'won') {
                 wonTotal += stageTotal;
             }
         });
 
-        // Top Header pipeline value
-        const activePipelines = document.querySelectorAll('.active-pipeline-value-display');
-        activePipelines.forEach(el => {
-            el.textContent = '₹' + Math.round(totalPipeline).toLocaleString('en-IN');
+        // Top Header deals value
+        const activeDealDisplays = document.querySelectorAll('.active-deals-value-display');
+        activeDealDisplays.forEach(el => {
+            el.textContent = '₹' + Math.round(totalDealsVal).toLocaleString('en-IN');
         });
         const wonDisplays = document.querySelectorAll('.won-deals-value-display');
         wonDisplays.forEach(el => {
@@ -898,7 +898,7 @@
                             <span class="text-sm font-black text-slate-900">₹${Number(deal.value).toLocaleString('en-IN')}</span>
                         </div>
                         <h4 class="text-sm font-black text-slate-800 mb-1">${deal.title}</h4>
-                        <p class="text-xs text-slate-500">${deal.notes || 'Pipeline Opportunity'}</p>
+                        <p class="text-xs text-slate-500">${deal.notes || 'Sales Opportunity'}</p>
                     </div>
                 `;
                 empGrid.insertBefore(card, empGrid.firstChild);
@@ -2036,6 +2036,9 @@
         renderReservationsTable();
         renderBranchesTable();
         renderDemosTable();
+        if (typeof window.updateEmployeeDashboardChart === 'function') {
+            window.updateEmployeeDashboardChart();
+        }
     }
 
     if (document.readyState === 'loading') {

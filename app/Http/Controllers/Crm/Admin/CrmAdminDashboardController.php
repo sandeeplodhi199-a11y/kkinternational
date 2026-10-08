@@ -402,7 +402,7 @@ class CrmAdminDashboardController extends Controller
             ];
         }
 
-        // Recent Leads & Pipeline
+        // Recent Leads & Deals
         $recentLeads = CrmLead::with('assignedEmployee')->latest()->limit(10)->get();
         $todaysFollowups = CrmFollowup::where('status', 'Pending')->orderBy('time', 'asc')->limit(5)->get();
         $pendingTasks = CrmTask::where('status', 'Pending')->orderBy('due_date', 'asc')->limit(5)->get();

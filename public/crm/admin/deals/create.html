@@ -239,9 +239,9 @@
             <span>Dashboard</span>
         </a>
 
-        <!-- 2. SECTION: CRM & PIPELINE -->
+        <!-- 2. SECTION: CRM & DEALS -->
         <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
-            CRM & Pipeline
+            CRM & Deals
         </div>
 
         <!-- All Leads -->
@@ -583,7 +583,7 @@
                                     <h5 class="text-xs font-bold text-slate-800 truncate">Deal Added: hyy</h5>
                                     <span class="text-[9px] text-slate-400 shrink-0">2 days</span>
                                 </div>
-                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">Deal added in pipeline at New stage for ₹5,000</p>
+                                <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">New deal added at New stage for ₹5,000</p>
                             </div>
                         </a>
                                                                     <a href="/crm/admin/leads/37" class="p-3 hover:bg-slate-50 flex items-start gap-2.5 transition block">
@@ -662,7 +662,7 @@
     <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
             <div class="flex items-center gap-2 text-xs font-bold text-slate-500 mb-1">
-                <a href="/crm/admin/deals" class="hover:text-purple-600 transition">Sales Pipeline</a>
+                <a href="/crm/admin/deals" class="hover:text-purple-600 transition">Sales Deals</a>
                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                 <span class="text-slate-900 font-extrabold">New Deal</span>
             </div>
@@ -673,7 +673,7 @@
                 <span>Create Opportunity / Deal</span>
             </h1>
             <p class="text-xs sm:text-sm text-slate-600 font-semibold mt-1">
-                Forecast expected revenues, configure pipeline probability, and assign closing managers.
+                Forecast expected revenues, configure win probability, and assign closing managers.
             </p>
         </div>
 
@@ -710,13 +710,13 @@
                     <div>
                         <label class="block text-xs font-black text-slate-800 mb-1.5">Associated Client / Account</label>
                         <select name="customer_id" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-600">
-                            <option value="">General Pipeline Opportunity</option>
+                            <option value="">General Sales Opportunity</option>
                                                             <option value="9">Ramesh (hisab)</option>
                                                     </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-black text-slate-800 mb-1.5">Pipeline Stage *</label>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Deal Stage *</label>
                         <select name="stage" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-black text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-600">
                             <option value="New" selected>New Opportunity</option>
                             <option value="Qualified">Qualified</option>
@@ -949,7 +949,7 @@
                                 <a href="${d.url}" class="flex items-center justify-between p-2 rounded-2xl hover:bg-amber-50/70 border border-transparent hover:border-amber-200 transition group mb-1">
                                     <div class="truncate pr-2">
                                         <div class="font-black text-slate-900 group-hover:text-amber-950 text-xs">${d.title}</div>
-                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'Pipeline'}</div>
+                                        <div class="text-[10px] text-slate-500 font-semibold">${d.stage || 'In Progress'}</div>
                                     </div>
                                     <span class="text-xs font-black text-slate-900 shrink-0">₹${d.value}</span>
                                 </a>

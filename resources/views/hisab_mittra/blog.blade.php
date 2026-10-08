@@ -14,7 +14,7 @@
             <span class="font-sans not-italic font-extrabold text-black">Indian Business Growth</span>
         </h1>
         <p class="mt-4 text-base text-navy-muted leading-relaxed">
-            Practical insights on Indian statutory compliance, biometric workforce management, and WhatsApp-driven sales pipelines.
+            Practical insights on Indian statutory compliance, biometric workforce management, and WhatsApp-driven sales workflows.
         </p>
     </div>
 

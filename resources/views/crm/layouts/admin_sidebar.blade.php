@@ -21,9 +21,9 @@
             <span>Dashboard</span>
         </a>
 
-        <!-- 2. SECTION: CRM & PIPELINE -->
+        <!-- 2. SECTION: CRM & DEALS -->
         <div class="px-6 pt-4 pb-1 text-[11px] font-black uppercase tracking-wider text-slate-500">
-            CRM & Pipeline
+            CRM & Deals
         </div>
 
         <!-- All Leads -->

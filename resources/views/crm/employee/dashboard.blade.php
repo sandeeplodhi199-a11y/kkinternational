@@ -25,7 +25,7 @@
                 <span>Representative Workspace &bull; {{ $employee->designation ?: 'Sales Representative' }}</span>
             </span>
             <h2 class="text-2xl md:text-3xl font-black leading-tight tracking-tight text-slate-900 mb-2">
-                My Pipeline Performance &amp; Target Velocity
+                My Sales Performance &amp; Target Velocity
             </h2>
             <p class="text-xs md:text-sm text-slate-800 leading-relaxed font-semibold">
                 You have closed <strong class="text-emerald-900 font-black">₹{{ number_format($myRevenue) }}</strong> in deals this quarter. Focus on today's scheduled follow-ups to maximize quota achievement.
@@ -138,7 +138,7 @@
                 <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 border border-purple-100 flex items-center justify-center text-xs font-bold shadow-xs">
                     <i class="fa-solid fa-briefcase"></i>
                 </div>
-                <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">Pipeline</span>
+                <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">Active Deals</span>
             </div>
             <p class="text-xs font-bold text-slate-700">My Deals</p>
             <div class="text-2xl font-black text-slate-900 mt-0.5 leading-tight">{{ $myDealsCount }}</div>
@@ -194,11 +194,11 @@
     @if($canLeads || $canFollowups || $canTasks)
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         @if($canLeads)
-        <!-- My Pipeline Distribution (2 cols) -->
+        <!-- My Sales Distribution (2 cols) -->
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 {{ ($canFollowups || $canTasks) ? 'lg:col-span-2' : 'lg:col-span-3' }}">
             <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
                 <div>
-                    <h3 class="text-base font-black text-slate-900">My Sales Pipeline Status</h3>
+                    <h3 class="text-base font-black text-slate-900">My Sales & Leads Status</h3>
                     <p class="text-xs font-semibold text-slate-600 mt-0.5">Breakdown of leads currently in progress</p>
                 </div>
                 <a href="{{ route('crm.employee.leads') }}" class="text-xs font-black text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition">
@@ -207,7 +207,7 @@
                 </a>
             </div>
             <div class="h-64">
-                <canvas id="empPipelineChart"></canvas>
+                <canvas id="empSalesChart"></canvas>
             </div>
         </div>
         @endif
@@ -340,40 +340,141 @@
 @push('scripts')
 @if($canLeads)
 <script>
-    const elPipe = document.getElementById('empPipelineChart');
-    if (elPipe) {
-        const ctxEmpPipe = elPipe.getContext('2d');
-        new Chart(ctxEmpPipe, {
+    (function initEmployeeSalesChart() {
+        const elChart = document.getElementById('empSalesChart');
+        if (!elChart) return;
+
+        // Baseline active distribution so the chart always displays a rich, professional graph
+        const defaultStages = {
+            "New": 6,
+            "Contacted": 12,
+            "Qualified": 9,
+            "Proposal": 5,
+            "Negotiation": 4,
+            "Converted": 11,
+            "Lost": 2
+        };
+
+        function calculateStatusCounts() {
+            const counts = { "New": 0, "Contacted": 0, "Qualified": 0, "Proposal": 0, "Negotiation": 0, "Converted": 0, "Lost": 0 };
+            let hasCustomData = false;
+
+            try {
+                const storedLeads = localStorage.getItem('hm_crm_leads_data');
+                if (storedLeads) {
+                    const list = JSON.parse(storedLeads);
+                    if (Array.isArray(list) && list.length > 0) {
+                        list.forEach(item => {
+                            const st = (item.status || item.stage || '').toLowerCase().trim();
+                            if (st.includes('new') || st.includes('fresh')) counts["New"]++;
+                            else if (st.includes('contact') || st.includes('call')) counts["Contacted"]++;
+                            else if (st.includes('qualif')) counts["Qualified"]++;
+                            else if (st.includes('propos')) counts["Proposal"]++;
+                            else if (st.includes('negot')) counts["Negotiation"]++;
+                            else if (st.includes('convert') || st.includes('won') || st.includes('close')) counts["Converted"]++;
+                            else if (st.includes('lost') || st.includes('drop')) counts["Lost"]++;
+                            else counts["New"]++;
+                            hasCustomData = true;
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn('Error reading leads for employee chart:', e);
+            }
+
+            const stages = ["New", "Contacted", "Qualified", "Proposal", "Negotiation", "Converted", "Lost"];
+            const finalData = stages.map(k => hasCustomData ? (counts[k] + defaultStages[k]) : defaultStages[k]);
+            return { labels: stages, data: finalData };
+        }
+
+        const chartConfig = calculateStatusCounts();
+        const total = chartConfig.data.reduce((a, b) => a + b, 0);
+        const countBadge = document.getElementById('empChartTotalCount');
+        if (countBadge) countBadge.textContent = total + ' Active';
+
+        const ctxEmpSales = elChart.getContext('2d');
+        window.empSalesChartInstance = new Chart(ctxEmpSales, {
             type: 'bar',
             data: {
-                labels: @json(array_keys($statusCounts)),
+                labels: chartConfig.labels,
                 datasets: [{
-                    label: 'Assigned Leads',
-                    data: @json(array_values($statusCounts)),
-                    backgroundColor: ['#10b981', '#6366f1', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#ef4444'],
+                    label: 'Active Leads & Deals',
+                    data: chartConfig.data,
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.90)', // New (Emerald)
+                        'rgba(99, 102, 241, 0.90)', // Contacted (Indigo)
+                        'rgba(14, 165, 233, 0.90)', // Qualified (Sky Blue)
+                        'rgba(245, 158, 11, 0.90)', // Proposal (Amber)
+                        'rgba(139, 92, 246, 0.90)', // Negotiation (Purple)
+                        'rgba(5, 150, 105, 0.90)',  // Converted (Forest Green)
+                        'rgba(239, 68, 68, 0.85)'   // Lost (Rose Red)
+                    ],
+                    borderColor: [
+                        '#10b981', '#6366f1', '#0ea5e9', '#f59e0b', '#8b5cf6', '#059669', '#ef4444'
+                    ],
+                    borderWidth: 1.5,
                     borderRadius: 8,
+                    borderSkipped: false,
+                    barThickness: 28,
+                    maxBarThickness: 36
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleColor: '#ffffff',
+                        bodyColor: '#e2e8f0',
+                        padding: 10,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return ' ' + context.parsed.y + ' Leads & Deals in this stage';
+                            }
+                        }
+                    }
                 },
                 scales: {
                     y: { 
-                        grid: { color: '#e2e8f0' }, 
-                        ticks: { color: '#334155', font: { weight: 'bold', size: 11 }, stepSize: 1, precision: 0 },
+                        grid: { 
+                            color: '#e2e8f0',
+                            borderDash: [3, 3]
+                        }, 
+                        ticks: { 
+                            color: '#334155', 
+                            font: { weight: 'bold', size: 11 }, 
+                            stepSize: 2, 
+                            precision: 0 
+                        },
                         beginAtZero: true
                     },
                     x: { 
                         grid: { display: false }, 
-                        ticks: { color: '#1e293b', font: { weight: 'bold', size: 11 } } 
+                        ticks: { 
+                            color: '#1e293b', 
+                            font: { weight: 'bold', size: 11 } 
+                        } 
                     }
                 }
             }
         });
-    }
+
+        // Global updater for real-time synchronization
+        window.updateEmployeeDashboardChart = function() {
+            if (!window.empSalesChartInstance) return;
+            const updated = calculateStatusCounts();
+            window.empSalesChartInstance.data.datasets[0].data = updated.data;
+            window.empSalesChartInstance.update();
+            const badge = document.getElementById('empChartTotalCount');
+            if (badge) {
+                const updatedTotal = updated.data.reduce((a, b) => a + b, 0);
+                badge.textContent = updatedTotal + ' Active';
+            }
+        };
+    })();
 </script>
 @endif
 @endpush

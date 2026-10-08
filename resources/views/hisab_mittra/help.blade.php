@@ -63,7 +63,7 @@
                     <i class="fa-solid fa-file-excel"></i>
                 </div>
                 <h3 class="text-base font-bold text-navy">Data Import & Export</h3>
-                <p class="text-xs text-navy-muted leading-relaxed">Bulk importing staff from Excel, downloading attendance registers, and exporting sales pipeline records.</p>
+                <p class="text-xs text-navy-muted leading-relaxed">Bulk importing staff from Excel, downloading attendance registers, and exporting sales workflow records.</p>
                 <a href="javascript:void(0)" class="text-xs font-bold text-aqua-dark hover:underline block">CSV Templates & Download &rarr;</a>
             </div>
 

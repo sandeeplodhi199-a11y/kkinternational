@@ -1,13 +1,13 @@
 @extends('crm.layouts.master')
 
-@section('title', 'Lead Pipeline Kanban')
+@section('title', 'Lead Kanban Kanban')
 
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
-            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Lead Pipeline (Kanban)</h2>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">Lead Kanban Board</h2>
             <p class="text-xs text-slate-500 font-medium">Drag and drop leads across stages to update conversion status</p>
         </div>
         <div class="flex items-center gap-3">

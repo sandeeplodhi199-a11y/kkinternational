@@ -159,22 +159,22 @@
                     </div>
                 </div>
 
-                <!-- 4. CRM & Sales Pipeline -->
+                <!-- 4. CRM & Sales Management -->
                 <div class="rounded-none bg-white border border-peri-border/60 shadow-soft-elevation hover:shadow-luxury-card hover:border-aqua/40 transition-all duration-300 group flex flex-col justify-between overflow-hidden">
                     <div class="relative h-36 sm:h-40 w-full overflow-hidden bg-slate-100">
-                        <img src="/images/modules/module-crm.jpg" alt="CRM & Deal Pipeline" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="/images/modules/module-crm.jpg" alt="CRM & Deals Management" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                         <div class="absolute bottom-2.5 left-3">
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/95 backdrop-blur text-navy text-[11px] font-bold shadow-sm">
-                                <i class="fa-solid fa-diagram-project text-aqua-dark"></i> CRM Pipeline
+                                <i class="fa-solid fa-diagram-project text-aqua-dark"></i> CRM & Deals
                             </span>
                         </div>
                     </div>
                     <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
                         <div>
-                            <h3 class="text-base font-bold text-navy mb-1">4. CRM & Deal Pipeline</h3>
+                            <h3 class="text-base font-bold text-navy mb-1">4. CRM & Deals Management</h3>
                             <p class="text-xs text-navy-muted leading-relaxed mb-2.5 line-clamp-2">
-                                Never lose leads again with visual drag-and-drop Kanban pipelines, automated follow-up reminders, and sales targets.
+                                Never lose leads again with visual drag-and-drop Kanban deal boards, automated follow-up reminders, and sales targets.
                             </p>
                             <ul class="space-y-1 text-xs text-navy-body font-medium">
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark text-[10px]"></i> Interactive Kanban Deal Stages</li>
@@ -839,7 +839,7 @@
                         <ul class="space-y-2.5 text-xs text-navy-body font-medium">
                             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Up to 100 Employees</li>
                             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Full HRM & Shift Rostering</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Visual Deal Pipeline & Leads CRM</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Visual Deal Board & Leads CRM</li>
                             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Official WhatsApp Messaging</li>
                             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Invoicing & Quotations Tool</li>
                             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-aqua-dark"></i> Priority Support & Training</li>

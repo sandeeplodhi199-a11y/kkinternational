@@ -68,7 +68,7 @@
                             <i class="fa-solid fa-comments-dollar"></i>
                         </div>
                         <div>
-                            <div class="text-xs font-bold text-navy">WhatsApp CRM & Deal Pipeline</div>
+                            <div class="text-xs font-bold text-navy">WhatsApp CRM & Deals Management</div>
                             <div class="text-[11px] text-navy-muted mt-0.5 leading-normal">
                                 Visual lead stages, instant GST quotations, automated WhatsApp reminders, and deal win-loss analytics.
                             </div>
@@ -182,7 +182,7 @@
                                     <option value="Full OS Suite">Full All-in-One Suite</option>
                                     <option value="HRM & Attendance">Biometric & GPS Attendance</option>
                                     <option value="Payroll & PF/ESI">Automated Payroll & Compliance</option>
-                                    <option value="CRM & Pipeline">WhatsApp Sales CRM</option>
+                                    <option value="CRM & Deals">WhatsApp Sales CRM</option>
                                 </select>
                             </div>
                         </div>

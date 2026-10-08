@@ -23,12 +23,12 @@ class CrmDealController extends Controller
             $stageTotals[$stage] = $dealsInStage->sum('value');
         }
 
-        $totalPipelineValue = CrmDeal::sum('value');
+        $totalDealsValValue = CrmDeal::sum('value');
         $wonValue = CrmDeal::where('stage', 'Won')->sum('value');
         $customers = CrmCustomer::all();
         $employees = CrmEmployee::where('status', 'Active')->get();
 
-        return view('crm.admin.deals.index', compact('stages', 'kanban', 'stageTotals', 'totalPipelineValue', 'wonValue', 'customers', 'employees'));
+        return view('crm.admin.deals.index', compact('stages', 'kanban', 'stageTotals', 'totalDealsValValue', 'wonValue', 'customers', 'employees'));
     }
 
     public function create()
@@ -69,13 +69,13 @@ class CrmDealController extends Controller
 
         \App\Models\Crm\CrmNotification::notify(
             "Deal Added: {$deal->title}",
-            "Deal added in pipeline at {$deal->stage} stage for ₹" . number_format($deal->value),
+            "New deal added at {$deal->stage} stage for ₹" . number_format($deal->value),
             'deal',
             url('/crm/admin/deals'),
             $deal->assigned_to
         );
 
-        return redirect()->route('crm.admin.deals.index')->with('success', 'Deal created in pipeline!');
+        return redirect()->route('crm.admin.deals.index')->with('success', 'Deal created successfully!');
     }
 
     public function updateStage(Request $request, $id)

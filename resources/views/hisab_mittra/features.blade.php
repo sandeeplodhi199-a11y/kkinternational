@@ -546,7 +546,7 @@
 
 
     <!-- ========================================================================= -->
-    <!-- MODULE 04: Sales CRM & Visual Deal Pipeline -->
+    <!-- MODULE 04: Sales CRM & Visual Deal Board -->
     <!-- ========================================================================= -->
     <section id="module-crm" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 scroll-mt-32">
         <div class="p-8 sm:p-12 rounded-3xl bg-white border border-slate-200 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -557,8 +557,8 @@
                     
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
                         <div>
-                            <h3 class="font-extrabold text-sm text-white">Interactive Deal Pipeline Kanban</h3>
-                            <p class="text-[11px] text-slate-400">Active pipeline volume: ₹62.4 Lakhs</p>
+                            <h3 class="font-extrabold text-sm text-white">Interactive Deal Kanban Board</h3>
+                            <p class="text-[11px] text-slate-400">Active deals volume: ₹62.4 Lakhs</p>
                         </div>
                         <span class="text-[11px] px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">
                             Quarter Q3 Forecast
@@ -659,7 +659,7 @@
                     <span>PILLAR 04 &bull; HIGH-VELOCITY SALES CRM</span>
                 </div>
                 <h2 class="text-2xl sm:text-4xl font-extrabold text-black tracking-tight mt-1 mb-4">
-                    Sales CRM & Visual Deal Pipeline
+                    Sales CRM & Visual Deal Board
                 </h2>
                 <p class="text-sm sm:text-base text-slate-600 leading-relaxed mb-6 font-medium">
                     Consolidate marketing channels, capture qualified leads automatically from your website and social campaigns, and track deal stages across your entire sales team with automated WhatsApp and email follow-up reminders.
@@ -691,7 +691,7 @@
                             <i class="fa-solid fa-check"></i>
                         </div>
                         <div>
-                            <strong class="text-black block text-sm font-extrabold">Pipeline Velocity & Forecasting</strong>
+                            <strong class="text-black block text-sm font-extrabold">Sales Velocity & Forecasting</strong>
                             <span class="text-slate-600 font-normal text-xs">Track bottlenecks, average closing time per stage, and project accurate quarterly cash inflow.</span>
                         </div>
                     </div>

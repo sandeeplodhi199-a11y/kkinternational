@@ -1,7 +1,7 @@
 @extends('hisab_mittra.layouts.master')
 
-@section('title', 'Sales CRM & Visual Deal Pipeline — Hisab Mittra Enterprise Suite')
-@section('meta_description', 'Accelerate Indian B2B sales with Hisab Mittra: Omnichannel Lead Ingestion, Visual Drag-and-Drop Kanban Pipeline, Official WhatsApp CRM, and 60-Second GST Quotations.')
+@section('title', 'Sales CRM & Visual Deal Board — Hisab Mittra Enterprise Suite')
+@section('meta_description', 'Accelerate Indian B2B sales with Hisab Mittra: Omnichannel Lead Ingestion, Visual Drag-and-Drop Kanban Deal Board, Official WhatsApp CRM, and 60-Second GST Quotations.')
 
 @section('content')
 <div class="py-12 sm:py-20 bg-transparent">
@@ -42,7 +42,7 @@
         <div class="mt-12 p-4 rounded-2xl bg-white border border-slate-200 shadow-lg grid grid-cols-2 md:grid-cols-4 gap-4 text-left motion-reveal delay-300">
             <div class="p-3 border-r border-slate-100 last:border-none">
                 <div class="text-2xl sm:text-3xl font-extrabold text-black" data-counter="₹1.8 Cr+">₹1.8 Cr+</div>
-                <div class="text-xs font-bold text-slate-800 mt-0.5">Active Pipeline Tracked</div>
+                <div class="text-xs font-bold text-slate-800 mt-0.5">Active Deals Tracked</div>
                 <div class="text-[11px] text-slate-500">Live deal forecasting</div>
             </div>
             <div class="p-3 border-r border-slate-100 last:border-none">
@@ -66,16 +66,16 @@
 
 
     <!-- ========================================================================= -->
-    <!-- 2. INTERACTIVE KANBAN DEAL PIPELINE SIMULATOR -->
+    <!-- 2. INTERACTIVE KANBAN DEAL SIMULATOR -->
     <!-- ========================================================================= -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         
         <div class="text-center max-w-3xl mx-auto mb-12">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-extrabold mb-2 border border-blue-200">
-                <i class="fa-solid fa-diagram-project"></i> VISUAL PIPELINE VELOCITY
+                <i class="fa-solid fa-diagram-project"></i> VISUAL DEALS VELOCITY
             </span>
             <h2 class="text-3xl sm:text-5xl font-extrabold text-black tracking-tight">
-                Interactive Visual Deal Pipeline
+                Interactive Visual Deal Board
             </h2>
             <p class="text-slate-600 text-sm sm:text-base mt-2 font-medium">
                 Move deals smoothly across stages, track probability, and forecast quarterly revenue with real-time velocity analytics.
@@ -90,7 +90,7 @@
                 <div>
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
-                        <h3 class="font-extrabold text-sm text-white">Q3 Enterprise Pipeline &bull; Target: ₹1.2 Cr</h3>
+                        <h3 class="font-extrabold text-sm text-white">Q3 Enterprise Deals &bull; Target: ₹1.2 Cr</h3>
                     </div>
                     <p class="text-[11px] text-slate-400 mt-0.5">Click "Advance Stage" on any deal card to simulate live stage velocity</p>
                 </div>
@@ -264,7 +264,7 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         
         <div class="text-center max-w-3xl mx-auto mb-12">
-            <span class="text-xs font-bold uppercase tracking-wider text-blue-600">STRUCTURED PIPELINE FLOW</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600">STRUCTURED SALES FLOW</span>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-black tracking-tight mt-1">
                 The 4-Stage High-Conversion Sales Funnel
             </h2>
@@ -504,7 +504,7 @@
                     <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
                 </div>
                 <div class="faq-content hidden mt-3 pt-3 border-t border-slate-100 text-xs text-slate-600 leading-relaxed font-medium">
-                    No, unless you want them to. Hisab Mittra provides granular role-based access control (RBAC). Sales executives only see deals assigned to them, while sales managers view team pipelines, and administrators maintain complete 360-degree organizational visibility.
+                    No, unless you want them to. Hisab Mittra provides granular role-based access control (RBAC). Sales executives only see deals assigned to them, while sales managers view team deals, and administrators maintain complete 360-degree organizational visibility.
                 </div>
             </div>
 

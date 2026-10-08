@@ -9,7 +9,7 @@
     <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
             <div class="flex items-center gap-2 text-xs font-bold text-slate-500 mb-1">
-                <a href="{{ route('crm.admin.deals.index') }}" class="hover:text-purple-600 transition">Sales Pipeline</a>
+                <a href="{{ route('crm.admin.deals.index') }}" class="hover:text-purple-600 transition">Sales Deals</a>
                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                 <span class="text-slate-900 font-extrabold">New Deal</span>
             </div>
@@ -20,7 +20,7 @@
                 <span>Create Opportunity / Deal</span>
             </h1>
             <p class="text-xs sm:text-sm text-slate-600 font-semibold mt-1">
-                Forecast expected revenues, configure pipeline probability, and assign closing managers.
+                Forecast expected revenues, configure win probability, and assign closing managers.
             </p>
         </div>
 
@@ -58,7 +58,7 @@
                     <div>
                         <label class="block text-xs font-black text-slate-800 mb-1.5">Associated Client / Account</label>
                         <select name="customer_id" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-600">
-                            <option value="">General Pipeline Opportunity</option>
+                            <option value="">General Sales Opportunity</option>
                             @foreach($customers as $c)
                                 <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->company }})</option>
                             @endforeach
@@ -66,7 +66,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-black text-slate-800 mb-1.5">Pipeline Stage *</label>
+                        <label class="block text-xs font-black text-slate-800 mb-1.5">Deal Stage *</label>
                         <select name="stage" class="w-full text-xs p-3 rounded-2xl border border-slate-300 font-black text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-600">
                             <option value="New" selected>New Opportunity</option>
                             <option value="Qualified">Qualified</option>
