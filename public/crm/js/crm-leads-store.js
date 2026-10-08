@@ -1289,10 +1289,114 @@
         return member;
     }
 
+        function updateTeamTableCounts() {
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr:not(.empty-row)');
+        const count = rows.length;
+
+        document.querySelectorAll('div').forEach(el => {
+            if (el.textContent && el.textContent.includes('Showing 1 to') && el.textContent.includes('entries')) {
+                el.textContent = `Showing 1 to ${count} of ${count} entries`;
+            }
+        });
+
+        rows.forEach((tr, idx) => {
+            const numTd = tr.querySelector('td:first-child');
+            if (numTd) numTd.textContent = idx + 1;
+        });
+    }
+
+    function deleteTeamMemberConfirm(id, name) {
+        if (!confirm('Are you sure you want to delete employee "' + (name || 'this employee') + '"?')) {
+            return;
+        }
+
+        const strId = String(id);
+
+        // 1. Remove from DOM
+        const rows = document.querySelectorAll('table tbody tr');
+        rows.forEach(tr => {
+            const btn = tr.querySelector(`button[onclick*="confirmDelete('${id}'"]`) || 
+                        tr.querySelector(`button[onclick*="confirmDelete(\"${id}\""]`) ||
+                        tr.querySelector(`button[onclick*="confirmDelete(${id},"]`);
+            if (btn || (name && tr.textContent.includes(name))) {
+                tr.style.transition = 'all 0.3s ease';
+                tr.style.opacity = '0';
+                tr.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    tr.remove();
+                    updateTeamTableCounts();
+                }, 300);
+            }
+        });
+
+        // 2. Mark as deleted in storage
+        try {
+            const delKey = 'hm_crm_deleted_team_ids';
+            let deletedIds = [];
+            try {
+                const rawDel = localStorage.getItem(delKey);
+                deletedIds = rawDel ? JSON.parse(rawDel) : [];
+            } catch(e) {}
+            if (!deletedIds.includes(strId)) {
+                deletedIds.push(strId);
+                localStorage.setItem(delKey, JSON.stringify(deletedIds));
+            }
+
+            const raw = localStorage.getItem('hm_crm_team_data');
+            if (raw) {
+                let list = JSON.parse(raw);
+                list = list.filter(item => String(item.id) !== strId && item.name !== name);
+                localStorage.setItem('hm_crm_team_data', JSON.stringify(list));
+            }
+        } catch (e) {
+            console.error('Storage error:', e);
+        }
+
+        // 3. Sync delete to MySQL
+        try {
+            syncToDatabase({ action: 'delete_employee', emp_id: id, name: name });
+        } catch(e) {}
+
+        // 4. Notification
+        showToast(`Employee "${name || 'Selected'}" deleted successfully!`, 'info');
+
+        // 5. If pure Laravel environment
+        const isLaravel = (typeof window.__IS_LARAVEL__ !== 'undefined' && window.__IS_LARAVEL__) || 
+                          (window.location.port === '8000');
+        if (isLaravel) {
+            const form = document.getElementById('deleteEmpForm');
+            if (form && !window.location.pathname.endsWith('.html')) {
+                form.action = '/crm/admin/team/' + id;
+                form.submit();
+            }
+        }
+    }
+
+    // Expose globally
+    window.confirmDelete = deleteTeamMemberConfirm;
+    window.deleteTeamMemberConfirm = deleteTeamMemberConfirm;
+    window.updateTeamTableCounts = updateTeamTableCounts;
+
     function renderTeamTable() {
         if (!window.location.pathname.includes('/team')) return;
         const tbody = document.querySelector('table tbody');
         if (!tbody) return;
+
+        // Auto-remove deleted employees from HTML table on load
+        const deletedTeamIds = getList('hm_crm_deleted_team_ids');
+        if (deletedTeamIds && deletedTeamIds.length) {
+            tbody.querySelectorAll('tr').forEach(tr => {
+                deletedTeamIds.forEach(delId => {
+                    const btn = tr.querySelector(`button[onclick*="confirmDelete('${delId}'"]`) || 
+                                tr.querySelector(`button[onclick*="confirmDelete(\"${delId}\""]`) ||
+                                tr.querySelector(`button[onclick*="confirmDelete(${delId},"]`);
+                    if (btn) tr.remove();
+                });
+            });
+            updateTeamTableCounts();
+        }
 
         const stored = getList(STORAGE_KEYS.team);
         if (!stored.length) return;
@@ -1300,10 +1404,11 @@
         tbody.querySelectorAll('.custom-injected-team').forEach(el => el.remove());
 
         stored.slice().reverse().forEach((m, idx) => {
+            if (deletedTeamIds && deletedTeamIds.includes(String(m.id))) return;
             const tr = document.createElement('tr');
             tr.className = 'custom-injected-team hover:bg-emerald-50/60 transition bg-emerald-50/20';
             tr.innerHTML = `
-                <td class="py-3.5 px-4 font-bold text-slate-400 text-xs">${10 + idx}</td>
+                <td class="py-3.5 px-4 font-bold text-slate-400 text-xs">${idx + 1}</td>
                 <td class="py-3.5 px-4 font-bold text-slate-800 text-xs whitespace-nowrap">
                     <span>${m.name}</span>
                     <span class="ml-1 px-1 py-0.2 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded">NEW</span>
@@ -1329,7 +1434,10 @@
             `;
             tbody.insertBefore(tr, tbody.firstChild);
         });
+        updateTeamTableCounts();
     }
+
+
 
     // ==========================================
     // 11. RESERVATIONS CONTROLLER & RENDERER

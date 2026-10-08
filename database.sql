@@ -2976,3 +2976,6 @@ INSERT INTO `crm_products` (`name`, `code`, `category`, `description`, `price`, 
 
 -- Auto-Saved Action [2026-10-07 13:22:09]
 INSERT INTO `crm_reservations` (`reservation_code`, `customer_name`, `service_name`, `date`, `time`, `assigned_to`, `status`, `amount`, `notes`, `created_at`, `updated_at`) VALUES ('RES-5489', 'Suresh Kumar', 'Onsite Setup & Training', '2026-10-09', '14:00:00', NULL, 'Confirmed', 5000, 'Installation scheduled', '2026-10-07 13:22:09', '2026-10-07 13:22:09');
+
+-- Auto-Saved Action [2026-10-08 11:33:07]
+DELETE FROM `crm_employees` WHERE `id` = 10;

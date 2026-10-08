@@ -746,6 +746,49 @@ if ($action === 'delete_lead' || $action === 'delete_record') {
 }
 
 // ==========================================
+// 14b. ACTION: DELETE EMPLOYEE / TEAM MEMBER
+// ==========================================
+if ($action === 'delete_employee' || $action === 'delete_team_member') {
+    $empId = (int)($input['emp_id'] ?? $input['id'] ?? 0);
+    $empName = trim($input['name'] ?? '');
+
+    $cond = $empId > 0 ? "`id` = {$empId}" : "`name` = '" . addslashes($empName) . "'";
+    $sql = "DELETE FROM `crm_employees` WHERE {$cond}";
+    appendToSqlDump($sql);
+
+    if ($pdo) {
+        try {
+            if ($empId > 0) {
+                $stmtCheck = $pdo->prepare("SELECT id, user_id, email FROM crm_employees WHERE id = ?");
+                $stmtCheck->execute([$empId]);
+                $empRow = $stmtCheck->fetch();
+
+                $stmt = $pdo->prepare("DELETE FROM crm_employees WHERE id = ?");
+                $stmt->execute([$empId]);
+
+                if ($empRow && !empty($empRow['user_id'])) {
+                    if ($empRow['email'] !== 'admin@c.com' && (int)$empRow['user_id'] !== 135) {
+                        $stmtUser = $pdo->prepare("DELETE FROM users WHERE id = ?");
+                        $stmtUser->execute([(int)$empRow['user_id']]);
+                    }
+                }
+            } else if (!empty($empName)) {
+                $stmt = $pdo->prepare("DELETE FROM crm_employees WHERE name = ?");
+                $stmt->execute([$empName]);
+            }
+            logActivity($pdo, 'Team', 'Delete Employee', "Deleted employee ID: {$empId} / Name: {$empName}");
+        } catch (Exception $e) {}
+    }
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Employee successfully deleted in SQL & MySQL database!',
+        'sql' => $sql
+    ]);
+    exit;
+}
+
+// ==========================================
 // 15. ACTION: UPDATE DEMO STATUS
 // ==========================================
 if ($action === 'update_demo_status' || (strpos($action, 'demo') !== false && isset($input['status']))) {

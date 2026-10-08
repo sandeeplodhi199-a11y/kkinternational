@@ -282,30 +282,122 @@
         document.getElementById('addEmpModal').classList.add('hidden');
     }
 
+        function updateTeamTableCounts() {
+        const tbody = document.querySelector('table tbody');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr:not(.empty-row)');
+        const count = rows.length;
+        
+        // Update "Showing 1 to X of X entries"
+        document.querySelectorAll('div').forEach(el => {
+            if (el.textContent && el.textContent.includes('Showing 1 to') && el.textContent.includes('entries')) {
+                el.textContent = `Showing 1 to ${count} of ${count} entries`;
+            }
+        });
+
+        // Re-number rows (Col 1: #)
+        rows.forEach((tr, idx) => {
+            const numTd = tr.querySelector('td:first-child');
+            if (numTd) numTd.textContent = idx + 1;
+        });
+    }
+
     function confirmDelete(id, name) {
         if (!confirm('Are you sure you want to delete employee "' + (name || 'this employee') + '"?')) {
             return;
         }
 
-        // Remove row with transition
+        const strId = String(id);
+
+        // 1. Immediately remove row from DOM with smooth animation
         const rows = document.querySelectorAll('table tbody tr');
+        let matched = false;
         rows.forEach(tr => {
             const btn = tr.querySelector(`button[onclick*="confirmDelete('${id}'"]`) || 
-                        tr.querySelector(`button[onclick*="confirmDelete(\"${id}\""]`);
-            if (btn) {
+                        tr.querySelector(`button[onclick*="confirmDelete(\"${id}\""]`) ||
+                        tr.querySelector(`button[onclick*="confirmDelete(${id},"]`);
+            if (btn || (name && tr.textContent.includes(name))) {
+                matched = true;
                 tr.style.transition = 'all 0.3s ease';
                 tr.style.opacity = '0';
                 tr.style.transform = 'scale(0.95)';
-                setTimeout(() => tr.remove(), 300);
+                setTimeout(() => {
+                    tr.remove();
+                    updateTeamTableCounts();
+                }, 300);
             }
         });
 
-        // Submit form in Laravel environment
-        const form = document.getElementById('deleteEmpForm');
-        if (form) {
-            form.action = '/crm/admin/team/' + id;
-            form.submit();
+        // 2. Mark as deleted in localStorage for persistence
+        try {
+            const delKey = 'hm_crm_deleted_team_ids';
+            let deletedIds = [];
+            try {
+                const rawDel = localStorage.getItem(delKey);
+                deletedIds = rawDel ? JSON.parse(rawDel) : [];
+            } catch(e) {}
+            if (!deletedIds.includes(strId)) {
+                deletedIds.push(strId);
+                localStorage.setItem(delKey, JSON.stringify(deletedIds));
+            }
+
+            const raw = localStorage.getItem('hm_crm_team_data');
+            if (raw) {
+                let list = JSON.parse(raw);
+                list = list.filter(item => String(item.id) !== strId && item.name !== name);
+                localStorage.setItem('hm_crm_team_data', JSON.stringify(list));
+            }
+        } catch (e) {
+            console.error('Storage error:', e);
+        }
+
+        // 3. Sync delete to MySQL database via sync.php
+        try {
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete_employee', emp_id: id, name: name })
+            }).catch(() => {});
+        } catch (e) {}
+
+        // 4. Show notification
+        if (typeof showToast === 'function') {
+            showToast(`Employee "${name || 'Selected'}" deleted successfully!`, 'info');
+        } else if (window.hmCrm && typeof window.hmCrm.showToast === 'function') {
+            window.hmCrm.showToast(`Employee "${name || 'Selected'}" deleted successfully!`, 'info');
+        }
+
+        // 5. In pure Laravel environment (only if actual PHP route, not static HTML)
+        const isLaravel = (typeof window.__IS_LARAVEL__ !== 'undefined' && window.__IS_LARAVEL__) || 
+                          (window.location.port === '8000');
+        if (isLaravel) {
+            const form = document.getElementById('deleteEmpForm');
+            if (form && !window.location.pathname.endsWith('.html')) {
+                form.action = '/crm/admin/team/' + id;
+                form.submit();
+            }
         }
     }
+
+    // Auto-remove previously deleted employees on load
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const delKey = 'hm_crm_deleted_team_ids';
+            const rawDel = localStorage.getItem(delKey);
+            const deletedIds = rawDel ? JSON.parse(rawDel) : [];
+            if (deletedIds.length > 0) {
+                const rows = document.querySelectorAll('table tbody tr');
+                rows.forEach(tr => {
+                    deletedIds.forEach(id => {
+                        const btn = tr.querySelector(`button[onclick*="confirmDelete('${id}'"]`) || 
+                                    tr.querySelector(`button[onclick*="confirmDelete(\"${id}\""]`) ||
+                                    tr.querySelector(`button[onclick*="confirmDelete(${id},"]`);
+                        if (btn) tr.remove();
+                    });
+                });
+                updateTeamTableCounts();
+            }
+        } catch(e) {}
+    });
 </script>
 @endsection
