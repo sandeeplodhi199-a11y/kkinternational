@@ -1803,8 +1803,22 @@
         `;
     }
 
+    function isDashboardPage() {
+        const p = (window.location.pathname || '').toLowerCase();
+        if (p.includes('/dashboard')) return true;
+        if (p === '/crm/admin' || p === '/crm/admin/' || p === '/crm/admin/index.html') return true;
+        if (p === '/crm/employee' || p === '/crm/employee/' || p === '/crm/employee/index.html') return true;
+        return false;
+    }
+
     function injectAutoRefreshButton() {
-        // Remove any misplaced widget in topbar header (e.g. next to Back/Website)
+        // STRICT REQUIREMENT: Auto Refresh button ONLY allowed on Admin Dashboard and Employee Dashboard!
+        if (!isDashboardPage()) {
+            document.querySelectorAll('.crm-auto-refresh-widget').forEach(el => el.remove());
+            return;
+        }
+
+        // Remove any misplaced widget in topbar header
         document.querySelectorAll('header .crm-auto-refresh-widget').forEach(el => el.remove());
 
         if (document.querySelector('.crm-auto-refresh-widget')) {
@@ -1812,7 +1826,7 @@
             return;
         }
 
-        // 1. Dashboard Greeting Card (Hello Admin!) - only on Dashboard greeting banner
+        // 1. Admin Dashboard Greeting Card (Hello Admin!)
         const dashboardBanner = document.querySelector('main .bg-slate-200');
         if (dashboardBanner && !dashboardBanner.querySelector('.crm-auto-refresh-widget')) {
             let actionDiv = dashboardBanner.querySelector('.crm-greeting-actions');
@@ -1826,29 +1840,21 @@
             return;
         }
 
-        // 2. Main Page Header Actions (Only inside main, beside primary create/add buttons)
-        const primaryActionBtn = document.querySelector('main a[href*="create"], main a[href*="add"], main button[onclick*="modal"], main button[data-action="add"]');
-        if (primaryActionBtn && primaryActionBtn.parentElement) {
-            const parent = primaryActionBtn.parentElement;
-            const wrapper = document.createElement('div');
-            wrapper.className = 'inline-block';
-            wrapper.innerHTML = createAutoRefreshWidgetHtml();
-            
-            if (parent.classList.contains('flex') && parent.classList.contains('items-center')) {
-                parent.insertBefore(wrapper.firstElementChild, primaryActionBtn);
-            } else {
-                const actionGroup = document.createElement('div');
-                actionGroup.className = 'flex items-center gap-2.5';
-                parent.insertBefore(actionGroup, primaryActionBtn);
-                actionGroup.appendChild(wrapper.firstElementChild);
-                actionGroup.appendChild(primaryActionBtn);
+        // 2. Employee Dashboard Hero Banner
+        const empBanner = document.querySelector('main [style*="c0e097"]') || document.querySelector('main .border-\\[\\#b4db87\\]\\/70');
+        if (empBanner && !empBanner.querySelector('.crm-auto-refresh-widget')) {
+            const btnContainer = empBanner.querySelector('.mt-5.flex.items-center');
+            if (btnContainer) {
+                const wrap = document.createElement('div');
+                wrap.innerHTML = createAutoRefreshWidgetHtml();
+                btnContainer.appendChild(wrap.firstElementChild);
+                updateAutoRefreshUI();
+                return;
             }
-            updateAutoRefreshUI();
-            return;
         }
-
-        updateAutoRefreshUI();
     }
+
+    
 
     function updateAutoRefreshUI() {
         const widgets = document.querySelectorAll('.crm-auto-refresh-widget');

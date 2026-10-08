@@ -16,29 +16,6 @@
             </div>
 
             <div class="flex items-center gap-2.5">
-                <!-- Auto Refresh Widget -->
-                <div class="inline-flex items-center gap-1.5 p-0.5 bg-white border border-slate-200/90 rounded-full shadow-xs crm-auto-refresh-widget transition hover:border-emerald-400">
-                    <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefresh ? window.HMCrmStore.toggleAutoRefresh(event) : null" title="Click to Refresh Immediately" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full hover:bg-slate-50 text-slate-700 text-xs font-bold transition active:scale-95 cursor-pointer">
-                        <span class="relative flex h-2 w-2">
-                            <span class="auto-refresh-ping animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="auto-refresh-dot relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <i class="auto-refresh-icon fa-solid fa-arrows-rotate text-[11px] text-slate-400 transition-transform"></i>
-                        <span class="auto-refresh-label text-[11px] font-bold">Auto Refresh: <strong class="text-emerald-700 font-black">ON</strong></span>
-                        <span class="auto-refresh-timer px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-black">10s</span>
-                    </button>
-                    <button type="button" onclick="window.HMCrmStore && window.HMCrmStore.toggleAutoRefreshState ? window.HMCrmStore.toggleAutoRefreshState(event) : null" title="Toggle Auto Refresh ON/OFF" class="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center text-[10px] transition cursor-pointer">
-                        <i class="fa-solid fa-power-off"></i>
-                    </button>
-                </div>
-
-                <a href="{{ route('crm.admin.team.create') }}" 
-                   class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#4f46e5] hover:bg-[#4338ca] text-white text-xs font-bold shadow-sm transition active:scale-95">
-                    <i class="fa-solid fa-plus text-xs"></i>
-                    <span>Add Employee</span>
-                </a>
-            </div>
-        </div>
 
         <!-- Table Controls: Show Entries & Search -->
         <div class="flex items-center justify-between flex-wrap gap-4 pb-2">
