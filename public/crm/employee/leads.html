@@ -515,12 +515,18 @@
             
             
             <div class="space-y-6">
-    <div class="flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center justify-between flex-wrap gap-4">
         <div>
             <h2 class="text-xl md:text-2xl font-extrabold text-slate-800">My Assigned Leads</h2>
             <p class="text-xs text-slate-500 font-medium">Prospects assigned to you for discovery, qualification and proposal presentation</p>
         </div>
         <div class="flex items-center flex-wrap gap-2.5">
+            <button type="button" onclick="document.getElementById('emp-add-lead-modal').classList.remove('hidden')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black shadow-sm transition active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Add New Lead</span>
+            </button>
+        </div>
+    </div>
 
     <!-- Leads List -->
     <div class="crm-card overflow-hidden">

@@ -16,6 +16,13 @@
             </div>
 
             <div class="flex items-center gap-2.5">
+                <a href="{{ route('crm.admin.team.create') }}" 
+                   class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#4f46e5] hover:bg-[#4338ca] text-white text-xs font-bold shadow-sm transition active:scale-95">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Add Employee</span>
+                </a>
+            </div>
+        </div>
 
         <!-- Table Controls: Show Entries & Search -->
         <div class="flex items-center justify-between flex-wrap gap-4 pb-2">
