@@ -344,7 +344,7 @@ Contact: support@hisabmittra.com | +91 7627055170 | www.hisabmittra.com</textare
         <div class="quotation-footer-container border-t-2 border-[#1e3a8a] pt-3 mt-4" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; width: 100%; gap: 14px;">
             <!-- 1. Left: EXACT QR Code Block (Matching user uploaded Image 2 Left) -->
             <div class="quotation-qr-col" style="flex: 0 0 160px; width: 160px; text-align: center;">
-                <img src="/crm/images/hisab-mittra-qr-col.png" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 155px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+                <img src="/crm/images/hisab-mittra-qr-col.png?v=2" alt="HisabMittra UPI QR & Bank" class="quotation-qr-img" style="width: 155px; height: auto; object-fit: contain; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
             </div>
 
             <!-- 2. Middle: Bank Details (Matching user uploaded Image 2 Right) -->
