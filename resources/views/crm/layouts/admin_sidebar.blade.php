@@ -37,7 +37,7 @@
         <a href="{{ route('crm.admin.deals.index') }}" 
            class="sidebar-dark-item {{ Request::routeIs('crm.admin.deals.*') ? 'sidebar-dark-item-active' : '' }}">
             <i class="fa-solid fa-handshake"></i>
-            <span>Deals & Pipeline</span>
+            <span>Deals</span>
         </a>
 
         <!-- Customers -->

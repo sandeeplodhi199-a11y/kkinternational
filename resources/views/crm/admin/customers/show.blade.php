@@ -1,4 +1,4 @@
-@extends('crm.layouts.master')
+﻿@extends('crm.layouts.master')
 
 @section('title', 'Customer 360° Profile - ' . $customer->name)
 
@@ -67,7 +67,7 @@
         <div class="lg:col-span-2 space-y-6">
             <!-- Deals & Opportunities -->
             <div class="crm-card p-6">
-                <h3 class="text-sm font-bold text-slate-800 mb-3">Associated Deals & Pipeline</h3>
+                <h3 class="text-sm font-bold text-slate-800 mb-3">Associated Deals</h3>
                 <div class="space-y-2">
                     @forelse($customer->deals as $deal)
                         <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 text-xs">
