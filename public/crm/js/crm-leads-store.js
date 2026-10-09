@@ -26,10 +26,15 @@
 
     const EMPLOYEES = {
         '1': 'Admin',
+        '2': 'Nandkishor Chauhan',
+        '4': 'RAVI BAIRWA',
+        '5': 'Ashok Chhapola',
         '6': 'Rahul Sharma',
         '7': 'Vipin',
         '8': 'Nandkishor Chouhan',
-        '9': 'sunny'
+        '9': 'sunny',
+        '11': 'RAVI BAIRWA',
+        '12': 'Ashok Chhapola'
     };
 
     const SOURCES = {

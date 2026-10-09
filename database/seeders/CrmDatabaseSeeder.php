@@ -68,7 +68,7 @@ class CrmDatabaseSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'password' => Hash::make('KkAdmin@2026!'),
-                'mobile' => '+91 9876543210',
+                'mobile' => '+91 9783055170',
                 'type' => 'crm_admin',
                 'is_deleted' => 0,
             ]
@@ -82,7 +82,7 @@ class CrmDatabaseSeeder extends Seeder
                 'employee_code' => 'EMP-001',
                 'name' => 'Admin',
                 'email' => 'admin@crm.com',
-                'phone' => '+91 9876543210',
+                'phone' => '+91 9783055170',
                 'designation' => 'Managing Director & Head of Sales',
                 'role' => 'Admin',
                 'joining_date' => '2024-01-15',
@@ -502,7 +502,7 @@ class CrmDatabaseSeeder extends Seeder
             'company_tagline' => 'Enterprise Sales & Customer Growth Platform',
             'currency_symbol' => '₹',
             'support_email' => 'support@emedleycrm.com',
-            'support_phone' => '+91 98765 43210',
+            'support_phone' => '+91 97830 55170',
             'fiscal_year_start' => 'April',
         ];
         foreach ($settings as $k => $v) {

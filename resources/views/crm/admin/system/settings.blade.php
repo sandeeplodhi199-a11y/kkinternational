@@ -141,7 +141,7 @@
 
                         <div>
                             <label class="block text-xs font-black text-slate-800 mb-1.5">Support Phone / Helpdesk</label>
-                            <input type="text" name="support_phone" value="{{ $settings['support_phone'] ?? '+91 98765 43210' }}"
+                            <input type="text" name="support_phone" value="{{ $settings['support_phone'] ?? '+91 97830 55170' }}"
                                    class="w-full text-xs font-bold p-3 rounded-2xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                         </div>
                     </div>

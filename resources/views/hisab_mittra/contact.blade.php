@@ -30,7 +30,7 @@
                     </div>
                     <h3 class="text-sm font-bold text-navy">Direct Sales Hotline</h3>
                     <p class="text-xs text-navy-muted">Mon–Sat from 09:30 AM to 07:00 PM IST</p>
-                    <a href="tel:+919876543210" class="text-xs font-bold text-aqua-dark block hover:underline">+91 98765 43210</a>
+                    <a href="tel:+919783055170" class="text-xs font-bold text-aqua-dark block hover:underline">+91 97830 55170</a>
                 </div>
 
                 <div class="p-6 rounded-3xl bg-white border border-aqua-border/60 shadow-soft-elevation space-y-2">
@@ -90,7 +90,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-1">WhatsApp / Phone Number *</label>
-                            <input type="tel" name="phone" required placeholder="+91 98765 43210" 
+                            <input type="tel" name="phone" required placeholder="+91 97830 55170" 
                                    class="w-full text-xs px-4 py-3 rounded-xl border border-aqua-border focus:border-aqua focus:ring-2 focus:ring-aqua/20 bg-mint outline-none">
                         </div>
                     </div>

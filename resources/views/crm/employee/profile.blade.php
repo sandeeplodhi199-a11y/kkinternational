@@ -58,7 +58,7 @@
                 </div>
                 <div>
                     <label class="text-slate-400 font-semibold block">Direct Phone / Mobile</label>
-                    <span class="text-slate-700 font-medium">{{ $employee->phone ?? '+91 98765 43210' }}</span>
+                    <span class="text-slate-700 font-medium">{{ $employee->phone ?? '+91 97830 55170' }}</span>
                 </div>
                 <div>
                     <label class="text-slate-400 font-semibold block">Panel Role</label>

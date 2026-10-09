@@ -134,7 +134,7 @@ class CrmQuotationController extends Controller
             'company_name' => CrmSetting::get('company_name', 'Emedley Cloud CRM'),
             'company_tagline' => CrmSetting::get('company_tagline', 'Enterprise Solutions'),
             'support_email' => CrmSetting::get('support_email', 'billing@emedleycrm.com'),
-            'support_phone' => CrmSetting::get('support_phone', '+91 98765 43210'),
+            'support_phone' => CrmSetting::get('support_phone', '+91 97830 55170'),
         ];
         return view('crm.admin.quotations.show', compact('quotation', 'settings'));
     }
@@ -146,7 +146,7 @@ class CrmQuotationController extends Controller
             'company_name' => CrmSetting::get('company_name', 'Emedley Cloud CRM'),
             'company_tagline' => CrmSetting::get('company_tagline', 'Enterprise Solutions'),
             'support_email' => CrmSetting::get('support_email', 'billing@emedleycrm.com'),
-            'support_phone' => CrmSetting::get('support_phone', '+91 98765 43210'),
+            'support_phone' => CrmSetting::get('support_phone', '+91 97830 55170'),
         ];
         return view('crm.admin.quotations.print', compact('quotation', 'settings'));
     }
@@ -158,7 +158,7 @@ class CrmQuotationController extends Controller
             'company_name' => CrmSetting::get('company_name', 'Emedley Cloud CRM'),
             'company_tagline' => CrmSetting::get('company_tagline', 'Enterprise Solutions'),
             'support_email' => CrmSetting::get('support_email', 'billing@emedleycrm.com'),
-            'support_phone' => CrmSetting::get('support_phone', '+91 98765 43210'),
+            'support_phone' => CrmSetting::get('support_phone', '+91 97830 55170'),
         ];
         $pdf = Pdf::loadView('crm.admin.quotations.pdf', compact('quotation', 'settings'));
         return $pdf->download("Quotation_{$quotation->quotation_no}.pdf");

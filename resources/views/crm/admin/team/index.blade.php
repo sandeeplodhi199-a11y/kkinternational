@@ -223,7 +223,7 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Phone Number</label>
-                <input type="text" name="phone" placeholder="e.g. +91 98765 43210" 
+                <input type="text" name="phone" placeholder="e.g. +91 97830 55170" 
                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
 

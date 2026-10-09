@@ -158,7 +158,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-navy mb-1.5">WhatsApp / Phone *</label>
-                                <input type="tel" name="phone" required placeholder="+91 98765 43210" value="{{ old('phone') }}"
+                                <input type="tel" name="phone" required placeholder="+91 97830 55170" value="{{ old('phone') }}"
                                        class="w-full text-xs px-4 py-3 rounded-xl border border-peri-border focus:border-aqua focus:ring-2 focus:ring-aqua/20 bg-white outline-none text-navy">
                                 @error('phone')
                                     <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>

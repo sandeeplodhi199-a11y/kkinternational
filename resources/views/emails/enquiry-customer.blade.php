@@ -139,7 +139,7 @@
     <!-- Contact Info -->
     <div class="contact-strip">
       <h3>Need Immediate Assistance?</h3>
-      <div class="c-row">📞 &nbsp;<a href="tel:+919876543210">+91 98765 43210</a></div>
+      <div class="c-row">📞 &nbsp;<a href="tel:+919783055170">+91 97830 55170</a></div>
       <div class="c-row">✉️ &nbsp;<a href="mailto:admin@hisabmittra.com">admin@hisabmittra.com</a></div>
       <div class="c-row">📍 &nbsp;India</div>
     </div>
@@ -155,7 +155,7 @@
   <div class="footer">
     <p>
       <strong style="color:#fff;">{{ config('app.name', 'Hisab Mittra CRM') }}</strong><br/>
-      <a href="tel:+919876543210">+91 98765 43210</a> &nbsp;|&nbsp;
+      <a href="tel:+919783055170">+91 97830 55170</a> &nbsp;|&nbsp;
       <a href="mailto:admin@hisabmittra.com">admin@hisabmittra.com</a><br/>
       <a href="{{ config('app.url', 'https://hisabmittra.com') }}">{{ config('app.url', 'https://hisabmittra.com') }}</a>
     </p>

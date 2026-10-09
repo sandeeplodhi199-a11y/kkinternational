@@ -781,9 +781,9 @@
                 <button type="button" onclick="openDemoModal()" class="px-8 py-4 rounded-2xl bg-white hover:bg-slate-100 text-black font-extrabold text-sm shadow-xl active:scale-95 transition-all text-center">
                     Schedule Live Interactive Demo
                 </button>
-                <a href="tel:+919876543210" class="px-6 py-4 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold text-sm border border-blue-400/40 active:scale-95 transition-all flex items-center justify-center gap-2">
+                <a href="tel:+919783055170" class="px-6 py-4 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white font-extrabold text-sm border border-blue-400/40 active:scale-95 transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-phone"></i>
-                    <span>+91 98765 43210</span>
+                    <span>+91 97830 55170</span>
                 </a>
             </div>
         </div>

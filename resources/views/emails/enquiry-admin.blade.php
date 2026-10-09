@@ -97,7 +97,7 @@
     <p>
       <strong>{{ config('app.name', 'Hisab Mittra CRM') }}</strong><br/>
       📍 India &nbsp;|&nbsp;
-      📞 <a href="tel:+919876543210">+91 98765 43210</a> &nbsp;|&nbsp;
+      📞 <a href="tel:+919783055170">+91 97830 55170</a> &nbsp;|&nbsp;
       ✉️ <a href="mailto:admin@hisabmittra.com">admin@hisabmittra.com</a>
     </p>
     <p style="margin-top:10px;font-size:11px;color:#9ca3af;">
