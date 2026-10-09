@@ -867,20 +867,37 @@
             <div class="max-w-5xl mx-auto">
 
                 <!-- Video Card Frame -->
-                <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-slate-200/80 bg-slate-900 aspect-[16/10] sm:aspect-[16/9]">
+                <div class="group relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 bg-slate-900 aspect-[16/10] sm:aspect-[16/9] cursor-pointer select-none" onclick="handleVideoContainerClick(event);">
 
                     <!-- Video (Full clean screen visibility) -->
                     <video id="showcase-video"
                         class="w-full h-full object-cover block"
-                        autoplay loop muted playsinline preload="auto">
+                        autoplay loop muted playsinline preload="auto"
+                        poster="/videos/demo-poster.jpg">
                         <source src="/videos/demo-video.mp4" type="video/mp4">
                         <source src="/videos/demo-video-backup.mp4" type="video/mp4">
+                        Your browser does not support HTML5 video.
                     </video>
 
-                    <!-- Audio toggle floating at bottom right -->
-                    <button type="button" onclick="toggleShowcaseMute();" class="absolute bottom-4 right-4 z-20 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur flex items-center justify-center transition-all shadow-md" title="Mute / Unmute">
-                        <i id="showcase-mute-icon" class="fa-solid fa-volume-xmark text-xs"></i>
-                    </button>
+                    <!-- Center Play/Pause Overlay Indicator (shows if paused or on hover) -->
+                    <div id="showcase-center-btn" class="absolute inset-0 m-auto z-20 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-blue-600/90 text-white shadow-2xl flex items-center justify-center transition-all duration-300 pointer-events-none opacity-0 group-hover:opacity-100">
+                        <i id="showcase-center-icon" class="fa-solid fa-play text-xl sm:text-2xl translate-x-0.5"></i>
+                    </div>
+
+                    <!-- Bottom Bar Overlay: Status Pill & Audio Toggle -->
+                    <div class="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
+                        <!-- Live Video Badge -->
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur text-white text-xs font-semibold shadow-md pointer-events-auto">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Interactive Platform Demo</span>
+                        </div>
+
+                        <!-- Audio toggle floating at bottom right -->
+                        <button type="button" onclick="toggleShowcaseMute(event);" class="pointer-events-auto px-3.5 py-1.5 rounded-full bg-black/60 hover:bg-black/85 text-white backdrop-blur flex items-center gap-2 transition-all shadow-md text-xs font-semibold cursor-pointer" title="Mute / Unmute">
+                            <i id="showcase-mute-icon" class="fa-solid fa-volume-xmark text-xs"></i>
+                            <span id="showcase-mute-text">Unmute</span>
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -888,34 +905,70 @@
     </section>
 
     <script>
-        function toggleShowcaseMute() {
+        function toggleShowcaseMute(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
             const v = document.getElementById('showcase-video');
             const muteIcon = document.getElementById('showcase-mute-icon');
-            if (v) {
-                v.muted = !v.muted;
-                if (muteIcon) {
-                    muteIcon.className = v.muted ? 'fa-solid fa-volume-xmark text-xs' : 'fa-solid fa-volume-high text-xs';
-                }
+            const muteText = document.getElementById('showcase-mute-text');
+            if (!v) return;
+            v.muted = !v.muted;
+            if (muteIcon) {
+                muteIcon.className = v.muted ? 'fa-solid fa-volume-xmark text-xs' : 'fa-solid fa-volume-high text-xs';
+            }
+            if (muteText) {
+                muteText.textContent = v.muted ? 'Unmute' : 'Mute';
+            }
+        }
+
+        function handleVideoContainerClick(e) {
+            if (e.target.closest('button')) return;
+            const v = document.getElementById('showcase-video');
+            const centerBtn = document.getElementById('showcase-center-btn');
+            const centerIcon = document.getElementById('showcase-center-icon');
+            if (!v) return;
+            if (v.paused) {
+                v.play().then(() => {
+                    if (centerBtn) centerBtn.classList.remove('!opacity-100');
+                    if (centerIcon) centerIcon.className = 'fa-solid fa-pause text-xl sm:text-2xl';
+                }).catch(() => {});
+            } else {
+                v.pause();
+                if (centerBtn) centerBtn.classList.add('!opacity-100');
+                if (centerIcon) centerIcon.className = 'fa-solid fa-play text-xl sm:text-2xl translate-x-0.5';
             }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             const v = document.getElementById('showcase-video');
+            const centerBtn = document.getElementById('showcase-center-btn');
+            const centerIcon = document.getElementById('showcase-center-icon');
+
             if (v) {
                 v.muted = true;
                 const tryPlay = function() {
                     const p = v.play();
                     if (p !== undefined) {
-                        p.catch(function() {
+                        p.then(() => {
+                            if (centerBtn) centerBtn.classList.remove('!opacity-100');
+                        }).catch(function() {
+                            // Autoplay blocked by browser policy, keep muted and retry or show button
                             v.muted = true;
-                            v.play().catch(function() {});
+                            v.play().catch(function() {
+                                if (centerBtn) centerBtn.classList.add('!opacity-100');
+                            });
                         });
                     }
                 };
                 tryPlay();
-                v.parentElement.addEventListener('click', function(e) {
-                    if (e.target.closest('button')) return;
-                    if (v.paused) v.play();
+
+                v.addEventListener('pause', function() {
+                    if (centerBtn) centerBtn.classList.add('!opacity-100');
+                    if (centerIcon) centerIcon.className = 'fa-solid fa-play text-xl sm:text-2xl translate-x-0.5';
+                });
+
+                v.addEventListener('play', function() {
+                    if (centerBtn) centerBtn.classList.remove('!opacity-100');
+                    if (centerIcon) centerIcon.className = 'fa-solid fa-pause text-xl sm:text-2xl';
                 });
             }
         });
