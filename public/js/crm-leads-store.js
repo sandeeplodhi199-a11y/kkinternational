@@ -26,10 +26,15 @@
 
     const EMPLOYEES = {
         '1': 'Admin',
+        '2': 'Nandkishor Chauhan',
+        '4': 'RAVI BAIRWA',
+        '5': 'Ashok Chhapola',
         '6': 'Rahul Sharma',
         '7': 'Vipin',
         '8': 'Nandkishor Chouhan',
-        '9': 'sunny'
+        '9': 'sunny',
+        '11': 'RAVI BAIRWA',
+        '12': 'Ashok Chhapola'
     };
 
     const SOURCES = {
@@ -1435,6 +1440,72 @@
     window.confirmDelete = deleteTeamMemberConfirm;
     window.deleteTeamMemberConfirm = deleteTeamMemberConfirm;
     window.updateTeamTableCounts = updateTeamTableCounts;
+
+    // Universal Soft Delete Handler for any CRM Entity
+    function deleteItemConfirm(type, id, name) {
+        const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+        if (!confirm(`Are you sure you want to delete ${typeLabel} "${name || id}"? It will be moved to the Recycle Bin.`)) {
+            return;
+        }
+
+        const delKey = 'hm_crm_deleted_' + type + '_ids';
+        try {
+            let deletedIds = [];
+            const raw = localStorage.getItem(delKey);
+            if (raw) deletedIds = JSON.parse(raw);
+            if (!deletedIds.includes(String(id))) {
+                deletedIds.push(String(id));
+                localStorage.setItem(delKey, JSON.stringify(deletedIds));
+            }
+        } catch(e) {}
+
+        const storageKeys = {
+            'customer': STORAGE_KEYS.customers,
+            'deal': STORAGE_KEYS.deals,
+            'task': STORAGE_KEYS.tasks,
+            'followup': STORAGE_KEYS.followups,
+            'demo': STORAGE_KEYS.demos,
+            'payment': STORAGE_KEYS.payments,
+            'quotation': STORAGE_KEYS.quotations
+        };
+        if (storageKeys[type]) {
+            try {
+                let list = getList(storageKeys[type]);
+                list = list.filter(item => String(item.id) !== String(id));
+                localStorage.setItem(storageKeys[type], JSON.stringify(list));
+            } catch(e) {}
+        }
+
+        try {
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete_item', type: type, id: id, name: name })
+            }).catch(() => {});
+        } catch(e) {}
+
+        const targetEl = document.querySelector(`[data-${type}-id="${id}"]`) ||
+                         document.querySelector(`[data-id="${id}"]`) ||
+                         document.getElementById(`${type}-row-${id}`) ||
+                         document.getElementById(`row-${id}`);
+        if (targetEl) {
+            targetEl.style.transition = 'all 0.3s ease-out';
+            targetEl.style.opacity = '0';
+            targetEl.style.transform = 'scale(0.9)';
+            setTimeout(() => targetEl.remove(), 300);
+        }
+
+        showToast(`🗑️ ${typeLabel} "${name || id}" moved to Recycle Bin!`, 'info');
+    }
+
+    window.deleteItemConfirm = deleteItemConfirm;
+    window.deleteCustomerConfirm = (id, name) => deleteItemConfirm('customer', id, name);
+    window.deleteDealConfirm = (id, name) => deleteItemConfirm('deal', id, name);
+    window.deleteTaskConfirm = (id, name) => deleteItemConfirm('task', id, name);
+    window.deleteFollowupConfirm = (id, name) => deleteItemConfirm('followup', id, name);
+    window.deleteDemoConfirm = (id, name) => deleteItemConfirm('demo', id, name);
+    window.deletePaymentConfirm = (id, name) => deleteItemConfirm('payment', id, name);
+    window.deleteQuotationConfirm = (id, name) => deleteItemConfirm('quotation', id, name);
 
     function renderTeamTable() {
         if (!window.location.pathname.includes('/team')) return;

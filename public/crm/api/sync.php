@@ -800,48 +800,40 @@ if ($action === 'delete_lead' || $action === 'delete_record') {
 // ==========================================
 // 14b. ACTION: DELETE EMPLOYEE / TEAM MEMBER
 // ==========================================
+// ==========================================
+// 14b. ACTION: DELETE EMPLOYEE / TEAM MEMBER (SOFT DELETE TO RECYCLE BIN)
+// ==========================================
 if ($action === 'delete_employee' || $action === 'delete_team_member') {
     $empId = (int)($input['emp_id'] ?? $input['id'] ?? 0);
     $empName = trim($input['name'] ?? '');
 
     $cond = $empId > 0 ? "`id` = {$empId}" : "`name` = '" . addslashes($empName) . "'";
-    $sql = "DELETE FROM `crm_employees` WHERE {$cond}";
+    $sql = "UPDATE `crm_employees` SET `deleted_at` = '{$now}', `updated_at` = '{$now}' WHERE {$cond}";
     appendToSqlDump($sql);
 
     if ($pdo) {
         try {
             if ($empId > 0) {
-                $stmtCheck = $pdo->prepare("SELECT id, user_id, email FROM crm_employees WHERE id = ?");
-                $stmtCheck->execute([$empId]);
-                $empRow = $stmtCheck->fetch();
-
-                $stmt = $pdo->prepare("DELETE FROM crm_employees WHERE id = ?");
+                $stmt = $pdo->prepare("UPDATE crm_employees SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?");
                 $stmt->execute([$empId]);
-
-                if ($empRow && !empty($empRow['user_id'])) {
-                    if ($empRow['email'] !== 'admin@c.com' && (int)$empRow['user_id'] !== 135) {
-                        $stmtUser = $pdo->prepare("DELETE FROM users WHERE id = ?");
-                        $stmtUser->execute([(int)$empRow['user_id']]);
-                    }
-                }
             } else if (!empty($empName)) {
-                $stmt = $pdo->prepare("DELETE FROM crm_employees WHERE name = ?");
+                $stmt = $pdo->prepare("UPDATE crm_employees SET deleted_at = NOW(), updated_at = NOW() WHERE name = ?");
                 $stmt->execute([$empName]);
             }
-            logActivity($pdo, 'Team', 'Delete Employee', "Deleted employee ID: {$empId} / Name: {$empName}");
+            logActivity($pdo, 'Team', 'Delete Employee', "Moved employee ID: {$empId} / Name: {$empName} to Recycle Bin");
         } catch (Exception $e) {}
     }
 
     echo json_encode([
         'success' => true,
-        'message' => 'Employee successfully deleted in SQL & MySQL database!',
+        'message' => 'Employee moved to Recycle Bin safely!',
         'sql' => $sql
     ]);
     exit;
 }
 
 // ==========================================
-// 14c. ACTION: DELETE PRODUCT / OFFERING
+// 14c. ACTION: DELETE PRODUCT / OFFERING (SOFT DELETE TO RECYCLE BIN)
 // ==========================================
 if ($action === 'delete_product') {
     $prodId = (int)($input['prod_id'] ?? $input['id'] ?? 0);
@@ -849,30 +841,307 @@ if ($action === 'delete_product') {
     $prodName = trim($input['name'] ?? '');
 
     $cond = $prodId > 0 ? "`id` = {$prodId}" : (!empty($prodCode) ? "`code` = '" . addslashes($prodCode) . "'" : "`name` = '" . addslashes($prodName) . "'");
-    $sql = "DELETE FROM `crm_products` WHERE {$cond}";
+    $sql = "UPDATE `crm_products` SET `deleted_at` = '{$now}', `updated_at` = '{$now}' WHERE {$cond}";
     appendToSqlDump($sql);
 
     if ($pdo) {
         try {
             if ($prodId > 0) {
-                $stmt = $pdo->prepare("DELETE FROM crm_products WHERE id = ?");
+                $stmt = $pdo->prepare("UPDATE crm_products SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?");
                 $stmt->execute([$prodId]);
             } else if (!empty($prodCode)) {
-                $stmt = $pdo->prepare("DELETE FROM crm_products WHERE code = ?");
+                $stmt = $pdo->prepare("UPDATE crm_products SET deleted_at = NOW(), updated_at = NOW() WHERE code = ?");
                 $stmt->execute([$prodCode]);
             } else if (!empty($prodName)) {
-                $stmt = $pdo->prepare("DELETE FROM crm_products WHERE name = ?");
+                $stmt = $pdo->prepare("UPDATE crm_products SET deleted_at = NOW(), updated_at = NOW() WHERE name = ?");
                 $stmt->execute([$prodName]);
             }
-            logActivity($pdo, 'Products', 'Delete Product', "Deleted product ID: {$prodId} / Code: {$prodCode} / Name: {$prodName}");
+            logActivity($pdo, 'Products', 'Delete Product', "Moved product ID: {$prodId} to Recycle Bin");
         } catch (Exception $e) {}
     }
 
     echo json_encode([
         'success' => true,
-        'message' => 'Product successfully deleted in SQL & MySQL database!',
+        'message' => 'Product moved to Recycle Bin safely!',
         'sql' => $sql
     ]);
+    exit;
+}
+
+// ==========================================
+// 14d. ACTION: DELETE RECORD (GENERIC SOFT DELETE TO RECYCLE BIN)
+// ==========================================
+if (in_array($action, ['delete_item', 'delete_record', 'delete_customer', 'delete_deal', 'delete_quotation', 'delete_task', 'delete_followup', 'delete_demo', 'delete_payment'])) {
+    $type = $input['type'] ?? str_replace('delete_', '', $action);
+    $id = (int)($input['id'] ?? $input['item_id'] ?? 0);
+    $tableMap = [
+        'lead' => 'crm_leads',
+        'employee' => 'crm_employees',
+        'customer' => 'crm_customers',
+        'deal' => 'crm_deals',
+        'quotation' => 'crm_quotations',
+        'product' => 'crm_products',
+        'task' => 'crm_tasks',
+        'followup' => 'crm_followups',
+        'demo' => 'crm_demos',
+        'payment' => 'crm_payments'
+    ];
+    $tbl = $tableMap[$type] ?? null;
+    if ($tbl && $id > 0) {
+        $sql = "UPDATE `{$tbl}` SET `deleted_at` = '{$now}', `updated_at` = '{$now}' WHERE `id` = {$id}";
+        appendToSqlDump($sql);
+        if ($pdo) {
+            try {
+                $stmt = $pdo->prepare("UPDATE {$tbl} SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?");
+                $stmt->execute([$id]);
+                logActivity($pdo, ucfirst($type), 'Delete Record', "Moved {$type} #{$id} to Recycle Bin");
+            } catch (Exception $e) {}
+        }
+        echo json_encode([
+            'success' => true,
+            'message' => ucfirst($type) . ' moved to Recycle Bin safely!',
+            'sql' => $sql
+        ]);
+        exit;
+    }
+}
+
+// ==========================================
+// 14e. RECYCLE BIN ENGINE (FETCH / RESTORE / PURGE / EMPTY)
+// ==========================================
+function crmTimeAgo($datetime) {
+    if (!$datetime) return 'Recently';
+    $time = strtotime($datetime);
+    $diff = time() - $time;
+    if ($diff < 60) return 'Just now';
+    if ($diff < 3600) return floor($diff / 60) . ' mins ago';
+    if ($diff < 86400) return floor($diff / 3600) . ' hours ago';
+    if ($diff < 604800) return floor($diff / 86400) . ' days ago';
+    return date('d M Y', $time);
+}
+
+// 1. GET ALL RECYCLE BIN RECORDS & COUNTS
+if ($action === 'get_recycle_bin' || $action === 'get_trash') {
+    $type = $input['type'] ?? $_GET['type'] ?? 'all';
+    $items = [];
+    $counts = [
+        'leads' => 0,
+        'customers' => 0,
+        'deals' => 0,
+        'quotations' => 0,
+        'followups' => 0,
+        'tasks' => 0,
+        'demos' => 0,
+        'payments' => 0,
+        'employees' => 0,
+        'products' => 0
+    ];
+
+    $cfg = [
+        'leads' => [
+            'table' => 'crm_leads',
+            'type' => 'lead',
+            'label' => 'Lead',
+            'badge' => 'bg-orange-100 text-orange-800 border-orange-200/60',
+            'sql' => "SELECT id, 'lead' as type, 'Lead' as label, 'bg-orange-100 text-orange-800 border-orange-200/60' as badge, name as title, CONCAT(COALESCE(company, 'Prospect'), ' • ', COALESCE(lead_code, 'LEAD')) as subtitle, COALESCE(phone, email, 'No contact') as info, deleted_at FROM crm_leads WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'customers' => [
+            'table' => 'crm_customers',
+            'type' => 'customer',
+            'label' => 'Customer',
+            'badge' => 'bg-blue-100 text-blue-800 border-blue-200/60',
+            'sql' => "SELECT id, 'customer' as type, 'Customer' as label, 'bg-blue-100 text-blue-800 border-blue-200/60' as badge, name as title, CONCAT(COALESCE(company, 'Business'), ' • ', COALESCE(customer_code, 'CUST')) as subtitle, COALESCE(phone, email, 'No contact') as info, deleted_at FROM crm_customers WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'deals' => [
+            'table' => 'crm_deals',
+            'type' => 'deal',
+            'label' => 'Deal',
+            'badge' => 'bg-purple-100 text-purple-800 border-purple-200/60',
+            'sql' => "SELECT id, 'deal' as type, 'Deal' as label, 'bg-purple-100 text-purple-800 border-purple-200/60' as badge, title as title, CONCAT('Stage: ', COALESCE(stage, 'Open'), ' • ₹', FORMAT(COALESCE(value, 0), 2)) as subtitle, 'Sales Deal' as info, deleted_at FROM crm_deals WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'quotations' => [
+            'table' => 'crm_quotations',
+            'type' => 'quotation',
+            'label' => 'Quotation',
+            'badge' => 'bg-teal-100 text-teal-800 border-teal-200/60',
+            'sql' => "SELECT id, 'quotation' as type, 'Quotation' as label, 'bg-teal-100 text-teal-800 border-teal-200/60' as badge, CONCAT('Quotation ', COALESCE(quotation_no, id)) as title, COALESCE(customer_name, 'Client') as subtitle, COALESCE(customer_phone, customer_email, 'Quotation Record') as info, deleted_at FROM crm_quotations WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'products' => [
+            'table' => 'crm_products',
+            'type' => 'product',
+            'label' => 'Product',
+            'badge' => 'bg-emerald-100 text-emerald-800 border-emerald-200/60',
+            'sql' => "SELECT id, 'product' as type, 'Product' as label, 'bg-emerald-100 text-emerald-800 border-emerald-200/60' as badge, name as title, CONCAT(COALESCE(category, 'Item'), ' • Code: ', COALESCE(code, 'PRD')) as subtitle, CONCAT('₹', FORMAT(COALESCE(price, 0), 2)) as info, deleted_at FROM crm_products WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'employees' => [
+            'table' => 'crm_employees',
+            'type' => 'employee',
+            'label' => 'Team',
+            'badge' => 'bg-rose-100 text-rose-800 border-rose-200/60',
+            'sql' => "SELECT id, 'employee' as type, 'Team' as label, 'bg-rose-100 text-rose-800 border-rose-200/60' as badge, name as title, CONCAT(COALESCE(role, 'Employee'), ' • ', COALESCE(employee_code, 'EMP')) as subtitle, COALESCE(email, phone, 'No contact') as info, deleted_at FROM crm_employees WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'tasks' => [
+            'table' => 'crm_tasks',
+            'type' => 'task',
+            'label' => 'Task',
+            'badge' => 'bg-yellow-100 text-yellow-800 border-yellow-200/60',
+            'sql' => "SELECT id, 'task' as type, 'Task' as label, 'bg-yellow-100 text-yellow-800 border-yellow-200/60' as badge, title as title, CONCAT('Priority: ', COALESCE(priority, 'Medium')) as subtitle, 'Task Record' as info, deleted_at FROM crm_tasks WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'followups' => [
+            'table' => 'crm_followups',
+            'type' => 'followup',
+            'label' => 'Follow-up',
+            'badge' => 'bg-indigo-100 text-indigo-800 border-indigo-200/60',
+            'sql' => "SELECT id, 'followup' as type, 'Follow-up' as label, 'bg-indigo-100 text-indigo-800 border-indigo-200/60' as badge, CONCAT('Follow-up (', COALESCE(type, 'Call'), ')') as title, CONCAT('Date: ', COALESCE(date, 'Scheduled')) as subtitle, 'Follow-up log' as info, deleted_at FROM crm_followups WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'demos' => [
+            'table' => 'crm_demos',
+            'type' => 'demo',
+            'label' => 'Demo',
+            'badge' => 'bg-pink-100 text-pink-800 border-pink-200/60',
+            'sql' => "SELECT id, 'demo' as type, 'Demo' as label, 'bg-pink-100 text-pink-800 border-pink-200/60' as badge, title as title, CONCAT('Date: ', COALESCE(date, 'Scheduled')) as subtitle, 'Demo Reservation' as info, deleted_at FROM crm_demos WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+        'payments' => [
+            'table' => 'crm_payments',
+            'type' => 'payment',
+            'label' => 'Payment',
+            'badge' => 'bg-cyan-100 text-cyan-800 border-cyan-200/60',
+            'sql' => "SELECT id, 'payment' as type, 'Payment' as label, 'bg-cyan-100 text-cyan-800 border-cyan-200/60' as badge, CONCAT('Payment #', COALESCE(payment_no, id)) as title, CONCAT('₹', FORMAT(COALESCE(amount, 0), 2)) as subtitle, COALESCE(payment_method, 'Payment') as info, deleted_at FROM crm_payments WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC"
+        ],
+    ];
+
+    if ($pdo) {
+        foreach ($cfg as $k => $c) {
+            try {
+                $countStmt = $pdo->query("SELECT COUNT(*) FROM {$c['table']} WHERE deleted_at IS NOT NULL");
+                $counts[$k] = (int)$countStmt->fetchColumn();
+
+                if ($type === 'all' || $type === $k || $type === $c['type']) {
+                    $stmt = $pdo->query($c['sql']);
+                    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($rows as $r) {
+                        $r['time_ago'] = crmTimeAgo($r['deleted_at']);
+                        $items[] = $r;
+                    }
+                }
+            } catch (Exception $e) {}
+        }
+    }
+
+    usort($items, function($a, $b) {
+        return strtotime($b['deleted_at']) - strtotime($a['deleted_at']);
+    });
+
+    echo json_encode([
+        'success' => true,
+        'counts' => $counts,
+        'totalTrash' => array_sum($counts),
+        'items' => $items
+    ]);
+    exit;
+}
+
+// 2. RESTORE RECORD FROM RECYCLE BIN
+if ($action === 'restore_recycle_bin' || $action === 'restore_item') {
+    $itemType = $input['type'] ?? '';
+    $itemId = (int)($input['id'] ?? 0);
+    $tableMap = [
+        'lead' => 'crm_leads', 'leads' => 'crm_leads',
+        'employee' => 'crm_employees', 'team' => 'crm_employees', 'employees' => 'crm_employees',
+        'customer' => 'crm_customers', 'customers' => 'crm_customers',
+        'deal' => 'crm_deals', 'deals' => 'crm_deals',
+        'quotation' => 'crm_quotations', 'quotations' => 'crm_quotations',
+        'product' => 'crm_products', 'products' => 'crm_products',
+        'task' => 'crm_tasks', 'tasks' => 'crm_tasks',
+        'followup' => 'crm_followups', 'followups' => 'crm_followups',
+        'demo' => 'crm_demos', 'demos' => 'crm_demos',
+        'payment' => 'crm_payments', 'payments' => 'crm_payments'
+    ];
+    $tbl = $tableMap[$itemType] ?? null;
+    if ($tbl && $itemId > 0 && $pdo) {
+        $stmt = $pdo->prepare("UPDATE {$tbl} SET deleted_at = NULL, updated_at = NOW() WHERE id = ?");
+        $stmt->execute([$itemId]);
+        logActivity($pdo, 'Recycle Bin', 'Restore Record', "Restored {$itemType} #{$itemId} from Recycle Bin");
+        $sql = "UPDATE `{$tbl}` SET `deleted_at` = NULL, `updated_at` = '{$now}' WHERE `id` = {$itemId};";
+        appendToSqlDump($sql);
+        echo json_encode(['success' => true, 'message' => "Record restored successfully!"]);
+        exit;
+    }
+    echo json_encode(['success' => false, 'error' => 'Unable to restore record.']);
+    exit;
+}
+
+// 3. PERMANENTLY PURGE RECORD FROM RECYCLE BIN
+if ($action === 'purge_recycle_bin' || $action === 'purge_item' || $action === 'force_delete') {
+    $itemType = $input['type'] ?? '';
+    $itemId = (int)($input['id'] ?? 0);
+    $tableMap = [
+        'lead' => 'crm_leads', 'leads' => 'crm_leads',
+        'employee' => 'crm_employees', 'team' => 'crm_employees', 'employees' => 'crm_employees',
+        'customer' => 'crm_customers', 'customers' => 'crm_customers',
+        'deal' => 'crm_deals', 'deals' => 'crm_deals',
+        'quotation' => 'crm_quotations', 'quotations' => 'crm_quotations',
+        'product' => 'crm_products', 'products' => 'crm_products',
+        'task' => 'crm_tasks', 'tasks' => 'crm_tasks',
+        'followup' => 'crm_followups', 'followups' => 'crm_followups',
+        'demo' => 'crm_demos', 'demos' => 'crm_demos',
+        'payment' => 'crm_payments', 'payments' => 'crm_payments'
+    ];
+    $tbl = $tableMap[$itemType] ?? null;
+    if ($tbl && $itemId > 0 && $pdo) {
+        $stmt = $pdo->prepare("DELETE FROM {$tbl} WHERE id = ? AND deleted_at IS NOT NULL");
+        $stmt->execute([$itemId]);
+        logActivity($pdo, 'Recycle Bin', 'Purge Record', "Permanently purged {$itemType} #{$itemId}");
+        $sql = "DELETE FROM `{$tbl}` WHERE `id` = {$itemId};";
+        appendToSqlDump($sql);
+        echo json_encode(['success' => true, 'message' => "Record permanently purged from database!"]);
+        exit;
+    }
+    echo json_encode(['success' => false, 'error' => 'Unable to purge record.']);
+    exit;
+}
+
+// 4. RESTORE ALL IN RECYCLE BIN
+if ($action === 'restore_all_recycle_bin') {
+    $targetType = $input['type'] ?? 'all';
+    $tables = [
+        'leads' => 'crm_leads', 'customers' => 'crm_customers', 'deals' => 'crm_deals',
+        'quotations' => 'crm_quotations', 'products' => 'crm_products', 'employees' => 'crm_employees',
+        'tasks' => 'crm_tasks', 'followups' => 'crm_followups', 'demos' => 'crm_demos', 'payments' => 'crm_payments'
+    ];
+    $count = 0;
+    if ($pdo) {
+        foreach ($tables as $k => $tbl) {
+            if ($targetType === 'all' || $targetType === $k) {
+                $stmt = $pdo->prepare("UPDATE {$tbl} SET deleted_at = NULL, updated_at = NOW() WHERE deleted_at IS NOT NULL");
+                $stmt->execute();
+                $count += $stmt->rowCount();
+            }
+        }
+    }
+    echo json_encode(['success' => true, 'restored' => $count, 'message' => "{$count} record(s) restored successfully!"]);
+    exit;
+}
+
+// 5. EMPTY ENTIRE RECYCLE BIN
+if ($action === 'empty_recycle_bin') {
+    $targetType = $input['type'] ?? 'all';
+    $tables = [
+        'leads' => 'crm_leads', 'customers' => 'crm_customers', 'deals' => 'crm_deals',
+        'quotations' => 'crm_quotations', 'products' => 'crm_products', 'employees' => 'crm_employees',
+        'tasks' => 'crm_tasks', 'followups' => 'crm_followups', 'demos' => 'crm_demos', 'payments' => 'crm_payments'
+    ];
+    $count = 0;
+    if ($pdo) {
+        foreach ($tables as $k => $tbl) {
+            if ($targetType === 'all' || $targetType === $k) {
+                $stmt = $pdo->prepare("DELETE FROM {$tbl} WHERE deleted_at IS NOT NULL");
+                $stmt->execute();
+                $count += $stmt->rowCount();
+            }
+        }
+    }
+    echo json_encode(['success' => true, 'purged' => $count, 'message' => "Recycle bin emptied permanently!"]);
     exit;
 }
 

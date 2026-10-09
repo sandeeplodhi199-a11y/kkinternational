@@ -112,11 +112,6 @@
                         <th class="py-3.5 px-4 w-3/12">DETAILS / INFO</th>
                         <th class="py-3.5 px-4 w-2/12">DELETED AT</th>
                         <th class="py-3.5 px-4 w-2/12 text-right">RESTORE / PURGE</th>
-                        <th class="py-3 px-4">ITEM / ENTITY</th>
-                        <th class="py-3 px-4">MODULE</th>
-                        <th class="py-3 px-4">DETAILS / INFO</th>
-                        <th class="py-3 px-4">DELETED AT</th>
-                        <th class="py-3 px-4 text-right">RESTORE / PURGE</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-bold">

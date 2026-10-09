@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
     <meta charset="utf-8">
@@ -663,85 +663,79 @@
         </div>
 
         <div class="flex items-center gap-2.5 flex-wrap shrink-0">
-            <form action="/crm/admin/super/recycle-bin/restore-all?type=all" method="POST" onsubmit="return confirm('Restore all items in this view?');">
-                <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
-                <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-rotate-left text-xs"></i>
-                    <span>Restore All</span>
-                </button>
-            </form>
+            <button type="button" id="btn-restore-all" onclick="restoreAllTrash()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-rotate-left text-xs"></i>
+                <span>Restore All</span>
+            </button>
 
-            <form action="/crm/admin/super/recycle-bin/empty?type=all" method="POST" onsubmit="return confirm('WARNING: Permanently purge all records in this view? This cannot be undone.');">
-                <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
-                <button type="submit" class="px-4 py-2 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-trash-can text-xs"></i>
-                    <span>Empty Trash</span>
-                </button>
-            </form>
+            <button type="button" id="btn-empty-trash" onclick="emptyTrashConfirm()" class="px-4 py-2 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 font-bold text-xs shadow-xs transition active:scale-95 flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+                <span>Empty Trash</span>
+            </button>
 
-            <span class="px-4 py-2 rounded-xl bg-slate-900 text-white font-black text-xs shadow-xs flex items-center gap-1.5">
+            <span id="header-trash-count-badge" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-black text-xs shadow-xs flex items-center gap-1.5">
                 <i class="fa-solid fa-recycle text-emerald-400 text-xs"></i>
-                <span>2 Items in Bin</span>
+                <span id="header-trash-count-text">Syncing...</span>
             </span>
         </div>
     </div>
 
     <!-- Filter Category Tabs -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        <a href="?type=all" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-slate-900 text-white border-slate-900 shadow-xs">
+    <div id="recycle-bin-tabs" class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <button type="button" data-type="all" onclick="switchRecycleTab('all')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-slate-900 text-white border-slate-900 shadow-xs cursor-pointer">
             <span>All Trash</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-white/20 text-white font-black">2</span>
-        </a>
+            <span id="tab-count-all" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-white/20 text-white font-black">0</span>
+        </button>
 
-        <a href="?type=leads" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="leads" onclick="switchRecycleTab('leads')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Leads</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">1</span>
-        </a>
+            <span id="tab-count-leads" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=customers" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="customers" onclick="switchRecycleTab('customers')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Customers</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-customers" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=deals" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="deals" onclick="switchRecycleTab('deals')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Deals</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-deals" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=quotations" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="quotations" onclick="switchRecycleTab('quotations')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Quotations</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-quotations" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=followups" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="followups" onclick="switchRecycleTab('followups')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Follow-ups</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-followups" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=tasks" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="tasks" onclick="switchRecycleTab('tasks')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Tasks</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-tasks" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=demos" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="demos" onclick="switchRecycleTab('demos')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Demos</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-demos" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=payments" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="payments" onclick="switchRecycleTab('payments')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Payments</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-payments" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=employees" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="employees" onclick="switchRecycleTab('employees')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Team</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">1</span>
-        </a>
+            <span id="tab-count-employees" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
 
-        <a href="?type=products" class="px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50">
+        <button type="button" data-type="products" onclick="switchRecycleTab('products')" class="recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer">
             <span>Products</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
-        </a>
+            <span id="tab-count-products" class="tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold">0</span>
+        </button>
     </div>
 
     <!-- Data Table -->
@@ -757,74 +751,11 @@
                         <th class="py-3.5 px-4 w-2/12 text-right">RESTORE / PURGE</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 font-medium">
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 text-slate-900">
-                            <span class="font-extrabold text-slate-900 text-sm block leading-tight">Live Test Client</span>
-                            <span class="text-[11px] text-slate-400 font-semibold">Real-Time Corp &bull; LIVE-3681</span>
-                        </td>
-                        <td class="py-3.5 px-4 text-center">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-orange-100 text-orange-800 border border-orange-200/60 inline-block">Lead</span>
-                        </td>
-                        <td class="py-3.5 px-4 text-slate-700 font-mono text-xs break-all">
-                            +91 91234 56789
-                        </td>
-                        <td class="py-3.5 px-4 text-slate-500 text-xs font-semibold">
-                            3 days ago
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <div class="inline-flex items-center gap-2 justify-end">
-                                <form action="/crm/admin/super/recycle-bin/lead/29/restore" method="POST">
-                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
-                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
-                                        <i class="fa-solid fa-rotate-left text-[11px]"></i>
-                                        <span>Restore</span>
-                                    </button>
-                                </form>
-                                <form action="/crm/admin/super/recycle-bin/lead/29/force" method="POST" onsubmit="return confirm('Permanently destroy this record? Cannot be undone.');">
-                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition border border-rose-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
-                                        <i class="fa-solid fa-trash-can text-[11px]"></i>
-                                        <span>Purge</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 text-slate-900">
-                            <span class="font-extrabold text-slate-900 text-sm block leading-tight">Test Agent</span>
-                            <span class="text-[11px] text-slate-400 font-semibold">Sales Representative &bull; EMP-144</span>
-                        </td>
-                        <td class="py-3.5 px-4 text-center">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200/60 inline-block">Team</span>
-                        </td>
-                        <td class="py-3.5 px-4 text-slate-700 font-mono text-xs break-all">
-                            testemployee_1791012960@example.com
-                        </td>
-                        <td class="py-3.5 px-4 text-slate-500 text-xs font-semibold">
-                            3 days ago
-                        </td>
-                        <td class="py-3.5 px-4 text-right">
-                            <div class="inline-flex items-center gap-2 justify-end">
-                                <form action="/crm/admin/super/recycle-bin/employee/10/restore" method="POST">
-                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
-                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
-                                        <i class="fa-solid fa-rotate-left text-[11px]"></i>
-                                        <span>Restore</span>
-                                    </button>
-                                </form>
-                                <form action="/crm/admin/super/recycle-bin/employee/10/force" method="POST" onsubmit="return confirm('Permanently destroy this record? Cannot be undone.');">
-                                    <input type="hidden" name="_token" value="csfYVpdE6sbdGBjQOeS5nVbaQbDguOYQxfVWsENE" autocomplete="off">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition border border-rose-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
-                                        <i class="fa-solid fa-trash-can text-[11px]"></i>
-                                        <span>Purge</span>
-                                    </button>
-                                </form>
-                            </div>
+                <tbody id="recycle-bin-tbody" class="divide-y divide-slate-100 font-medium">
+                    <tr>
+                        <td colspan="5" class="py-12 text-center text-slate-500 font-bold">
+                            <i class="fa-solid fa-circle-notch fa-spin text-emerald-600 text-2xl mb-2 block mx-auto"></i>
+                            <span>Loading live recycle bin records from database...</span>
                         </td>
                     </tr>
                 </tbody>
@@ -1184,7 +1115,486 @@
             });
         })();
     </script>
-        <script src="/crm/js/crm-leads-store.js"></script>
+    <script src="/crm/js/crm-leads-store.js"></script>
+    <script>
+    // ==========================================
+    // DYNAMIC RECYCLE BIN & TRASH RECOVERY ENGINE
+    // ==========================================
+    (function() {
+        'use strict';
+
+        let currentRecycleType = 'all';
+        let allRecycleItems = [];
+        let recycleCounts = {};
+
+        // Read initial ?type= from URL if present
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialType = urlParams.get('type');
+            if (initialType) currentRecycleType = initialType;
+        } catch(e) {}
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function escapeAttr(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        function showRecycleToast(msg, icon = 'success') {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: icon,
+                    title: msg,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+            } else {
+                alert(msg);
+            }
+        }
+
+        function updateTabsUI(activeType) {
+            document.querySelectorAll('.recycle-tab-btn').forEach(btn => {
+                const btnType = btn.getAttribute('data-type');
+                const countBadge = btn.querySelector('.tab-count-badge');
+                if (btnType === activeType) {
+                    btn.className = 'recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-slate-900 text-white border-slate-900 shadow-xs cursor-pointer';
+                    if (countBadge) {
+                        countBadge.className = 'tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-white/20 text-white font-black';
+                    }
+                } else {
+                    btn.className = 'recycle-tab-btn px-4 py-2 rounded-xl border transition shrink-0 flex items-center gap-2 bg-white text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer';
+                    if (countBadge) {
+                        countBadge.className = 'tab-count-badge px-1.5 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-bold';
+                    }
+                }
+            });
+        }
+
+        window.switchRecycleTab = function(type) {
+            currentRecycleType = type;
+            updateTabsUI(type);
+            try {
+                const newUrl = new URL(window.location.href);
+                newUrl.searchParams.set('type', type);
+                window.history.pushState({ type: type }, '', newUrl.toString());
+            } catch(e) {}
+            loadRecycleBin(type);
+        };
+
+        window.loadRecycleBin = function(type) {
+            const queryType = type || currentRecycleType || 'all';
+            const tbody = document.getElementById('recycle-bin-tbody');
+            if (!tbody) return;
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="py-12 text-center text-slate-500 font-bold">
+                        <i class="fa-solid fa-circle-notch fa-spin text-emerald-600 text-2xl mb-2 block mx-auto"></i>
+                        <span>Loading live recycle bin records from database...</span>
+                    </td>
+                </tr>
+            `;
+
+            fetch('/crm/api/sync.php?action=get_recycle_bin&type=' + encodeURIComponent(queryType) + '&t=' + Date.now())
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || !data.success) {
+                        throw new Error((data && data.message) || 'Failed to fetch recycle bin');
+                    }
+
+                    recycleCounts = data.counts || {};
+                    const totalTrash = typeof data.totalTrash !== 'undefined' ? data.totalTrash : 0;
+
+                    // Update tab badge numbers
+                    const keys = ['all', 'leads', 'customers', 'deals', 'quotations', 'followups', 'tasks', 'demos', 'payments', 'employees', 'products'];
+                    keys.forEach(k => {
+                        const el = document.getElementById('tab-count-' + k);
+                        if (el) {
+                            const count = (k === 'all') ? totalTrash : (recycleCounts[k] || 0);
+                            el.textContent = count;
+                        }
+                    });
+
+                    // Update header total count badge
+                    const headerCount = document.getElementById('header-trash-count-text');
+                    if (headerCount) {
+                        headerCount.textContent = totalTrash + ' Items in Bin';
+                    }
+
+                    // Enable/disable top bulk buttons
+                    const btnRestoreAll = document.getElementById('btn-restore-all');
+                    const btnEmpty = document.getElementById('btn-empty-trash');
+                    const currentViewCount = (queryType === 'all') ? totalTrash : (recycleCounts[queryType] || 0);
+                    const hasItems = currentViewCount > 0;
+                    if (btnRestoreAll) btnRestoreAll.disabled = !hasItems;
+                    if (btnEmpty) btnEmpty.disabled = !hasItems;
+
+                    allRecycleItems = data.items || [];
+                    renderRecycleBinTable(allRecycleItems);
+                })
+                .catch(err => {
+                    console.error('Recycle bin load error:', err);
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="py-10 text-center text-rose-500 font-bold">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-2xl mb-2 block mx-auto"></i>
+                                <span>Unable to load records. Check connection and retry.</span>
+                                <div class="mt-2">
+                                    <button type="button" onclick="loadRecycleBin()" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition">
+                                        <i class="fa-solid fa-rotate-right mr-1"></i> Retry
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+        };
+
+        function renderRecycleBinTable(items) {
+            const tbody = document.getElementById('recycle-bin-tbody');
+            if (!tbody) return;
+
+            if (!items || items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-16 text-center text-slate-500 font-medium">
+                            <i class="fa-solid fa-trash-can text-slate-300 text-4xl mb-3 block mx-auto"></i>
+                            <span class="text-sm font-extrabold text-slate-700 block">Recycle Bin is empty</span>
+                            <span class="text-xs text-slate-400 font-medium">No deleted records found in this category.</span>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = '';
+            items.forEach(item => {
+                const rowId = 'recycle-row-' + item.type + '-' + item.id;
+                const badgeClass = item.badge || 'bg-slate-100 text-slate-800 border-slate-200/60';
+                const label = item.label || (item.type.charAt(0).toUpperCase() + item.type.slice(1));
+                const safeTitle = escapeHtml(item.title || 'Untitled');
+                const safeSubtitle = escapeHtml(item.subtitle || '');
+                const safeInfo = escapeHtml(item.info || '—');
+                const timeAgo = escapeHtml(item.time_ago || 'Recently');
+                const attrTitle = escapeAttr(item.title || 'Record');
+
+                html += `
+                    <tr id="${rowId}" class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 text-slate-900">
+                            <span class="font-extrabold text-slate-900 text-sm block leading-tight">${safeTitle}</span>
+                            <span class="text-[11px] text-slate-400 font-semibold">${safeSubtitle}</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${badgeClass} inline-block">${label}</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-700 font-mono text-xs break-all">
+                            ${safeInfo}
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-500 text-xs font-semibold">
+                            ${timeAgo}
+                        </td>
+                        <td class="py-3.5 px-4 text-right">
+                            <div class="inline-flex items-center gap-2 justify-end">
+                                <button type="button" 
+                                        onclick="restoreTrashItem('${item.type}', '${item.id}', '${attrTitle}')" 
+                                        class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
+                                    <i class="fa-solid fa-rotate-left text-[11px]"></i>
+                                    <span>Restore</span>
+                                </button>
+                                <button type="button" 
+                                        onclick="purgeTrashItem('${item.type}', '${item.id}', '${attrTitle}')" 
+                                        class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition border border-rose-200/60 flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
+                                    <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                    <span>Purge</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // 1-Click Restore Record
+        window.restoreTrashItem = function(type, id, title) {
+            const row = document.getElementById('recycle-row-' + type + '-' + id);
+            if (row) {
+                row.style.opacity = '0.5';
+                row.style.pointerEvents = 'none';
+            }
+
+            fetch('/crm/api/sync.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'restore_item',
+                    type: type,
+                    id: id
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.success) {
+                    cleanDeletedStorageForRestore(type, id);
+
+                    if (row) {
+                        row.style.transition = 'all 0.3s ease-out';
+                        row.style.transform = 'translateX(20px)';
+                        row.style.opacity = '0';
+                        setTimeout(() => {
+                            row.remove();
+                            loadRecycleBin(currentRecycleType);
+                        }, 300);
+                    } else {
+                        loadRecycleBin(currentRecycleType);
+                    }
+
+                    showRecycleToast(`"${title || 'Record'}" restored to active records!`, 'success');
+                } else {
+                    if (row) {
+                        row.style.opacity = '1';
+                        row.style.pointerEvents = 'auto';
+                    }
+                    showRecycleToast((data && data.error) || 'Failed to restore record.', 'error');
+                }
+            })
+            .catch(err => {
+                if (row) {
+                    row.style.opacity = '1';
+                    row.style.pointerEvents = 'auto';
+                }
+                showRecycleToast('Network error restoring record.', 'error');
+            });
+        };
+
+        // Permanently Purge Record
+        window.purgeTrashItem = function(type, id, title) {
+            const doPurge = () => {
+                const row = document.getElementById('recycle-row-' + type + '-' + id);
+                if (row) {
+                    row.style.opacity = '0.5';
+                    row.style.pointerEvents = 'none';
+                }
+
+                fetch('/crm/api/sync.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'purge_item',
+                        type: type,
+                        id: id
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        cleanDeletedStorageForRestore(type, id);
+                        if (row) {
+                            row.style.transition = 'all 0.3s ease-out';
+                            row.style.transform = 'scale(0.9)';
+                            row.style.opacity = '0';
+                            setTimeout(() => {
+                                row.remove();
+                                loadRecycleBin(currentRecycleType);
+                            }, 300);
+                        } else {
+                            loadRecycleBin(currentRecycleType);
+                        }
+                        showRecycleToast(`"${title || 'Record'}" permanently destroyed.`, 'info');
+                    } else {
+                        if (row) {
+                            row.style.opacity = '1';
+                            row.style.pointerEvents = 'auto';
+                        }
+                        showRecycleToast((data && data.error) || 'Failed to purge record.', 'error');
+                    }
+                })
+                .catch(err => {
+                    if (row) {
+                        row.style.opacity = '1';
+                        row.style.pointerEvents = 'auto';
+                    }
+                    showRecycleToast('Network error purging record.', 'error');
+                });
+            };
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Permanently destroy record?',
+                    text: `Are you sure you want to permanently delete "${title || 'this item'}"? This forensic destruction cannot be undone.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e11d48',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes, Purge Permanently',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) doPurge();
+                });
+            } else {
+                if (confirm(`WARNING: Permanently destroy "${title || 'this item'}"? This cannot be undone.`)) {
+                    doPurge();
+                }
+            }
+        };
+
+        // Restore All Records
+        window.restoreAllTrash = function() {
+            const doRestoreAll = () => {
+                fetch('/crm/api/sync.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'restore_all_recycle_bin',
+                        type: currentRecycleType
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        cleanAllDeletedStorage();
+                        loadRecycleBin(currentRecycleType);
+                        showRecycleToast(data.message || 'All items restored successfully!', 'success');
+                    } else {
+                        showRecycleToast((data && data.error) || 'Failed to restore all items.', 'error');
+                    }
+                })
+                .catch(() => showRecycleToast('Network error restoring items.', 'error'));
+            };
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Restore All Records?',
+                    text: `Restore all deleted records in "${currentRecycleType.toUpperCase()}" view back to active CRM tables?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#059669',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes, Restore All',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) doRestoreAll();
+                });
+            } else {
+                if (confirm('Restore all items in this view back to active records?')) {
+                    doRestoreAll();
+                }
+            }
+        };
+
+        // Empty Trash
+        window.emptyTrashConfirm = function() {
+            const doEmpty = () => {
+                fetch('/crm/api/sync.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'empty_recycle_bin',
+                        type: currentRecycleType
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        cleanAllDeletedStorage();
+                        loadRecycleBin(currentRecycleType);
+                        showRecycleToast(data.message || 'Recycle bin emptied permanently!', 'info');
+                    } else {
+                        showRecycleToast((data && data.error) || 'Failed to empty recycle bin.', 'error');
+                    }
+                })
+                .catch(() => showRecycleToast('Network error emptying trash.', 'error'));
+            };
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Permanently Empty Trash?',
+                    text: `WARNING: Permanently purge all records in "${currentRecycleType.toUpperCase()}" view? This action cannot be reversed!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e11d48',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes, Empty Trash',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) doEmpty();
+                });
+            } else {
+                if (confirm('WARNING: Permanently destroy all items in this view? Cannot be undone.')) {
+                    doEmpty();
+                }
+            }
+        };
+
+        function cleanDeletedStorageForRestore(type, id) {
+            try {
+                const map = {
+                    'lead': 'hm_crm_deleted_lead_ids',
+                    'employee': 'hm_crm_deleted_team_ids',
+                    'product': 'hm_crm_deleted_product_ids',
+                    'customer': 'hm_crm_deleted_customer_ids',
+                    'deal': 'hm_crm_deleted_deal_ids',
+                    'quotation': 'hm_crm_deleted_quotation_ids',
+                    'task': 'hm_crm_deleted_task_ids',
+                    'followup': 'hm_crm_deleted_followup_ids',
+                    'demo': 'hm_crm_deleted_demo_ids',
+                    'payment': 'hm_crm_deleted_payment_ids'
+                };
+                const key = map[type];
+                if (key) {
+                    const raw = localStorage.getItem(key);
+                    if (raw) {
+                        let list = JSON.parse(raw);
+                        list = list.filter(item => String(item) !== String(id));
+                        localStorage.setItem(key, JSON.stringify(list));
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function cleanAllDeletedStorage() {
+            try {
+                const keys = [
+                    'hm_crm_deleted_lead_ids',
+                    'hm_crm_deleted_team_ids',
+                    'hm_crm_deleted_product_ids',
+                    'hm_crm_deleted_customer_ids',
+                    'hm_crm_deleted_deal_ids',
+                    'hm_crm_deleted_quotation_ids',
+                    'hm_crm_deleted_task_ids',
+                    'hm_crm_deleted_followup_ids',
+                    'hm_crm_deleted_demo_ids',
+                    'hm_crm_deleted_payment_ids'
+                ];
+                keys.forEach(k => localStorage.removeItem(k));
+            } catch(e) {}
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTabsUI(currentRecycleType);
+            loadRecycleBin(currentRecycleType);
+        });
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            updateTabsUI(currentRecycleType);
+            loadRecycleBin(currentRecycleType);
+        }
+    })();
+    </script>
 </body>
 </html>
 
